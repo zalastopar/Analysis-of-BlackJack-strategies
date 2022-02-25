@@ -1,1 +1,1 @@
-# Analysis-of-BlackJack-strategies
+# Analysis of Black Jack strategies
