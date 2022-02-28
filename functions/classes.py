@@ -16,7 +16,7 @@ LIGHTPINK = (250, 12, 139)
 
 OFFWHITE = (241, 235, 219)
 WRITING = (206, 183, 127)
-DARKWHITE = (220, 204, 164)
+
 
 # game
 class Game:
@@ -39,14 +39,41 @@ class Card:
         self.value = value # numbar of the card
         self.position = position #position of the card on the table (x, y)
 
+
+
+
+        
+
     def draw(self, screen):
         # Blank card
-        pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 350), border_radius=6)
-        pygame.draw.rect(screen, DARKWHITE, (self.position[0], self.position[1], 200, 350), 5, 6)
+        pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
+        pygame.draw.rect(screen, WRITING, (self.position[0], self.position[1], 200, 320), 5, 6)
 
-        # Add value
-        text_font = pygame.font.SysFont('Bungee', 150)
-        value = text_font.render(str(self.value), TRUE, WRITING)
-        screen.blit(value, (self.position[0] + 200/5, self.position[1] + 350/3))
+        sign = self.value
+        if sign == 14:
+            sign = 'K'
+        elif sign == 13:
+            sign = 'Q'
+        elif sign == 12:
+            sign = 'J'
+        elif sign == 11:
+            sign = 'A'
+        elif sign == 1:
+            sign = 'A'
+        else:
+            sign = str(sign)
+
+
+        # Draw value to card
+        text_font = pygame.font.SysFont('Bungee', 200)
+        text_surface = text_font.render(sign, True, WRITING)
+        w = text_surface.get_width()
+        h = text_surface.get_height()
+        
+        image = pygame.image.load('racecar.png')
+        screen.blit(image, (0, 0))
+
+        value = text_font.render(sign, TRUE, WRITING)
+        screen.blit(value, (self.position[0] - w/2 + 200/2, self.position[1] + 320/2 - h/2))
 
     
