@@ -5,6 +5,7 @@ from pygame.locals import *
 import time
 import sys
 import pygame_textinput
+import os
 
 
 # import other python files
