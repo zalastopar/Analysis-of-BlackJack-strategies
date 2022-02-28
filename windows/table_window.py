@@ -57,6 +57,7 @@ def input(events, position, player):
             text_font = pygame.font.SysFont('Bungee', 30)
             warning = text_font.render("You can't bet more than you have!", TRUE, DARKTEAL)
             gameDisplay.blit(warning, (position[0], position[1] + position[3]))
+            player.bet = 0.0
             
         else:
             player.bet = money
@@ -98,7 +99,6 @@ def table(events, player, game):
 
     gameDisplay.blit(first, (width/2 - 500, height - 500))
 
-    # ne mores potrdit ce ni dost balanca
 
     mouse = pygame.mouse.get_pos()
 
@@ -129,8 +129,6 @@ def table(events, player, game):
     first = text_font.render('Menu', TRUE, DARKPINK)
     gameDisplay.blit(first, (width - 60, 10))
 
-    karta = classes.Card('S', 14, [width/2, height/2])
-    karta.draw(gameDisplay)
 
     # Clicking buttons
     for event in events:
@@ -145,7 +143,7 @@ def table(events, player, game):
 
     pygame.display.update()
 
-# na zacetku kok bo bet
+
 # dodaj gumbe glede na karte
 
 
