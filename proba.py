@@ -36,11 +36,6 @@ smallfont = pygame.font.SysFont('Corbel',35)
 # this font
 text = smallfont.render('quit' , True , color)
   
-
-
-
-
-  
 while True:
       
     for ev in pygame.event.get():
@@ -76,4 +71,3 @@ while True:
       
     # updates the frames of the game
     pygame.display.update()
- 
