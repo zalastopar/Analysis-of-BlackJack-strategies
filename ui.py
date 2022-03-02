@@ -57,7 +57,8 @@ pygame.display.set_caption("BlackJack Table")
 # When menu player deletes 
 
 mygame = classes.Game(0, 4, 0, 10, {})
-myhand = classes.Hand(5, [], [])
+myhand = classes.Hand(5, [], [], 0)
+
  
 # Beginning Game Loop
 while True:
@@ -79,7 +80,6 @@ while True:
     elif position == 4:
         table_window.playing_game(myhand, mygame)
         #table_window.table(events, myhand, mygame)
-
 
     # clock.tick(60) means that for every second at most
     # 60 frames should be passed.

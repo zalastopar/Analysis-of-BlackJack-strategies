@@ -169,13 +169,12 @@ def table(events, hand, game):
 
     pygame.display.update()
 
-def deal_cards(position, sez, game):
-    sui, val = cards.random_card(game)
-    c = classes.Card(sui, val, position)
-    c.draw(gameDisplay)
-    #pygame.display.flip()
-    sez.append(c)
 
+def draw_hand(hand):
+    i = 0
+    for card in hand:
+
+        card.draw(gameDisplay)
 
 def playing_game(hand, game):
 
@@ -196,21 +195,39 @@ def playing_game(hand, game):
     gameDisplay.blit(bet, (width - 1498.5 + 15, height - 120 ))
     gameDisplay.blit(balance, (width - 1498.5 + 15, height - 120 - 40))
 
+    player_position = [500, 500]
+    dealer_position = [500, 70]
 
-    # Player gets first card
-    deal_cards([50, 50], hand.player_hand, game)
+    if hand.round == 0:
+        # Player gets first card
+        sui, val = cards.random_card(game)
+        c = classes.Card(sui, val, player_position)
+        hand.player_hand.append(c)
+        c.draw(gameDisplay)
 
-    sui, val = cards.random_card(game)
-    c = classes.Card(sui, val, [500, 500])
-    c.draw(gameDisplay)
-    gameDisplay
+        # Dealer gets one card
+        sui, val = cards.random_card(game)
+        c = classes.Card(sui, val, dealer_position)
+        hand.dealer_hand.append(c)
+        c.draw(gameDisplay)
 
-    # Dealer gets one card
+        # Player gets one more card
+        player_position = [player_position[0] + 150, 500]
+        sui, val = cards.random_card(game)
+        c = classes.Card(sui, val, player_position)
+        hand.player_hand.append(c)
+        c.draw(gameDisplay)
+        print(hand)
 
-    deal_cards([200, 200], hand.dealer_hand, game)
-    # Player gets one more card
-    deal_cards([50, 50], hand.player_hand, game)
-    pygame.display.flip()
+        pygame.display.update()
+        hand.round = 1
+    elif hand.round == 1:
+        draw_hand(hand.player_hand)
+        draw_hand(hand.dealer_hand)
+
+
+        
+        
     
 
 

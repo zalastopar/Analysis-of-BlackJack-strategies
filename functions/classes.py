@@ -122,10 +122,11 @@ class Card:
 
 
 class Hand:
-    def __init__(self, bet, hand, dealer_hand):
+    def __init__(self, bet, hand, dealer_hand, round):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
+        self.round = round
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
