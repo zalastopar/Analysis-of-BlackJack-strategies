@@ -7,6 +7,7 @@ import pygame_textinput
 
 # functions
 import functions.classes as classes
+import functions.cards as cards
 
 # Setting up color objects
 BLACK = (0, 0, 0)
@@ -32,7 +33,7 @@ pygame.display.set_caption("BlackJack Table")
 textinput = pygame_textinput.TextInputVisualizer()
 
 
-def input(events, position, player):
+def input(events, position, game, hand):
     
     #gameDisplay.fill(PINK)
 
@@ -52,15 +53,15 @@ def input(events, position, player):
         warning = text_font.render('Your amount must be a number!', TRUE, DARKTEAL)
         pygame.draw.rect(gameDisplay, TEAL, [position[0], position[1] + position[3], 10+ warning.get_width(), position[3]])
         
-        if player.balance < money:
+        if game.balance < money:
             # Write warning
             text_font = pygame.font.SysFont('Bungee', 30)
             warning = text_font.render("You can't bet more than you have!", TRUE, DARKTEAL)
             gameDisplay.blit(warning, (position[0], position[1] + position[3]))
-            player.bet = 0.0
+            hand.bet = 0.0
             
         else:
-            player.bet = money
+            hand.bet = money
 
     except:
         # Write warning
@@ -78,10 +79,7 @@ def input(events, position, player):
     gameDisplay.blit(textinput.surface, (position[0], position[1] + position[3]/3))
 
 
-
-
-# Create table
-def table(events, player, game):
+def simple_table(hand, game): 
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
 
@@ -89,25 +87,53 @@ def table(events, player, game):
     pygame.draw.rect(gameDisplay, TEAL, (width - 1498.5, height - 850, width-200-3, height-100-3))
     pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5-2, height - 850-2, width-200, height-100), 10, 3)
 
+    # Balance
+    text_font = pygame.font.SysFont('Bungee', 65)
+    bet = text_font.render('Bet amount: ' + str(hand.bet), TRUE, DARKTEAL)
+    text_font = pygame.font.SysFont('Bungee', 50)
+
+    balance = text_font.render('Balance: ' + str(game.balance), TRUE, DARKTEAL)
+
+    gameDisplay.blit(bet, (width - 1498.5 + 15, height - 120 ))
+    gameDisplay.blit(balance, (width - 1498.5 + 15, height - 120 - 40))
+
+
+    mouse = pygame.mouse.get_pos()
+    # Menu button
+    if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35:
+        pygame.draw.rect(gameDisplay, LIGHTPINK, ( width - 65, 5, 65, 30))
+    text_font = pygame.font.SysFont('Bungee', 30)
+    first = text_font.render('Menu', TRUE, DARKPINK)
+    gameDisplay.blit(first, (width - 60, 10))
+
+
+# Create table
+def table(events, hand, game):
+    
+    # Create empty window
+    pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
+
+    # Create table
+    pygame.draw.rect(gameDisplay, TEAL, (width - 1498.5, height - 850, width-200-3, height-100-3))
+    pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5-2, height - 850-2, width-200, height-100), 10, 3)
+
+
     # Place your bet
     text_font = pygame.font.SysFont('Bungee', 100)
     first = text_font.render('Place your bet:', TRUE, DARKTEAL)
     position = [width/2 + 100, height - 490, 100, 50]
-    input(events, position, player)
-
-
+    input(events, position, game, hand)
 
     gameDisplay.blit(first, (width/2 - 500, height - 500))
-
 
     mouse = pygame.mouse.get_pos()
 
     # Balance
     text_font = pygame.font.SysFont('Bungee', 65)
-    bet = text_font.render('Bet amount: ' + str(player.bet), TRUE, DARKTEAL)
+    bet = text_font.render('Bet amount: ' + str(hand.bet), TRUE, DARKTEAL)
     text_font = pygame.font.SysFont('Bungee', 50)
 
-    balance = text_font.render('Balance: ' + str(player.balance), TRUE, DARKTEAL)
+    balance = text_font.render('Balance: ' + str(game.balance), TRUE, DARKTEAL)
 
     gameDisplay.blit(bet, (width - 1498.5 + 15, height - 120 ))
     gameDisplay.blit(balance, (width - 1498.5 + 15, height - 120 - 40))
@@ -137,11 +163,57 @@ def table(events, player, game):
             #if the mouse is clicked on the button smth happens:
             if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
                 game.position = 1
-            elif width/2 + 100 <= mouse[0] <= width/2 + 100 + 100 and height - 400 <= mouse[1] <= height - 400 + 50 and player.bet > 0:
+            elif width/2 + 100 <= mouse[0] <= width/2 + 100 + 100 and height - 400 <= mouse[1] <= height - 400 + 50 and hand.bet > 0:
                 game.position = 5
     
 
     pygame.display.update()
+
+def deal_cards(position, sez, game):
+    sui, val = cards.random_card(game)
+    c = classes.Card(sui, val, position)
+    c.draw(gameDisplay)
+    #pygame.display.flip()
+    sez.append(c)
+
+
+def playing_game(hand, game):
+
+    # Create empty window
+    pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
+
+    # Create table
+    pygame.draw.rect(gameDisplay, TEAL, (width - 1498.5, height - 850, width-200-3, height-100-3))
+    pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5-2, height - 850-2, width-200, height-100), 10, 3)
+
+    # Balance
+    text_font = pygame.font.SysFont('Bungee', 65)
+    bet = text_font.render('Bet amount: ' + str(hand.bet), TRUE, DARKTEAL)
+    text_font = pygame.font.SysFont('Bungee', 50)
+
+    balance = text_font.render('Balance: ' + str(game.balance), TRUE, DARKTEAL)
+
+    gameDisplay.blit(bet, (width - 1498.5 + 15, height - 120 ))
+    gameDisplay.blit(balance, (width - 1498.5 + 15, height - 120 - 40))
+
+
+    # Player gets first card
+    deal_cards([50, 50], hand.player_hand, game)
+
+    sui, val = cards.random_card(game)
+    c = classes.Card(sui, val, [500, 500])
+    c.draw(gameDisplay)
+    gameDisplay
+
+    # Dealer gets one card
+
+    deal_cards([200, 200], hand.dealer_hand, game)
+    # Player gets one more card
+    deal_cards([50, 50], hand.player_hand, game)
+    pygame.display.flip()
+    
+
+
 
 
 # dodaj gumbe glede na karte

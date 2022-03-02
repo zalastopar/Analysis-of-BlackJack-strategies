@@ -56,9 +56,8 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-moja_igra = classes.Game(0, 4, 0)
-igralec = classes.Player(2, 0)
-print(moja_igra.simulation)
+mygame = classes.Game(0, 4, 0, 10, {})
+myhand = classes.Hand(5, [], [])
  
 # Beginning Game Loop
 while True:
@@ -69,15 +68,17 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    position = moja_igra.position
+    position = mygame.position
     if position == 1:
-        menu_window.menu(events, moja_igra) 
+        table_window.simple_table(myhand, mygame)
+        #menu_window.menu(events, mygame) 
     elif position == 2:
-        prep_window.bet_window(events, igralec, moja_igra)
+        prep_window.bet_window(events, mygame)
     elif position == 3:
-        prep_window.bet_window_sim(events, igralec, moja_igra)
+        prep_window.bet_window_sim(events, mygame)
     elif position == 4:
-        table_window.table(events, igralec, moja_igra)
+        table_window.playing_game(myhand, mygame)
+        #table_window.table(events, myhand, mygame)
 
 
     # clock.tick(60) means that for every second at most

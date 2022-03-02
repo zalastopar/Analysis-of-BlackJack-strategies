@@ -4,34 +4,27 @@ import pygame
 from pygame.locals import *
 
 # Setting up color objects
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (60,179,113)
-PINK = (216, 0, 115)
-TEAL = (0, 128, 128)
-DARKPINK = (102, 0, 51)
-DARKTEAL = (0,73,83)
-LIGHTTEAL = (95,158,160)
-LIGHTPINK = (250, 12, 139)
-
 OFFWHITE = (241, 235, 219)
 WRITING = (206, 183, 127)
 
 
 # game
 class Game:
-    def __init__(self, simulation, position, help):
+    def __init__(self, simulation, position, help, balance, deck):
         self.simulation = simulation # save as int how many 0 to inf
         self.position = position # which window is open
-        self.help = help # 0 if without help, 1 if with help
+        self.help = help # TRUE or FALSE ################################################# popravi v window
+        self.balance = balance
+        self.deck = deck # dict of cards that already happened - currently we play with 6 decks
 
+    '''
+    def __repr__(self):
+        return 'Simulation: ' + str(self.simulation) + '\nHelp: ' + str(self.help) + '\nBalace: ' + str(self.balance)
 
-# player
-class Player:
-    def __init__(self, balance, bet, hand):
-        self.balance = balance  # float
-        self.bet = bet  # float
-        self.hand = hand # sez with cards in hand like ['H3', 'S14']
+    def __init__(self):
+        return 'Simulation: ' + str(self.simulation) + '\nHelp: ' + str(self.help) + '\nBalace: ' + str(self.balance)
+    '''
+        
 
 # card
 class Card:
@@ -40,10 +33,17 @@ class Card:
         self.value = value # number of the card
         self.position = position #position of the card on the table (x, y)
 
+    def __repr__(self):
+        return self.suit + str(self.value)
 
+    def __str__(self):
+        return self.suit + str(self.value)
 
-
-        
+    def real_value(self):
+        if self.value in [12, 13, 14]:
+            return 10
+        else:
+            return self.value
 
     def draw(self, screen):
         # Blank card
@@ -118,4 +118,33 @@ class Card:
         # self.position[1] - (self.position[1] + 320/2 - h/2)/2 - height/2
 
         '''
+
+
+
+class Hand:
+    def __init__(self, bet, hand, dealer_hand):
+        self.bet = bet # float
+        self.player_hand = hand # sez with cards
+        self.dealer_hand = dealer_hand # sez with player cards
+
+    def __repr__(self):
+        return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
+
+    def __str__(self) -> str:
+        return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
+
+    def split(self):
+        s = False
+        hand = self.player_hand
+        if len(hand) == 2 and hand[0].real_value() == hand[1].real_value():
+            s = True
+        return s
+
+    def double(self):
+        d = False
+        hand = self.player_hand
+        if len(hand) == 2:
+            d = True
+        return d
+
     

@@ -98,7 +98,7 @@ def input(events, position, typeof):
 
 
 
-def bet_window(events, player, game):
+def bet_window(events, game):
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
     
@@ -109,7 +109,7 @@ def bet_window(events, player, game):
     gameDisplay.blit(first, (width - 1400, height-700))
     position = [width - 600, height-695, 100, 50]
     balance = input(events, position, 0.0)
-    player.balance = balance
+    game.balance = balance
 
     mouse = pygame.mouse.get_pos()
     if game.simulation >0: # Button Next
@@ -168,9 +168,9 @@ def bet_window(events, player, game):
             #if the mouse is clicked on the button smth happens:
             if width - 955 <= mouse[0] <= width - 955 + 200 and height - 200 <= mouse[1] <= height - 100 + 100: 
                 game.position = 1 # go back (to Menu)
-            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100 and game.simulation >0 and player.balance >0:
+            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100 and game.simulation >0 and game.balance >0:
                 game.position = 3 # select num of simulations
-            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100 and game.simulation == 0 and player.balance >0:
+            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100 and game.simulation == 0 and game.balance >0:
                 game.position = 4 # start playing
                 
 
@@ -178,13 +178,13 @@ def bet_window(events, player, game):
 
 
 
-def bet_window_sim(events, player, game):
+def bet_window_sim(events, game):
     # Money placed
     pygame.draw.rect(gameDisplay, PINK, (width - 600, height-700, 100, 50))
 
     text_font = pygame.font.SysFont('Bungee', 100)
     first = text_font.render('Deposit your balance: ', TRUE, DARKPINK)
-    second = text_font.render(str(player.balance), TRUE, DARKPINK)
+    second = text_font.render(str(game.balance), TRUE, DARKPINK)
     gameDisplay.blit(first, (width - 1400, height-700))
     gameDisplay.blit(second, (width - 600, height-700))
 
