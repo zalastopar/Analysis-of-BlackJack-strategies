@@ -11,5 +11,10 @@ my programme is written in python, user interface is created with *pygame*
 * Counting Cards
 * Oscar's Grind
 * Winning streak strategies
+* Losing streak strategies
 * Martingale system
-[more about strategies here](https://upswingpoker.com/the-best-blackjack-betting-strategy-basic-explanation/)
+* Steady betting strategy
+
+
+More about above strategies [here](https://upswingpoker.com/the-best-blackjack-betting-strategy-basic-explanation/)
+and [here](https://www.mypokercoaching.com/blackjack-betting-strategy/).
