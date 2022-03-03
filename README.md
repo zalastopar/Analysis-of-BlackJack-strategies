@@ -1,6 +1,6 @@
 # Analysis of BlackJack strategies
 
-my programme is written in python, user interface is created with *pygame*
+my programme is written in python, user interface is created with [*pygame*](https://github.com/pygame/pygame)
 
 ### Plan for my project:
 * Create BlackJack game
@@ -18,3 +18,4 @@ my programme is written in python, user interface is created with *pygame*
 
 More about above strategies [here](https://upswingpoker.com/the-best-blackjack-betting-strategy-basic-explanation/)
 and [here](https://www.mypokercoaching.com/blackjack-betting-strategy/).
+
