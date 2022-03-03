@@ -233,10 +233,21 @@ def playing_game(hand, game):
 
         # Check which buttons are necessary
 
-        # Hit
-        # Check
-        # Split
-        # Double
+        # Hit and stand
+        if hand.hit:
+            # hit and stand button
+            pass
+        elif hand.split():
+            # split
+            pass
+        elif hand.double():
+            # double
+            pass
+        elif hand.insurance():
+            # insuraance
+            pass
+        
+
         # Insurance
 
 

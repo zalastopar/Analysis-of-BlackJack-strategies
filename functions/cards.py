@@ -1,5 +1,4 @@
-# deal cards
-# compare hand to dealer
+
 
 import functions.classes as classes
 import random
@@ -8,32 +7,7 @@ import random
 a = [classes.Card('S', 6, [0,0]), classes.Card('S', 13, [0,0]), classes.Card('S', 11, [0,0])]
 
 
-def hand_value(sez):
-    '''The function takes a list of cards and calculates its value'''
-    hand = []
-    # remove suit and only look at value
-    for card in sez:
-        val = card.real_value()
-        hand.append(val)
 
-    hand_value = 0
-    soft = False
-
-    if 11 in hand: # 11 ali 1??????????? zapis
-        '''Ace can count as 11 or as 1. There can be only 1 ace in hand that counts as 11
-        otherwise hand value would be > 22. So max 1 ace counts as 11 and other as 1.'''
-        ace = hand.count(11)
-        hand = [value for value in hand if value != 11]
-        val = sum(hand) 
-        val = val + ace # firstly count all aces as one
-        if val + 10 <= 21:
-            val = val + 10 # if it is possible count one ace as 11
-            soft = True
-        hand_value = val
-    else:
-        hand_value = sum(hand)
-
-    return(hand_value, soft)
 
 
 def random_card(game):
