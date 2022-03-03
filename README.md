@@ -1,6 +1,6 @@
 # Analysis of BlackJack strategies
 
-my programme is written in python, user interface is created with [*pygame*](https://github.com/pygame/pygame)
+my program is written in python, user interface is created with [*pygame*](https://github.com/pygame/pygame)
 
 ### Plan for my project:
 * Make BlackJack game
