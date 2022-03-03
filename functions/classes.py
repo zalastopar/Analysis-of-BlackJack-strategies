@@ -76,7 +76,6 @@ class Card:
         screen.blit(value, (self.position[0] - w/2 + 200/2, self.position[1] + 320/2 - h/2))
 
 
-
         # Write suits on cards
         s = self.suit
         if s == 'C':
@@ -119,6 +118,24 @@ class Card:
 
         '''
 
+    def card_back(self, screen):
+        # Blank card
+        pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
+        pygame.draw.rect(screen, WRITING, (self.position[0], self.position[1], 200, 320), 5, 6)
+
+
+        # Add Kitten
+        path = os.path.join("suits/2.png")
+        image = pygame.image.load(path)
+
+        width, height = image.get_width(), image.get_height()
+
+        image = pygame.transform.scale(image, (width*0.35, height*0.35))
+        width, height = image.get_width(), image.get_height()
+        screen.blit(image, (self.position[0] + (200-width)/2, self.position[1] + (320 - height)/2))
+        #screen.blit(image, (self.position[0] - width/2 + 200/2, self.position[1] + 320/2 + h/2 ))
+
+        # self.position[1] - (self.position[1] + 320/2 - h/2)/2 - height/2
 
 
 class Hand:
@@ -126,7 +143,7 @@ class Hand:
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
-        self.round = round
+        self.round = round # which round as in: 1-first deal 2-add card 3-deal dealers cards
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -147,5 +164,10 @@ class Hand:
         if len(hand) == 2:
             d = True
         return d
+    
+    def insurance(self):
+        hand = self.dealer_hand[0]
+        if 11 == hand.value:
+            return True
 
     

@@ -212,18 +212,33 @@ def playing_game(hand, game):
         c.draw(gameDisplay)
 
         # Player gets one more card
-        player_position = [player_position[0] + 150, 500]
+        player_position = [player_position[0] + 150, player_position[1]]
         sui, val = cards.random_card(game)
         c = classes.Card(sui, val, player_position)
         hand.player_hand.append(c)
         c.draw(gameDisplay)
         print(hand)
 
+        # Dealers card
+        d_card = classes.Card('S', 12, [dealer_position[0] + 150, dealer_position[1]])
+        d_card.card_back(gameDisplay)
+
         pygame.display.update()
         hand.round = 1
     elif hand.round == 1:
         draw_hand(hand.player_hand)
         draw_hand(hand.dealer_hand)
+        d_card = classes.Card('S', 12, [dealer_position[0] + 150, dealer_position[1]])
+        d_card.card_back(gameDisplay)
+
+        # Check which buttons are necessary
+
+        # Hit
+        # Check
+        # Split
+        # Double
+        # Insurance
+
 
 
         
