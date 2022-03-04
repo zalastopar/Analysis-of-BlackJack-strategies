@@ -1,4 +1,3 @@
-
 from pickle import TRUE
 import pygame
 from pygame.locals import *
@@ -15,6 +14,7 @@ import windows.table_window as table_window
 import windows.prep_window as prep_window
 import windows.end_window as end_window
 import windows.proba as proba
+import windows.table as table_w
 
 # functions
 from functions.classes import *
@@ -64,13 +64,47 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = Game(0, 11, 0, 100, {})
+mygame = Game(0, 1, 0, 100, {})
 myhand = Hand(0, [], [], False, False, False, 0)
-view = proba.pre_ending(myhand, mygame)
+
  
+
+def view(position):
+    if position == 1:
+        menu_window.menu()
+    elif position == 2:
+        prep_window.bet_window(mygame)
+
+    elif position == 3:   
+        pass                               ############ simulation - bomo naredili pol
+        #prep_window.bet_window_sim(events, mygame)
+
+    elif position == 4:
+        table_w.place_bet(myhand, mygame)
+    
+    elif position == 5:
+        table_w.dealing(myhand, mygame)
+    elif position == 6:
+        table_w.adding_buttons(myhand, mygame)
+    elif position == 8:
+        table_w.add_dealer_cards(myhand, mygame)
+    elif position == 9:
+        pass
+    elif position == 10:
+        table_w.winner(myhand, mygame)
+    '''
+    elif position == 11:
+        end_window.pre_ending(myhand, mygame)
+    elif position == 12:
+        end_window.cash_out(mygame)
+    elif position == 13:
+        end_window.finnish(mygame)
+    '''
+
+
 # Beginning Game Loop
 while True:
-    view
+    view(mygame.position)
     pygame.display.update()
     events = pygame.event.get()
     position = mygame.position
@@ -80,55 +114,25 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if position == 11:
+            if position == 1:
+                menu_window.menu_buttons(mygame, mouse)
+            elif position == 2:
+                prep_window.prep_buttons(mygame, mouse)
+                myhand = Hand(0, [], [], False, False, False, 0)
+            elif position == 3:
+                pass
+            elif position == 4:
+                table_w.place_bet_buttons(mygame, mouse, myhand)
+            elif position == 6:
+                table_w.dealing_buttons(mygame, mouse, myhand)
+            elif position == 10:
+                table_w.winner_buttons(mygame, mouse, myhand)
+
+            
+            '''if position == 11:
                 view = proba.pre_ending(myhand, mygame)
             elif position == 12:
                 view = proba.cash_out(event, mygame, mouse)
             elif position == 13:
                 view = proba.finnish(event, mygame, mouse)
-'''
-    if position == 1:
-        menu_window.menu(events, mygame) 
-    elif position == 2:
-        prep_window.bet_window(events, mygame)
-    elif position == 3:
-        prep_window.bet_window_sim(events, mygame)
-    elif position == 4:
-        table_window.table(events, myhand, mygame)
-    elif position == 5:
-        table_window.first_round(myhand, mygame)
-    elif position == 6:
-        table_window.adding_buttons(events, myhand, mygame,)
-    elif position == 7:
-        table_window.add_player_cards(myhand, mygame)
-    elif position == 8:
-        table_window.add_dealer_cards(myhand, mygame)
-    elif position == 9:
-        pass
-    elif position == 10:
-        table_window.winner(events, myhand, mygame)
-    elif position == 11:
-        end_window.pre_ending(myhand, mygame)
-    elif position == 12:
-        end_window.cash_out(events, mygame)
-    elif position == 13:
-        end_window.finnish(events, mygame)
-
-
-
-    # clock.tick(60) means that for every second at most
-    # 60 frames should be passed.
-    clock.tick(60)
-
-'''
-
-    
-
-
-
-
-
-
-
-
-
+            '''

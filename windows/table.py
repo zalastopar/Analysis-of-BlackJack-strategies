@@ -29,56 +29,6 @@ pygame.display.set_caption("BlackJack Table")
 
 
 
-# Preparations for textbox
-textinput = pygame_textinput.TextInputVisualizer()
-
-'''
-def input(events, position, game, hand):
-    
-    #gameDisplay.fill(PINK)
-
-    txt = textinput.value
-
-    # Make text look pretty
-    textinput.font_color = WHITE
-    textinput.cursor_color = DARKTEAL
-    
-    # Only floats allowed lower than your deposit amount and save value 
-    money = 0
-
-    try:
-        money = float(txt)
-        # Delete warning
-        text_font = pygame.font.SysFont('Bungee', 30)
-        warning = text_font.render('Your amount must be a number!', TRUE, DARKTEAL)
-        pygame.draw.rect(gameDisplay, TEAL, [position[0], position[1] + position[3], 10 + warning.get_width(), position[3]])
-        
-        if game.balance < money:
-            # Write warning
-            text_font = pygame.font.SysFont('Bungee', 30)
-            warning = text_font.render("You can't bet more than you have!", TRUE, DARKTEAL)
-            gameDisplay.blit(warning, (position[0], position[1] + position[3]))
-            hand.bet = 0.0
-            
-        else:
-            hand.bet = money
-
-    except:
-        # Write warning
-        text_font = pygame.font.SysFont('Bungee', 30)
-        warning = text_font.render('Your amount must be a number!', TRUE, DARKTEAL)
-        gameDisplay.blit(warning, (position[0], position[1] + position[3]))
-
-        # Set input to ''
-        textinput.value = ''
-
-
-    # Feed it with events every frame
-    textinput.update(events)
-    # Blit its surface onto the screen
-    gameDisplay.blit(textinput.surface, (position[0], position[1] + position[3]/3))
-'''
-
 def empty_table(hand, game):
     'Function creates an empty table. Later different figures will be added to it.'
 
@@ -105,7 +55,7 @@ def empty_table(hand, game):
 
 
 # Create table
-def table(events, hand, game): # game.position = 4
+def place_bet(hand, game): # game.position = 4
     'First table screen. Player places bet.'
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
@@ -118,8 +68,10 @@ def table(events, hand, game): # game.position = 4
     # Place your bet
     text_font = pygame.font.SysFont('Bungee', 100)
     first = text_font.render('Place your bet:', TRUE, DARKTEAL)
-    position = [width/2 + 100, height - 490, 100, 50]
+    ##################################position = [width/2 + 100, height - 490, 100, 50]
     #################################input(events, position, game, hand) ############################# bet
+
+    # Kok je nov balance in kok je bet ########################################################################################
 
     gameDisplay.blit(first, (width/2 - 500, height - 500))
 
@@ -144,27 +96,77 @@ def table(events, hand, game): # game.position = 4
     menu = classes.Button([width - 65, 5], 'Menu', LIGHTPINK, PINK, DARKPINK, [65, 30], False)
     menu.create(gameDisplay, 30)
 
-
-    # Clicking buttons
-    mouse = pygame.mouse.get_pos()
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
-
-            #if the mouse is clicked on the button smth happens:
-            if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
-                game.position = 1
-            elif width/2 + 100 <= mouse[0] <= width/2 + 100 + 300 and height - 400 <= mouse[1] <= height - 400 + 80 and hand.bet > 0: # bet
-                game.position = 5
-    
-
     pygame.display.update()
 
+def place_bet_buttons(game, mouse, hand):
+
+    if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
+        game.position = 1
+    elif width/2 + 100 <= mouse[0] <= width/2 + 100 + 300 and height - 400 <= mouse[1] <= height - 400 + 80: ####### and hand.bet > 0: # bet
+        # Add random cards
+
+        # Player gets 2 cards
+        sui, val = cards.random_card(game)
+        c = classes.Card(sui, val, game.player_position)
+        hand.player_hand.append(c)
+        sui, val = cards.random_card(game)
+        position = game.player_position
+        c = classes.Card(sui, val, [position[0] + 150, position[1]])
+        hand.player_hand.append(c)
+        # Dealer gets 1 card
+        sui, val = cards.random_card(game)
+        c = classes.Card(sui, val, game.dealer_position)
+        hand.dealer_hand.append(c)
+        c.draw(gameDisplay)
+
+        game.position = 5
+    
 
 def draw_hand(hand):
     i = 0
     for card in hand:
         card.draw(gameDisplay)
 
+
+def dealing(hand, game): # game.position = 5
+    'After the bet is placed dealer deals first round of cards. Player gets 2 and dealer gets only 1 face up.'
+
+    empty_table(hand, game)
+
+    # Player gets first card
+    card = hand.player_hand[0]
+    card.draw(gameDisplay)
+    
+    pygame.display.flip()
+    pygame.event.pump()
+    pygame.time.delay(500)
+
+    # Dealer gets one card
+    card = hand.dealer_hand[0]
+    card.draw(gameDisplay)
+
+    pygame.display.flip()
+    pygame.event.pump()
+    pygame.time.delay(500)
+
+    # Player gets one more card
+    card = hand.player_hand[1]
+    card.draw(gameDisplay)
+
+    pygame.display.flip()
+    pygame.event.pump()
+    pygame.time.delay(500)
+
+    d_card = classes.Card('S', 12, [game.dealer_position[0] + 150, game.dealer_position[1]])
+    d_card.card_back(gameDisplay)
+
+    game.position = 6
+
+    
+
+
+
+'''
 def first_round(hand, game):  # game.position = 5
     'After the bet is placed dealer deals first round of cards. Player gets 2 and dealer gets only 1 face up.'
     game.balance = game.balance - hand.bet
@@ -208,8 +210,9 @@ def first_round(hand, game):  # game.position = 5
 
     # Go to window with buttons
     game.position = 6
+'''
 
-def adding_buttons(events, hand, game): # game.position = 6
+def adding_buttons(hand, game): # game.position = 6
     'Function draws hands and adds action buttons.'
 
     empty_table(hand, game)
@@ -228,7 +231,6 @@ def adding_buttons(events, hand, game): # game.position = 6
         game.position = 10
     elif val == 21:
         game.positoin = 8
-    
     
     # Check which buttons are necessary
     # Hit and stand
@@ -255,45 +257,42 @@ def adding_buttons(events, hand, game): # game.position = 6
     menu = classes.Button([width - 65, 5], 'Menu', LIGHTPINK, PINK, DARKPINK, [65, 30], False)
     menu.create(gameDisplay, 30)
 
-    # Add action to buttons
-    mouse = pygame.mouse.get_pos()
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if width - 955 <= mouse[0] <= width - 955 + 140 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.insurance(): #insurance
-                hand.take_insurance = True
 
-            #if the mouse is clicked on the button smth happens:
-            if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
-                game.position = 1
-            elif width - 955 <= mouse[0] <= width - 955 + 140 and height - 70 <= mouse[1] <= height - 70 + 60: # Hit
-                game.position = 7
-            elif width - 955 + 140 + 10 <= mouse[0] <= width - 955 + 140 + 140 + 10 and height - 70 <= mouse[1] <= height - 70 + 60: # Stand
-                game.position = 8
-            elif width - 955 + 140 + 10 + 140 + 10 <= mouse[0] <= width - 955 + 140 + 10 + 140 + 10 + 150 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.double(): # Double
-                hand.take_double = True
-                game.position = 7
-            elif width - 955 - 140 - 10 <= mouse[0] <= width - 955 - 140 - 10 + 140 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.split(): # Split
-                hand.take_split = True
-                game.position = 9
+def dealing_buttons(game, mouse, hand):
+    if width - 955 <= mouse[0] <= width - 955 + 140 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.insurance(): #insurance
+        hand.take_insurance = True
 
-def add_player_cards(hand, game): # game.position = 7
-    position = game.player_position
-    num = len(hand.player_hand)
-    if hand.take_double: # only one card is added
-        sui, val = cards.random_card(game)
-        c = classes.Card(sui, val, [position[0] + 150*2, position[1]])
-        hand.player_hand.append(c)
-        hand.take_double = False
-        game.position = 8
-    else: 
+    #if the mouse is clicked on the button smth happens:
+    if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
+        game.position = 1
+    elif width - 955 <= mouse[0] <= width - 955 + 140 and height - 70 <= mouse[1] <= height - 70 + 60: # Hit
+        position = game.player_position
+        num = len(hand.player_hand)
         sui, val = cards.random_card(game)
         c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
         hand.player_hand.append(c)
+
+        pygame.display.flip()
+        pygame.event.pump()
+        pygame.time.delay(200)
+
         game.position = 6
 
-    pygame.display.flip()
-    pygame.event.pump()
-    pygame.time.delay(200)
+    elif width - 955 + 140 + 10 <= mouse[0] <= width - 955 + 140 + 140 + 10 and height - 70 <= mouse[1] <= height - 70 + 60: # Stand
+        game.position = 8
+    elif width - 955 + 140 + 10 + 140 + 10 <= mouse[0] <= width - 955 + 140 + 10 + 140 + 10 + 150 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.double(): # Double
+        sui, val = cards.random_card(game)
+        c = classes.Card(sui, val, [game.player_position[0] + 150*2, game.player_position[1]])
+        hand.player_hand.append(c)
+        pygame.display.flip()
+        pygame.event.pump()
+        pygame.time.delay(200)
+        game.position = 8
+    elif width - 955 - 140 - 10 <= mouse[0] <= width - 955 - 140 - 10 + 140 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.split(): # Split
+        hand.take_split = True
+        game.position = 9
+
+
 
 def add_dealer_cards(hand, game): # game.position = 8
 
@@ -303,13 +302,13 @@ def add_dealer_cards(hand, game): # game.position = 8
 
     position = game.dealer_position
     val, k = hand.hand_value('D')
-
-    while val <= 17:
+    num = len(hand.dealer_hand)
+    if val > 17:
+        game.position = 10
+    else:
         if hand.BlackJack('D'):
-            break
-
-        val, k = hand.hand_value('D')
-        num = len(hand.dealer_hand)
+            game.position = 10
+        
         if val == 17:
             if k:
                 sui, val = cards.random_card(game)
@@ -322,7 +321,7 @@ def add_dealer_cards(hand, game): # game.position = 8
                 pygame.event.pump()
                 pygame.time.delay(500)
             else:
-                break
+                game.position = 10
 
         else:
             sui, val = cards.random_card(game)
@@ -340,7 +339,7 @@ def add_dealer_cards(hand, game): # game.position = 8
 def split(): #game.position = 9
     pass
 
-def winner(events, hand, game): # game.position = 10
+def winner(hand, game): # game.position = 10
 
     empty_table(hand, game)  
     draw_hand(hand.player_hand)
@@ -350,7 +349,6 @@ def winner(events, hand, game): # game.position = 10
         d_card.card_back(gameDisplay)
     else:
         draw_hand(hand.dealer_hand)
-
 
     money = hand.who_wins()
     hand.winnings = money
@@ -365,34 +363,15 @@ def winner(events, hand, game): # game.position = 10
         first = text_font.render('YOU WON: ' + str(money*hand.bet), TRUE, DARKTEAL)
         gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
 
-
     # Next button
     next = classes.Button([width/2 - 140/2, height - 70], 'Next', LIGHTPINK, PINK, DARKTEAL, [140, 60], True)
     next.create(gameDisplay, 60)
 
+def winner_buttons(game, mouse, hand):
 
-    mouse = pygame.mouse.get_pos()
-    # Clicking buttons
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
-
-            #if the mouse is clicked on the button smth happens:
-            if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
-                game.position = 1
-            elif width/2 - 140/2 <= mouse[0] <= width/2 - 140/2 + 140 and height - 70 <= mouse[1] <= height - 70 + 60: # Hit
-                game.position = 11
-
-    pygame.display.update()
-
-
-
-
-
- 
-
-
-
-        
-
-
+    if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
+        game.position = 1
+    elif width/2 - 140/2 <= mouse[0] <= width/2 - 140/2 + 140 and height - 70 <= mouse[1] <= height - 70 + 60: # 
+        game.balance = game.balance + hand.winnings*hand.bet
+        game.position = 11
 

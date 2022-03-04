@@ -11,7 +11,6 @@ a = [classes.Card('S', 6, [0,0]), classes.Card('S', 13, [0,0]), classes.Card('S'
 
 
 def random_card(game):
-    print(game.deck)
     suits = ['S', 'H', 'D', 'C']
     values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     # get random values

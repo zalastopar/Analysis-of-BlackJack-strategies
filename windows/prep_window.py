@@ -5,6 +5,7 @@ import pygame_textinput
 import pygame_textinput
 import pygame.locals as pl
 
+import functions.classes as classes
 
 pygame.init()
 
@@ -31,12 +32,10 @@ pygame.display.set_caption("BlackJack Table")
 # Preparations for textbox
 textinput = pygame_textinput.TextInputVisualizer()
 
-
+'''
 def input(events, position, typeof):
 
-    base_font = pygame.font.Font(None, 30)
-    
-    #gameDisplay.fill(PINK)
+    base_font = pygame.font.Font(None, 40)
 
     txt = textinput.value
 
@@ -94,11 +93,11 @@ def input(events, position, typeof):
 
 
     return(money)
+'''
 
 
 
-
-def bet_window(events, game):
+def bet_window(game): # game.position = 2
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
     
@@ -108,79 +107,43 @@ def bet_window(events, game):
     first = text_font.render('Deposit your balance: ', TRUE, DARKPINK)
     gameDisplay.blit(first, (width - 1400, height-700))
     position = [width - 600, height-695, 100, 50]
-    balance = input(events, position, 0.0)
+    ######################################balance = input(events, position, 0.0)
+    balance = 5 ##########################################
     game.balance = balance
 
     mouse = pygame.mouse.get_pos()
     if game.simulation >0: # Button Next
-        pygame.draw.rect(gameDisplay, TEAL, (width - 955, height - 200, 200, 100))
-        pygame.draw.rect(gameDisplay, TEAL, (width - 955 + 200 + 20, height - 200, 200, 100))
-        
+        b = classes.Button([width - 955, height - 200], 'Back', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+        b.create(gameDisplay, 70)
 
-        if  width - 955 <= mouse[0] <= width - 955 + 200 and height - 200 <= mouse[1] <= height - 100 + 100:
-            pygame.draw.rect(gameDisplay, LIGHTTEAL, (width - 955, height - 200, 200, 100))
-        elif  width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100:
-            pygame.draw.rect(gameDisplay, LIGHTTEAL, (width - 955 + 200 + 20, height - 200, 200, 100))
+        b = classes.Button([width - 955 + 300 + 40, height - 200], 'Next', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+        b.create(gameDisplay, 70)
 
-
-        pygame.draw.rect(gameDisplay, DARKTEAL, (width - 955 + 200 + 20, height - 200, 200, 100), 2)
-        pygame.draw.rect(gameDisplay, DARKTEAL, (width - 955, height - 200, 200, 100), 2)
-
-        text_font = pygame.font.SysFont('Bungee', 80)
-        first = text_font.render('Back', TRUE, DARKTEAL)
-        second = text_font.render('Next', TRUE, DARKTEAL)
-        gameDisplay.blit(first, (width - 955 + 35, height - 200 + 25))
-        gameDisplay.blit(second, (width - 955 + 200 + 20 + 45, height - 200 + 25))
 
     else: #  Button Play
-        pygame.draw.rect(gameDisplay, TEAL, (width - 955, height - 200, 200, 100))
-        pygame.draw.rect(gameDisplay, TEAL, (width - 955 + 200 + 20, height - 200, 200, 100))
-        
+        b = classes.Button([width - 955, height - 200], 'Back', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+        b.create(gameDisplay, 70)
 
-        if  width - 955 <= mouse[0] <= width - 955 + 200 and height - 200 <= mouse[1] <= height - 100 + 100:
-            pygame.draw.rect(gameDisplay, LIGHTTEAL, (width - 955, height - 200, 200, 100))
-        elif  width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100:
-            pygame.draw.rect(gameDisplay, LIGHTTEAL, (width - 955 + 200 + 20, height - 200, 200, 100))
-
-
-        pygame.draw.rect(gameDisplay, DARKTEAL, (width - 955 + 200 + 20, height - 200, 200, 100), 2)
-        pygame.draw.rect(gameDisplay, DARKTEAL, (width - 955, height - 200, 200, 100), 2)
-
-        text_font = pygame.font.SysFont('Bungee', 80)
-        first = text_font.render('Back', TRUE, DARKTEAL)
-        second = text_font.render('Play', TRUE, DARKTEAL)
-        gameDisplay.blit(first, (width - 955 + 35, height - 200 + 25))
-        gameDisplay.blit(second, (width - 955 + 200 + 20 + 45, height - 200 + 25))
-
-    '''
-    # Menu button
-    if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35:
-        pygame.draw.rect(gameDisplay, LIGHTPINK, ( width - 65, 5, 65, 30))
-    text_font = pygame.font.SysFont('Bungee', 30)
-    first = text_font.render('Menu', TRUE, DARKPINK)
-    gameDisplay.blit(first, (width - 60, 10))
-    '''
-
-    # Clicking buttons
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
-
-            #if the mouse is clicked on the button smth happens:
-            if width - 955 <= mouse[0] <= width - 955 + 200 and height - 200 <= mouse[1] <= height - 100 + 100: 
-                game.position = 1 # go back (to Menu)
-            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100 and game.simulation >0 and game.balance >0:
-                game.position = 3 # select num of simulations
-            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100 and game.simulation == 0 and game.balance >0:
-                game.position = 4 # start playing
-                
-
+        b = classes.Button([width - 955 + 300 + 40, height - 200], 'Play', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+        b.create(gameDisplay, 70)
     pygame.display.update()
 
+def prep_buttons(game, mouse):
 
+    if width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # go back (to Menu)
+        game.position = 1 
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # and game.simulation >0 and game.balance >0: # select num of simulations
+        game.position = 4 ############# 3 
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # and game.simulation == 0 and game.balance >0: # start playing
+        game.position = 4 
+                
 
-def bet_window_sim(events, game):
+    
+
+'''
+def bet_window_sim(events, game): # game.position = 3
     # Money placed
-    pygame.draw.rect(gameDisplay, PINK, (width - 600, height-700, 100, 50))
+    pygame.draw.rect(gameDisplay, PINK, (width - 600, height-700, 100, 100))
 
     text_font = pygame.font.SysFont('Bungee', 100)
     first = text_font.render('Deposit your balance: ', TRUE, DARKPINK)
@@ -193,7 +156,7 @@ def bet_window_sim(events, game):
     first = text_font.render('Insert number of simulations: ', TRUE, DARKPINK)
     gameDisplay.blit(first, (width - 1400, height-500))
     position = [width - 750, height-500, 100, 50]
-    game.simulation = input(events, position, 0)
+    ######################################game.simulation = input(events, position, 0)
 
     # Select playing strategy
     text_font = pygame.font.SysFont('Bungee', 60)
@@ -201,42 +164,30 @@ def bet_window_sim(events, game):
     gameDisplay.blit(first, (width - 1400, height-400))
 
     # Menu button
-    mouse = pygame.mouse.get_pos()
-    if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35:
-        pygame.draw.rect(gameDisplay, LIGHTPINK, ( width - 65, 5, 65, 30))
-    text_font = pygame.font.SysFont('Bungee', 30)
-    first = text_font.render('Menu', TRUE, DARKPINK)
-    gameDisplay.blit(first, (width - 60, 10))
+    menu = classes.Button([width - 65, 5], 'Menu', LIGHTPINK, PINK, DARKPINK, [65, 30], False)
+    menu.create(gameDisplay, 30)
 
     # Back and Play button
-    pygame.draw.rect(gameDisplay, TEAL, (width - 955, height - 200, 200, 100))
-    pygame.draw.rect(gameDisplay, TEAL, (width - 955 + 200 + 20, height - 200, 200, 100))
-    
-    if  width - 955 <= mouse[0] <= width - 955 + 200 and height - 200 <= mouse[1] <= height - 100 + 100:
-        pygame.draw.rect(gameDisplay, LIGHTTEAL, (width - 955, height - 200, 200, 100))
-    elif  width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100:
-        pygame.draw.rect(gameDisplay, LIGHTTEAL, (width - 955 + 200 + 20, height - 200, 200, 100))
+    b = classes.Button([width - 955, height - 200], 'Back', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+    b.create(gameDisplay, 70)
 
-    pygame.draw.rect(gameDisplay, DARKTEAL, (width - 955 + 200 + 20, height - 200, 200, 100), 2)
-    pygame.draw.rect(gameDisplay, DARKTEAL, (width - 955, height - 200, 200, 100), 2)
-
-    text_font = pygame.font.SysFont('Bungee', 80)
-    first = text_font.render('Back', TRUE, DARKTEAL)
-    second = text_font.render('Play', TRUE, DARKTEAL)
-    gameDisplay.blit(first, (width - 955 + 35, height - 200 + 25))
-    gameDisplay.blit(second, (width - 955 + 200 + 20 + 45, height - 200 + 25))
+    b = classes.Button([width - 955 + 300 + 40, height - 200], 'Play', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+    b.create(gameDisplay, 70)
 
 
     # Clicking buttons
+    mouse = pygame.mouse.get_pos()
     for event in events:
         if event.type == pygame.MOUSEBUTTONDOWN:
 
             #if the mouse is clicked on the button smth happens:
             if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
                 game.position = 1
-            elif width - 955 <= mouse[0] <= width - 955 + 200 and height - 200 <= mouse[1] <= height - 100 + 100: # select deposit amount again
+            elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # select deposit amount again
                 game.position = 2
-            elif width - 955 + 200 + 20 <= mouse[0] <= width - 955 + 200 + 20 + 200 and height - 200 <= mouse[1] <= height - 200 + 100: # gp play
+            elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # start game
                 game.position = 4
 
+
     pygame.display.update()
+'''

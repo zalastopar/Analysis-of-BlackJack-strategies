@@ -28,13 +28,6 @@ class Game:
         self.dealer_position = [500, 70]
         self.player_position = [500, 500]
 
-    '''
-    def __repr__(self):
-        return 'Simulation: ' + str(self.simulation) + '\nHelp: ' + str(self.help) + '\nBalace: ' + str(self.balance)
-
-    def __init__(self):
-        return 'Simulation: ' + str(self.simulation) + '\nHelp: ' + str(self.help) + '\nBalace: ' + str(self.balance)
-    '''
         
 
 # card
@@ -148,10 +141,14 @@ class Card:
 
 
 class Hand:
-    def __init__(self, bet, hand, dealer_hand):
+    def __init__(self, bet, hand, dealer_hand, insurance, double, split, winnings):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
+        self.take_insurance = insurance # bool - if player decided for an insurance
+        self.take_split = split # bool - if player splited
+        self.take_double = double # bool - if player doubled
+        self.winnings = winnings
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -168,7 +165,7 @@ class Hand:
             
         hand = []
         # remove suit and only look at value
-        for card in sez:
+        for card in cards:
             val = card.real_value()
             hand.append(val)
 
@@ -207,19 +204,22 @@ class Hand:
     
     def insurance(self):
         hand = self.dealer_hand[0]
-        if 11 == hand.value:
+        if hand.value == 11:
             return True
+        else:
+            return False
 
     def hit(self):    # goes also for stand
-        hand = self.player_hand
-        if self.hand_value('P') > 21:
+        val, k = self.hand_value('P')
+        if val > 21:
             return False
         return True
             
-
     def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player
         if who == 'D':
             hand = self.dealer_hand
+            if len(hand) != 2:
+                return False
         else:
             hand = self.player_hand
         first = hand[0]
@@ -228,14 +228,12 @@ class Hand:
             return True
         elif  len(hand) == 2 and [first.real_value(), second.real_value()] == [11, 10]:
             return True
-
-    
+ 
     def who_wins(self):
         winnings = 0
-        dealer = self.hand_value('D')
-        player = self.hand_value('P')
-
-        if self.BlackJack('P'): # you automatically win with BJ ### najbrz lahko odstranmo ker posebi preverjas
+        dealer, k = self.hand_value('D')
+        player, k = self.hand_value('P')
+        if self.BlackJack('P'):
             winnings = 2.5
         elif player > 21:  # over 21 - you lose
             winnings = 0
@@ -255,21 +253,22 @@ class Hand:
 
         return winnings
             
-            # se da bos vedla a je black jack al kaj
-        
-      
+
         
 class Button:
-    def __init__(self, position, txt, lightcol, col, darkcol, size):
+    def __init__(self, position, txt, lightcol, col, darkcol, size, border):
         self.position = position
         self.txt = txt
         self.lightcol = lightcol
         self.darkcol = darkcol
         self.col = col
         self.size = size #  [width, height]
+        self.border = border #bool
 
 
     def create(self, screen, txt_size):
+        '''Function creates button. It gets lighter if mouse is on it (LIGHTCOL).
+        Text and border are in DARKCOL. Text is centralised. Button is in COL. '''
         width = self.size[0]
         height = self.size[1]
         position = self.position
@@ -286,10 +285,8 @@ class Button:
             pygame.draw.rect(screen, lightcol, (position[0], position[1], width, height))
 
         # Create border
-        pygame.draw.rect(screen, darkcol, (position[0], position[1], width, height), 5)
-
-        ### uredi da je napis na sredini
-
+        if self.border:
+            pygame.draw.rect(screen, darkcol, (position[0], position[1], width, height), 5)
 
 
         # Define button text 
@@ -300,8 +297,7 @@ class Button:
 
         first = text_font.render(self.txt, TRUE, darkcol)
  
-        screen.blit(first, (position[0] +(width - w)/2, position[1] + (height -h)/2))
-
+        screen.blit(first, (position[0] + (width - w)/2, position[1] + (height -h)/2))
 
 
     
