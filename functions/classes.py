@@ -3,9 +3,18 @@ import os.path
 import pygame
 from pygame.locals import *
 
+
+
 # Setting up color objects
 OFFWHITE = (241, 235, 219)
 WRITING = (206, 183, 127)
+
+
+
+
+
+
+
 
 
 # game
@@ -16,6 +25,8 @@ class Game:
         self.help = help # TRUE or FALSE ################################################# popravi v window
         self.balance = balance
         self.deck = deck # dict of cards that already happened - currently we play with 6 decks
+        self.dealer_position = [500, 70]
+        self.player_position = [500, 500]
 
     '''
     def __repr__(self):
@@ -28,7 +39,7 @@ class Game:
 
 # card
 class Card:
-    def __init__(self, suit, value, position) -> None:
+    def __init__(self, suit, value, position):
         self.suit = suit # suit of the card D(diamond), C(clubs), H(hearts), S(spade)
         self.value = value # number of the card
         self.position = position #position of the card on the table (x, y)
@@ -133,23 +144,52 @@ class Card:
         image = pygame.transform.scale(image, (width*0.35, height*0.35))
         width, height = image.get_width(), image.get_height()
         screen.blit(image, (self.position[0] + (200-width)/2, self.position[1] + (320 - height)/2))
-        #screen.blit(image, (self.position[0] - width/2 + 200/2, self.position[1] + 320/2 + h/2 ))
 
-        # self.position[1] - (self.position[1] + 320/2 - h/2)/2 - height/2
 
 
 class Hand:
-    def __init__(self, bet, hand, dealer_hand, round):
+    def __init__(self, bet, hand, dealer_hand):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
-        self.round = round # which round as in: 1-first deal 2-add card 3-deal dealers cards
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
 
     def __str__(self) -> str:
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
+
+    def hand_value(self, who): # who 'D' for deaker and 'P' for player
+        '''The function takes a list of cards and calculates its value'''
+        if who == 'D':
+            cards = self.dealer_hand
+        else:
+            cards = self.player_hand
+            
+        hand = []
+        # remove suit and only look at value
+        for card in sez:
+            val = card.real_value()
+            hand.append(val)
+
+        hand_value = 0
+        soft = False
+
+        if 11 in hand: # 11 ali 1??????????? zapis
+            '''Ace can count as 11 or as 1. There can be only 1 ace in hand that counts as 11
+            otherwise hand value would be > 22. So max 1 ace counts as 11 and other as 1.'''
+            ace = hand.count(11)
+            hand = [value for value in hand if value != 11]
+            val = sum(hand) 
+            val = val + ace # firstly count all aces as one
+            if val + 10 <= 21:
+                val = val + 10 # if it is possible count one ace as 11
+                soft = True
+            hand_value = val
+        else:
+            hand_value = sum(hand)
+
+        return(hand_value, soft)
 
     def split(self):
         s = False
@@ -169,5 +209,99 @@ class Hand:
         hand = self.dealer_hand[0]
         if 11 == hand.value:
             return True
+
+    def hit(self):    # goes also for stand
+        hand = self.player_hand
+        if self.hand_value('P') > 21:
+            return False
+        return True
+            
+
+    def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player
+        if who == 'D':
+            hand = self.dealer_hand
+        else:
+            hand = self.player_hand
+        first = hand[0]
+        second= hand[1]
+        if len(hand) == 2 and [first.real_value(), second.real_value()] == [10, 11]:
+            return True
+        elif  len(hand) == 2 and [first.real_value(), second.real_value()] == [11, 10]:
+            return True
+
+    
+    def who_wins(self):
+        winnings = 0
+        dealer = self.hand_value('D')
+        player = self.hand_value('P')
+
+        if self.BlackJack('P'): # you automatically win with BJ ### najbrz lahko odstranmo ker posebi preverjas
+            winnings = 2.5
+        elif player > 21:  # over 21 - you lose
+            winnings = 0
+        elif player <= 21: # you maybe win
+            # check dealers cards
+            if self.BlackJack('D'): # dealer BJ - you lose
+                winnings = 0
+            elif dealer > 21: # dealer over - you win
+                winnings = 2
+            else:
+                if dealer == player:
+                    winnings = 1
+                elif dealer > player:
+                    winnings = 0
+                else:
+                    winnings = 2
+
+        return winnings
+            
+            # se da bos vedla a je black jack al kaj
+        
+      
+        
+class Button:
+    def __init__(self, position, txt, lightcol, col, darkcol, size):
+        self.position = position
+        self.txt = txt
+        self.lightcol = lightcol
+        self.darkcol = darkcol
+        self.col = col
+        self.size = size #  [width, height]
+
+
+    def create(self, screen, txt_size):
+        width = self.size[0]
+        height = self.size[1]
+        position = self.position
+
+        col = self.col
+        darkcol = self.darkcol
+        lightcol = self.lightcol
+
+        pygame.draw.rect(screen, col, (position[0], position[1], width, height))
+
+        # Lighter whene mouse is on button
+        mouse = pygame.mouse.get_pos()
+        if  position[0] <= mouse[0] <= width + position[0] and position[1] <= mouse[1] <= height + position[1]:
+            pygame.draw.rect(screen, lightcol, (position[0], position[1], width, height))
+
+        # Create border
+        pygame.draw.rect(screen, darkcol, (position[0], position[1], width, height), 5)
+
+        ### uredi da je napis na sredini
+
+
+
+        # Define button text 
+        text_font = pygame.font.SysFont('Bungee', txt_size)
+        text_surface = text_font.render(self.txt, True, darkcol)
+        w = text_surface.get_width()
+        h = text_surface.get_height()
+
+        first = text_font.render(self.txt, TRUE, darkcol)
+ 
+        screen.blit(first, (position[0] +(width - w)/2, position[1] + (height -h)/2))
+
+
 
     
