@@ -153,7 +153,7 @@ class Card:
         screen.blit(image, (self.position[0] + (200-width)/2, self.position[1] + (320 - height)/2))
 
 class Hand:
-    def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings):
+    def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings, split_bet):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
@@ -162,6 +162,7 @@ class Hand:
         self.split_hand = split_hand
         self.take_double = double # bool - if player doubled
         self.winnings = winnings
+        self.split_bet = split_bet
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -203,26 +204,29 @@ class Hand:
 
         return(hand_value, soft)
 
-    def split(self):
+    def split(self, game):
         s = False
         hand = self.player_hand
-        if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
-            s = True
+        if game.balance >= self.bet:
+            if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
+                s = True
         return s
 
-    def double(self):
+    def double(self, game):
         d = False
         hand = self.player_hand
-        if len(hand) == 2:
-            d = True
+        if game.balance >= self.bet:
+            if len(hand) == 2:
+                d = True
         return d
     
-    def insurance(self):
+    def insurance(self, game):
+        s = False
         hand = self.dealer_hand[0]
-        if hand.value == 11:
-            return True
-        else:
-            return False
+        if game.balance >= self.bet/2:
+            if hand.value == 11:
+                s = True
+        return s
 
     def hit(self):    # goes also for stand
         val, k = self.hand_value('P')

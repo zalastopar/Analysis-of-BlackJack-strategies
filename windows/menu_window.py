@@ -60,14 +60,18 @@ def menu():
 def menu_buttons(game, mouse):
     #if the mouse is clicked on the button smth happens:
     if width/2 - 20-400 <= mouse[0] <= width/2 - 20-400 + 400 and height - 500 <= mouse[1] <= height - 500 + 80: # Normal game
+        game.balance = 0
+        game.help = False
         game.position = 2
-        game.help = 0
     elif width/2 + 20 <= mouse[0] <= width/2 + 20+ 400 and height - 500 <= mouse[1] <= height - 500 + 80: # Game with help
+        game.help = True
+        game.balance = 0
         game.position = 2
-        game.help = 1
     elif width/2 - 20-400 <= mouse[0] <= width/2 - 20-400 + 400 and height - 500 + 40 + 80 <= mouse[1] <= height - 500 + 40 + 80 + 80: # Simulations
-        game.position = 2
+        game.balance = 0
+        game.help = False
         game.simulation = 1
+        game.position = 2
     elif width/2 + 20 <= mouse[0] <= width/2 + 20 + 400 and height - 500 + 40 + 80 <= mouse[1] <= height - 500 + 40 + 80 + 80: # Quit
         pygame.quit()
 

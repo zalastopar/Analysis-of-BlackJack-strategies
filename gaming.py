@@ -10,11 +10,10 @@ import os
 # import other python files
 # windows
 import windows.menu_window as menu_window
-import windows.table_window as table_window
 import windows.prep_window as prep_window
 import windows.end_window as end_window
-import windows.proba as proba
-import windows.table as table_w
+
+import windows.table as table
 
 # functions
 from functions.classes import *
@@ -37,6 +36,9 @@ DARKPINK = (102, 0, 51)
 DARKTEAL = (0,73,83)
 LIGHTTEAL = (95,158,160)
 LIGHTPINK = (250, 12, 139)
+OFFWHITE = (241, 235, 219)
+WRITING = (206, 183, 127)
+
  
 # Setup a 1600x900 pixel display with caption
 width = 1600
@@ -57,49 +59,48 @@ pygame.display.set_caption("BlackJack Table")
 # 8 - table - add dealer cards
 # 9 - table - split
 # 10 - table who wins
-# 11 - prefinnish
 # 12 - cash out
 # 13 - finnish
 
 
 # When menu player deletes 
 
-mygame = Game(0, 1, 0, 100, {})
-myhand = Hand(0, [], [], False, False, False, 0)
+mygame = Game(0, 1, False, 0, {})
+myhand = Hand(0, [], [], 0, False, False, [], 0, 0)
 
- 
+balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
+bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE])
+
+napaka = False
 
 def view(position):
     if position == 1:
         menu_window.menu()
     elif position == 2:
-        prep_window.bet_window(mygame)
-
+        prep_window.bet_window(mygame, balance_box)
     elif position == 3:   
         pass                               ############ simulation - bomo naredili pol
         #prep_window.bet_window_sim(events, mygame)
 
     elif position == 4:
-        table_w.place_bet(myhand, mygame)
-    
+        table.place_bet(myhand, mygame, bet_box)
     elif position == 5:
-        table_w.dealing(myhand, mygame)
+        table.dealing(myhand, mygame)
     elif position == 6:
-        table_w.adding_buttons(myhand, mygame)
+        table.adding_buttons(myhand, mygame)
     elif position == 8:
-        table_w.add_dealer_cards(myhand, mygame)
+        table.add_dealer_cards(myhand, mygame)
     elif position == 9:
-        pass
+        table.split(myhand, mygame)
     elif position == 10:
-        table_w.winner(myhand, mygame)
-    '''
-    elif position == 11:
-        end_window.pre_ending(myhand, mygame)
+        table.winner(myhand, mygame)
     elif position == 12:
         end_window.cash_out(mygame)
     elif position == 13:
         end_window.finnish(mygame)
-    '''
+
+
+
 
 
 # Beginning Game Loop
@@ -109,7 +110,12 @@ while True:
     events = pygame.event.get()
     position = mygame.position
     mouse = pygame.mouse.get_pos()
+
+
+
     for event in events:
+
+
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
@@ -117,22 +123,24 @@ while True:
             if position == 1:
                 menu_window.menu_buttons(mygame, mouse)
             elif position == 2:
-                prep_window.prep_buttons(mygame, mouse)
-                myhand = Hand(0, [], [], False, False, False, 0)
+                prep_window.prep_buttons(mygame, mouse, balance_box)   
             elif position == 3:
                 pass
             elif position == 4:
-                table_w.place_bet_buttons(mygame, mouse, myhand)
+                table.place_bet_buttons(mygame, mouse, myhand, bet_box)
             elif position == 6:
-                table_w.dealing_buttons(mygame, mouse, myhand)
+                table.dealing_buttons(mygame, mouse, myhand)
             elif position == 10:
-                table_w.winner_buttons(mygame, mouse, myhand)
+                table.winner_buttons(mygame, mouse, myhand)
+            elif position == 12:
+                end_window.cash_out_buttons(mygame, mouse)
+            elif position == 13:
+                end_window.finnish_buttons(mygame, mouse)
+        if position == 2:
+                balance_box.handle_event(event, gameDisplay, mygame)
+        elif position ==4:
+                bet_box.handle_event(event, gameDisplay, mygame, True)
+
+
 
             
-            '''if position == 11:
-                view = proba.pre_ending(myhand, mygame)
-            elif position == 12:
-                view = proba.cash_out(event, mygame, mouse)
-            elif position == 13:
-                view = proba.finnish(event, mygame, mouse)
-            '''

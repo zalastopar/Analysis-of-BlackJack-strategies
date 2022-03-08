@@ -27,13 +27,9 @@ gameDisplay = pygame.display.set_mode((width, height))
 gameDisplay.fill(PINK)
 pygame.display.set_caption("BlackJack Table")
 
-def pre_ending(hand, game): # game.position = 11
-    game.balance = game.balance + hand.winnings*hand.bet
-    game.position = 12
-    hand.player_hand = []
-    hand.dealer_hand = []
 
-def cash_out(events, game):  # game.position = 12
+
+def cash_out(game):  # game.position = 12
     '''Cash out window. PLayer can cash out or play again'''
 
     # Create empty window
@@ -49,24 +45,27 @@ def cash_out(events, game):  # game.position = 12
     gameDisplay.blit(first, ((width - w)/2, height - 650))
 
     # Cash out
-    b = classes.Button([width/2 - 20-300, height - 500], 'Cash out', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+    b = classes.Button([width/2 - 300/2 - 40 - 300, height - 500], 'Cash out', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+    b.create(gameDisplay, 70)
+    # Play again
+    b = classes.Button([width/2 - 300/2, height - 500], 'Play again', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
     b.create(gameDisplay, 70)
     # Add on
-    b = classes.Button([width/2 + 20, height - 500], 'Play again', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
+    b = classes.Button([width/2 + 300/2 + 40, height - 500], 'Add on', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
     b.create(gameDisplay, 70)
 
-    mouse = pygame.mouse.get_pos()
-    # Clicking buttons
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
 
-            #if the mouse is clicked on the button smth happens:
-            if  width/2 - 20-300 <= mouse[0] <= width/2 - 20 and height - 500 <= mouse[1] <= height - 500 + 80: # Cash out
-                game.position = 13
-            elif width/2 + 20 <= mouse[0] <= width/2 + 20 + 300 and height - 500 <= mouse[1] <= height - 500 + 80: # Add on
-                game.position = 4
+def cash_out_buttons(game,mouse):
 
-def finnish(events, game): # game.position = 13
+    if  width/2 - 300/2 - 40 - 300 <= mouse[0] <= width/2 - 300/2 - 40  and height - 500 <= mouse[1] <= height - 500 + 80: # Cash out
+        game.position = 13
+    elif width/2 - 300/2 <= mouse[0] <= width/2 - 300/2 + 300 and height - 500 <= mouse[1] <= height - 500 + 80 and game.balance > 0: # Play again
+        game.position = 4
+    elif width/2 + 300/2 + 40 <= mouse[0] <= width/2 + 300/2 + 40 + 300 and height - 500 <= mouse[1] <= height - 500 + 80:
+        game.position = 2
+    
+
+def finnish(game): # game.position = 13
     '''Window after cash out. Player can go on menu or leave game.'''
 
     # Create empty window
@@ -89,13 +88,12 @@ def finnish(events, game): # game.position = 13
     b = classes.Button([width/2 + 20, height - 500], 'Quit', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
     b.create(gameDisplay, 70)
 
-    mouse = pygame.mouse.get_pos()
-    # Clicking buttons
-    for event in events:
-        if event.type == pygame.MOUSEBUTTONDOWN:
 
-            #if the mouse is clicked on the button smth happens:
-            if  width/2 - 20-300 <= mouse[0] <= width/2 - 20 and height - 500 <= mouse[1] <= height - 500 + 80: # Cash out
-                game.position = 1
-            elif width/2 + 20 <= mouse[0] <= width/2 + 20 + 300 and height - 500 <= mouse[1] <= height - 500 + 80: # Add on
-                pygame.quit()
+def finnish_buttons(game, mouse):
+
+    if  width/2 - 20-300 <= mouse[0] <= width/2 - 20 and height - 500 <= mouse[1] <= height - 500 + 80: # Cash out
+        game.balance = 0
+        game.position = 1
+        game.help = False
+    elif width/2 + 20 <= mouse[0] <= width/2 + 20 + 300 and height - 500 <= mouse[1] <= height - 500 + 80: # Quit
+        pygame.quit()

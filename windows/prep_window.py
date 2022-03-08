@@ -40,70 +40,6 @@ def print_error(txt, pos, size, col):
 
 
 
-def input(events, position, typeof):
-
-    base_font = pygame.font.Font(None, 40)
-
-    txt = textinput.value
-
-    # Make text look pretty
-    textinput.font_color = WHITE
-    textinput.cursor_color = DARKPINK
-    text_surface = base_font.render(txt, True, DARKPINK)
-
-    # Change rect size
-    s = text_surface.get_width()
-    position[2] = max(100, s + s/3)
-    pygame.draw.rect(gameDisplay, LIGHTPINK, position)
-
-    
-    # Only integers or floats allowed and save value
-    money = 0
-
-    if isinstance(typeof, int): # we want int
-        try:
-            money = int(txt)
-            # Delete warning
-            text_font = pygame.font.SysFont('Bungee', 30)
-            warning = text_font.render('You amount must be an integer!', TRUE, WHITE)
-            pygame.draw.rect(gameDisplay, PINK, [position[0], position[1] + position[3], 10+ warning.get_width(), position[3]])
-        except:
-            # Write warning
-            text_font = pygame.font.SysFont('Bungee', 30)
-            warning = text_font.render('Your amount must be an integer!', TRUE, WHITE)
-            gameDisplay.blit(warning, (position[0], position[1] + position[3]))
-
-            # Set input to ''
-            textinput.value = ''
-
-    else: # we want float
-        try:
-            money = float(txt)
-            # Delete warning
-            text_font = pygame.font.SysFont('Bungee', 30)
-            warning = text_font.render('Your amount must be a number!', TRUE, WHITE)
-            pygame.draw.rect(gameDisplay, PINK, [position[0], position[1] + position[3], 10+ warning.get_width(), position[3]])
-        except:
-            # Write warning
-            text_font = pygame.font.SysFont('Bungee', 30)
-            warning = text_font.render('Your amount must be a number!', TRUE, WHITE)
-            gameDisplay.blit(warning, (position[0], position[1] + position[3]))
-
-            # Set input to ''
-            textinput.value = ''
-
-
-    # Feed it with events every frame
-    textinput.update(events)
-    # Blit its surface onto the screen
-    gameDisplay.blit(textinput.surface, (position[0], position[1] + position[3]/3))
-
-
-    return(money)
-
-
-
-
 def bet_window(game, box): # game.position = 2
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
@@ -149,7 +85,7 @@ def prep_buttons(game, mouse, box):
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.simulation >0: #and game.balance >0: # select num of simulations
         game.position = 4 ############# 3 
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box.text != '' and float(box.text) > 0 and game.simulation == 0: # start playing
-        game.balance = float(box.text)
+        game.balance = game.balance + float(box.text)
         box.text = ''
         box.txt_surface = box.text_font.render('', True, PINK)
         game.position = 4 
