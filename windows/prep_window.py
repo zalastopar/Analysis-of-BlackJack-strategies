@@ -32,7 +32,14 @@ pygame.display.set_caption("BlackJack Table")
 # Preparations for textbox
 textinput = pygame_textinput.TextInputVisualizer()
 
-'''
+
+def print_error(txt, pos, size, col):
+    text_font = pygame.font.SysFont('Bungee', size)
+    warning = text_font.render(txt, TRUE, col)
+    gameDisplay.blit(warning, pos)
+
+
+
 def input(events, position, typeof):
 
     base_font = pygame.font.Font(None, 40)
@@ -93,11 +100,11 @@ def input(events, position, typeof):
 
 
     return(money)
-'''
 
 
 
-def bet_window(game): # game.position = 2
+
+def bet_window(game, box): # game.position = 2
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
     
@@ -106,12 +113,8 @@ def bet_window(game): # game.position = 2
     text_font = pygame.font.SysFont('Bungee', 100)
     first = text_font.render('Deposit your balance: ', TRUE, DARKPINK)
     gameDisplay.blit(first, (width - 1400, height-700))
-    position = [width - 600, height-695, 100, 50]
-    ######################################balance = input(events, position, 0.0)
-    balance = 5 ##########################################
-    game.balance = balance
 
-    mouse = pygame.mouse.get_pos()
+
     if game.simulation >0: # Button Next
         b = classes.Button([width - 955, height - 200], 'Back', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
         b.create(gameDisplay, 70)
@@ -126,15 +129,29 @@ def bet_window(game): # game.position = 2
 
         b = classes.Button([width - 955 + 300 + 40, height - 200], 'Play', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
         b.create(gameDisplay, 70)
+
+    if box.napaka == 1:
+        print_error('Your amount must be a number!', [width - 600, height-695 + 70], 28, DARKPINK)
+
+
+    # Create textbox
+    box.update()
+    box.draw(gameDisplay)
+
+
+
     pygame.display.update()
 
-def prep_buttons(game, mouse):
+def prep_buttons(game, mouse, box):
 
     if width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # go back (to Menu)
         game.position = 1 
-    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # and game.simulation >0 and game.balance >0: # select num of simulations
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.simulation >0: #and game.balance >0: # select num of simulations
         game.position = 4 ############# 3 
-    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # and game.simulation == 0 and game.balance >0: # start playing
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box.text != '' and float(box.text) > 0 and game.simulation == 0: # start playing
+        game.balance = float(box.text)
+        box.text = ''
+        box.txt_surface = box.text_font.render('', True, PINK)
         game.position = 4 
                 
 

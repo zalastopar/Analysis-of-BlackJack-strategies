@@ -5,16 +5,32 @@ from pygame.locals import *
 
 
 
+
 # Setting up color objects
 OFFWHITE = (241, 235, 219)
 WRITING = (206, 183, 127)
 
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (60,179,113)
+PINK = (216, 0, 115)
+TEAL = (0, 128, 128)
+DARKPINK = (102, 0, 51)
+DARKTEAL = (0,73,83)
+LIGHTTEAL = (95,158,160)
+LIGHTPINK = (250, 12, 139)
+
+width = 1600
+height = 900
+gameDisplay = pygame.display.set_mode((width, height))
+gameDisplay.fill(PINK)
+pygame.display.set_caption("BlackJack Table")
 
 
-
-
-
-
+def print_error(txt, pos):
+    text_font = pygame.font.SysFont('Bungee', 30)
+    warning = text_font.render(txt, TRUE, TEAL)
+    gameDisplay.blit(warning, pos)
 
 
 # game
@@ -26,9 +42,7 @@ class Game:
         self.balance = balance
         self.deck = deck # dict of cards that already happened - currently we play with 6 decks
         self.dealer_position = [500, 70]
-        self.player_position = [500, 500]
-
-        
+        self.player_position = [500, 500]    
 
 # card
 class Card:
@@ -138,15 +152,14 @@ class Card:
         width, height = image.get_width(), image.get_height()
         screen.blit(image, (self.position[0] + (200-width)/2, self.position[1] + (320 - height)/2))
 
-
-
 class Hand:
-    def __init__(self, bet, hand, dealer_hand, insurance, double, split, winnings):
+    def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
-        self.take_insurance = insurance # bool - if player decided for an insurance
-        self.take_split = split # bool - if player splited
+        self.take_insurance = insurance # num, how much is insurance
+        self.take_split = split # 0 - if not split, 1-dealing first hand, 2-dealing 2nd hand 
+        self.split_hand = split_hand
         self.take_double = double # bool - if player doubled
         self.winnings = winnings
 
@@ -156,10 +169,12 @@ class Hand:
     def __str__(self) -> str:
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
 
-    def hand_value(self, who): # who 'D' for deaker and 'P' for player
+    def hand_value(self, who): # who 'D' for deaker and 'P' for player 'S' split hand
         '''The function takes a list of cards and calculates its value'''
         if who == 'D':
             cards = self.dealer_hand
+        elif who == 'S':
+            cards = self.split_hand
         else:
             cards = self.player_hand
             
@@ -191,7 +206,7 @@ class Hand:
     def split(self):
         s = False
         hand = self.player_hand
-        if len(hand) == 2 and hand[0].real_value() == hand[1].real_value():
+        if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
             s = True
         return s
 
@@ -229,11 +244,11 @@ class Hand:
         elif  len(hand) == 2 and [first.real_value(), second.real_value()] == [11, 10]:
             return True
  
-    def who_wins(self):
+    def who_wins(self, who): # 'P' player, 'S' split hand
         winnings = 0
         dealer, k = self.hand_value('D')
-        player, k = self.hand_value('P')
-        if self.BlackJack('P'):
+        player, k = self.hand_value(who)
+        if self.BlackJack(who):
             winnings = 2.5
         elif player > 21:  # over 21 - you lose
             winnings = 0
@@ -253,8 +268,6 @@ class Hand:
 
         return winnings
             
-
-        
 class Button:
     def __init__(self, position, txt, lightcol, col, darkcol, size, border):
         self.position = position
@@ -266,7 +279,7 @@ class Button:
         self.border = border #bool
 
 
-    def create(self, screen, txt_size):
+    def create(self, screen, txt_size, border_size = 5):
         '''Function creates button. It gets lighter if mouse is on it (LIGHTCOL).
         Text and border are in DARKCOL. Text is centralised. Button is in COL. '''
         width = self.size[0]
@@ -286,7 +299,7 @@ class Button:
 
         # Create border
         if self.border:
-            pygame.draw.rect(screen, darkcol, (position[0], position[1], width, height), 5)
+            pygame.draw.rect(screen, darkcol, (position[0], position[1], width, height), border_size)
 
 
         # Define button text 
@@ -300,4 +313,71 @@ class Button:
         screen.blit(first, (position[0] + (width - w)/2, position[1] + (height -h)/2))
 
 
-    
+class InputBox:   
+    '''the main code for this class comes from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
+    I have made some alternations.'''
+
+    def __init__(self, x, y, w, h, text='', text_size = 50, col=[LIGHTPINK, DARKPINK, OFFWHITE], napaka = 0):
+        self.rect = pygame.Rect(x, y, w, h)
+        self.col = col
+        self.color = col[0]
+        self.text = text
+        self.text_font = pygame.font.SysFont('Bungee', text_size)
+        self.txt_surface = self.text_font.render(text, True, self.color)
+        self.active = False
+        self.napaka = napaka
+
+    def handle_event(self, event, screen, game, bet = False):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if self.rect.collidepoint(event.pos):
+                # Toggle the active variable.
+                self.active = not self.active
+            else:
+                self.active = False
+            # Change the current color of the input box.
+            self.color = self.col[1] if self.active else self.col[0]
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    self.text = self.text
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+
+                    try:
+                        money = float(self.text)
+                        # Delete warning
+                        text_font = pygame.font.SysFont('Bungee', 30)
+                        warning = text_font.render('Your amount must be a number!', TRUE, TEAL)
+                        pygame.draw.rect(screen, TEAL, [100, 100, 10 + warning.get_width(), 30])
+                        self.napaka = 0
+                        if bet and game.balance < money:
+                            # write error
+                            self.napaka = 2
+
+
+                    except:
+                        # Write warning
+                        self.napaka = 1 
+
+                        # Set input to ''
+                        self.text = ''
+
+                # Re-render the text.
+                self.txt_surface = self.text_font.render(self.text, TRUE, self.col[2])
+
+                    
+
+    def update(self):
+        # Resize the box if the text is too long.
+        width = max(300, self.txt_surface.get_width()+10)
+        self.rect.w = width
+
+    def draw(self, screen):
+        # Blit the text.
+        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        # Blit the rect.
+        pygame.draw.rect(screen, self.color, self.rect, 2)
+
