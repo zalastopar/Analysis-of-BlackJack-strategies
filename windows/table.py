@@ -8,15 +8,19 @@ import functions.classes as classes
 import functions.cards as cards
 
 # Setting up color objects
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (60,179,113)
-PINK = (216, 0, 115)
-TEAL = (0, 128, 128)
-DARKPINK = (102, 0, 51)
-DARKTEAL = (0,73,83)
-LIGHTTEAL = (95,158,160)
-LIGHTPINK = (250, 12, 139)
+
+
+#PINK = (216, 0, 115)
+PINK = (242,233,222)
+DARKPINK = (250, 12, 139)
+LIGHTPINK = (239,187,204)
+
+TEAL = (221,173,175)
+DARKTEAL = (216,105,105)
+LIGHTTEAL = (239,187,204)
+
+OFFWHITE = (242,233,222)
+WRITING = (255,153,153)
  
 # Setup a 1600x900 pixel display with caption
 width = 1600
@@ -129,7 +133,7 @@ def place_bet(hand, game, box): # game.position = 4
     gameDisplay.blit(balance, (width - 1498.5 + 15, height - 850 + 15))
 
     # Bet button
-    bet = classes.Button([width/2 + 100, height - 400], 'Bet', LIGHTPINK, LIGHTTEAL, DARKTEAL, [300, 80], True)
+    bet = classes.Button([width/2 + 100, height - 400], 'Bet', WRITING, TEAL, DARKTEAL, [300, 80], True)
     bet.create(gameDisplay, 70)
 
     # Menu button
@@ -271,6 +275,7 @@ def adding_buttons(hand, game): # game.position = 6
 
     # Check if the game is over for player
     val, k = hand.hand_value('P')
+    v, k = hand.hand_value('S')
     if hand.BlackJack('P'):
         if hand.take_split == 1:
             hand.take_split = 2
@@ -281,30 +286,34 @@ def adding_buttons(hand, game): # game.position = 6
         if hand.take_split == 1:
             hand.take_split = 2
             game.position = 9
+        elif hand.take_split == 2 and v <= 21:
+            game.position = 8
         else:
             game.position = 10
     elif val == 21:
         if hand.take_split == 1:
             hand.take_split = 2
             game.position = 9
+        elif hand.take_split == 2 and v <= 21:
+            game.position = 8
         else:
             game.positoin = 8
     
     # Check which buttons are necessary
     # Hit and stand
     if hand.hit:
-        hit = classes.Button([width - 955, height - 70], 'Hit', LIGHTPINK, PINK, DARKTEAL, [140, 60], True)
+        hit = classes.Button([width - 955, height - 70], 'Hit', WRITING, TEAL, DARKTEAL, [140, 60], True)
         hit.create(gameDisplay, 60)
 
-        stand = classes.Button([width - 955 + 140 + 10, height - 70], 'Stand', LIGHTPINK, PINK, DARKTEAL, [140, 60], True)
+        stand = classes.Button([width - 955 + 140 + 10, height - 70], 'Stand', WRITING, TEAL, DARKTEAL, [140, 60], True)
         stand.create(gameDisplay, 60)
     # Split
     if hand.split(game):
-        split = classes.Button([width - 955 - 140 - 10, height - 70], 'Split', LIGHTPINK, PINK, DARKTEAL, [140, 60], True)
+        split = classes.Button([width - 955 - 140 - 10, height - 70], 'Split', WRITING, TEAL, DARKTEAL, [140, 60], True)
         split.create(gameDisplay, 60)
     # Double
     if hand.double(game):
-        double = classes.Button([width - 955 + 140 + 10 + 140 + 10, height - 70], 'Double', LIGHTPINK, PINK, DARKTEAL, [140, 60], True)
+        double = classes.Button([width - 955 + 140 + 10 + 140 + 10, height - 70], 'Double', WRITING, TEAL, DARKTEAL, [140, 60], True)
         double.create(gameDisplay, 55)
     # Insurance
     if hand.insurance(game):

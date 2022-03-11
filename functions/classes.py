@@ -7,18 +7,16 @@ from pygame.locals import *
 
 
 # Setting up color objects
-OFFWHITE = (241, 235, 219)
-WRITING = (206, 183, 127)
+PINK = (242,233,222)
+DARKPINK = (250, 12, 139)
+LIGHTPINK = (239,187,204)
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (60,179,113)
-PINK = (216, 0, 115)
-TEAL = (0, 128, 128)
-DARKPINK = (102, 0, 51)
-DARKTEAL = (0,73,83)
-LIGHTTEAL = (95,158,160)
-LIGHTPINK = (250, 12, 139)
+TEAL = (221,173,175)
+DARKTEAL = (216,105,105)
+LIGHTTEAL = (239,187,204)
+
+OFFWHITE = (242,233,222)
+WRITING = (255,153,153)
 
 width = 1600
 height = 900
@@ -66,7 +64,7 @@ class Card:
     def draw(self, screen):
         # Blank card
         pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
-        pygame.draw.rect(screen, WRITING, (self.position[0], self.position[1], 200, 320), 5, 6)
+        pygame.draw.rect(screen, DARKTEAL, (self.position[0], self.position[1], 200, 320), 5, 6)
 
         sign = self.value
         if sign == 14:
@@ -84,8 +82,8 @@ class Card:
 
 
         # Draw value on card
-        text_font = pygame.font.SysFont('Bungee', 220)
-        text_surface = text_font.render(sign, True, WRITING)
+        text_font = pygame.font.SysFont('Agency FB', 200)
+        text_surface = text_font.render(sign, True, LIGHTPINK)
         w = text_surface.get_width()
         h = text_surface.get_height()
 
@@ -93,7 +91,7 @@ class Card:
         value = text_font.render(sign, TRUE, WRITING)
         screen.blit(value, (self.position[0] - w/2 + 200/2, self.position[1] + 320/2 - h/2))
 
-
+        '''
         # Write suits on cards
         s = self.suit
         if s == 'C':
@@ -111,8 +109,16 @@ class Card:
         hi = text_surface.get_height()
         c_suit = value = text_font.render(s, TRUE, WRITING)
         screen.blit(c_suit, (self.position[0] - wi/2 + 200/2, self.position[1] + 320/2 + h/2 -20))
-
         '''
+
+        # For small text
+        text_font = pygame.font.SysFont('Agency FB', 50)
+        text_surface = text_font.render(sign, True, LIGHTPINK)
+        w = text_surface.get_width()
+        h = text_surface.get_height()
+        value = text_font.render(sign, TRUE, PINK)
+
+
         # Draw suit on card
         s = self.suit
         if s == 'C':
@@ -127,28 +133,44 @@ class Card:
         
         image = pygame.image.load(path)
         width, height = image.get_width(), image.get_height()
-        image = pygame.transform.scale(image, (width*0.05, height*0.05))
+        image = pygame.transform.scale(image, (width*0.5, height*0.5))
         width, height = image.get_width(), image.get_height()
-        screen.blit(image, (self.position[0] + 8, self.position[1] + h + 5))
-        #screen.blit(image, (self.position[0] - width/2 + 200/2, self.position[1] + 320/2 + h/2 ))
+        screen.blit(image, (self.position[0] + 200 - width - 1, self.position[1] + 4))
+        screen.blit(image, (self.position[0] + 3, self.position[1] + 320 - height - 4))
+
+
+
 
         # self.position[1] - (self.position[1] + 320/2 - h/2)/2 - height/2
 
-        '''
+        # Small values
+        text_font = pygame.font.SysFont('Bungee', 60)
+        text_surface = text_font.render(sign, True, WRITING)
+        w = text_surface.get_width()
+        h = text_surface.get_height()
+        value = text_font.render(sign, TRUE, WRITING)
+        screen.blit(value, (self.position[0] + 7, self.position[1] + 5))
+        screen.blit(value, (self.position[0] + 200 -w - 6, self.position[1] + 320 - height + 4))
+
+        
+
+
+
+
 
     def card_back(self, screen):
         # Blank card
         pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
-        pygame.draw.rect(screen, WRITING, (self.position[0], self.position[1], 200, 320), 5, 6)
+        pygame.draw.rect(screen, DARKTEAL, (self.position[0], self.position[1], 200, 320), 5, 6)
 
 
         # Add Kitten
-        path = os.path.join("suits/2.png")
+        path = os.path.join("suits/wool (10).png")
         image = pygame.image.load(path)
 
         width, height = image.get_width(), image.get_height()
 
-        image = pygame.transform.scale(image, (width*0.35, height*0.35))
+        image = pygame.transform.scale(image, (width*0.32, height*0.32))
         width, height = image.get_width(), image.get_height()
         screen.blit(image, (self.position[0] + (200-width)/2, self.position[1] + (320 - height)/2))
 
@@ -321,7 +343,7 @@ class InputBox:
     '''the main code for this class comes from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
     I have made some alternations.'''
 
-    def __init__(self, x, y, w, h, text='', text_size = 50, col=[LIGHTPINK, DARKPINK, OFFWHITE], napaka = 0):
+    def __init__(self, x, y, w, h, text='', text_size = 50, col=[LIGHTPINK, DARKPINK, OFFWHITE], napaka = 0, txtcol = WRITING):
         self.rect = pygame.Rect(x, y, w, h)
         self.col = col
         self.color = col[0]
@@ -330,6 +352,7 @@ class InputBox:
         self.txt_surface = self.text_font.render(text, True, self.color)
         self.active = False
         self.napaka = napaka
+        self.txtcol = txtcol
 
     def handle_event(self, event, screen, game, bet = False):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -352,16 +375,10 @@ class InputBox:
 
                     try:
                         money = float(self.text)
-                        # Delete warning
-                        text_font = pygame.font.SysFont('Bungee', 30)
-                        warning = text_font.render('Your amount must be a number!', TRUE, TEAL)
-                        pygame.draw.rect(screen, TEAL, [100, 100, 10 + warning.get_width(), 30])
                         self.napaka = 0
                         if bet and game.balance < money:
                             # write error
                             self.napaka = 2
-
-
                     except:
                         # Write warning
                         self.napaka = 1 
@@ -370,7 +387,7 @@ class InputBox:
                         self.text = ''
 
                 # Re-render the text.
-                self.txt_surface = self.text_font.render(self.text, TRUE, self.col[2])
+                self.txt_surface = self.text_font.render(self.text, TRUE, self.txtcol)
 
                     
 
