@@ -10,16 +10,17 @@ import functions.classes as classes
 import functions.cards as cards
 
 # Setting up color objects
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (60,179,113)
-PINK = (216, 0, 115)
-TEAL = (0, 128, 128)
-DARKPINK = (102, 0, 51)
-DARKTEAL = (0,73,83)
-LIGHTTEAL = (95,158,160)
-LIGHTPINK = (250, 12, 139)
- 
+PINK = (242,233,222)
+DARKPINK = (222,93,131)#(212,112,162)
+LIGHTPINK = (239,187,204)
+
+TEAL = (221,173,175)
+DARKTEAL = (216,105,105)
+LIGHTTEAL = (239,187,204)
+
+OFFWHITE = (242,233,222)
+WRITING = (255,153,153)
+
 # Setup a 1600x900 pixel display with caption
 width = 1600
 height = 900

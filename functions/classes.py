@@ -8,7 +8,7 @@ from pygame.locals import *
 
 # Setting up color objects
 PINK = (242,233,222)
-DARKPINK = (250, 12, 139)
+DARKPINK = (222,93,131)#(212,112,162)
 LIGHTPINK = (239,187,204)
 
 TEAL = (221,173,175)
@@ -155,9 +155,6 @@ class Card:
         
 
 
-
-
-
     def card_back(self, screen):
         # Blank card
         pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
@@ -165,14 +162,14 @@ class Card:
 
 
         # Add Kitten
-        path = os.path.join("suits/wool (10).png")
+        path = os.path.join("suits/cat1.png")
         image = pygame.image.load(path)
 
         width, height = image.get_width(), image.get_height()
 
         image = pygame.transform.scale(image, (width*0.32, height*0.32))
         width, height = image.get_width(), image.get_height()
-        screen.blit(image, (self.position[0] + (200-width)/2, self.position[1] + (320 - height)/2))
+        screen.blit(image, (self.position[0] + (200-width)/2 + 3, self.position[1] + (320 - height)/2))
 
 class Hand:
     def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings, split_bet):
@@ -256,11 +253,13 @@ class Hand:
             return False
         return True
             
-    def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player
+    def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player or 'S' split
         if who == 'D':
             hand = self.dealer_hand
             if len(hand) != 2:
                 return False
+        elif who == 'S':
+            hand = self.split_hand
         else:
             hand = self.player_hand
         first = hand[0]

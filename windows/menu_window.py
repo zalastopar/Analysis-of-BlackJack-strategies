@@ -7,15 +7,19 @@ from pygame.locals import *
 import functions.classes as classes
 
 # Setting up color objects
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (60,179,113)
-PINK = (216, 0, 115)
-TEAL = (0, 128, 128)
-DARKPINK = (102, 0, 51)
-DARKTEAL = (0,73,83)
-LIGHTTEAL = (95,158,160)
-LIGHTPINK = (250, 12, 139)
+
+#PINK = (216, 0, 115)
+#DARKPINK = (102, 0, 51)
+PINK = (242,233,222)
+DARKPINK = (222,93,131)#(212,112,162)
+LIGHTPINK = (239,187,204)
+
+TEAL = (221,173,175)
+DARKTEAL = (216,105,105)
+LIGHTTEAL = (239,187,204)
+
+OFFWHITE = (242,233,222)
+WRITING = (255,153,153)
 
 # Setup a 1600x900 pixel display with caption
 width = 1600
@@ -40,17 +44,17 @@ def menu():
     gameDisplay.blit(first, ((width - w)/2, height - 650))
 
     # Play
-    b = classes.Button([width/2 - 20-400, height - 500], 'Play', LIGHTTEAL, PINK, DARKPINK, [400, 80], True)
+    b = classes.Button([width/2 - 20-400, height - 500], 'Play', LIGHTPINK, PINK, DARKPINK, [400, 80], True)
     b.create(gameDisplay, 70)
     # Quit
-    b = classes.Button([width/2 + 20, height - 500], 'Play with help', LIGHTTEAL, PINK, DARKPINK, [400, 80], True)
+    b = classes.Button([width/2 + 20, height - 500], 'Play with help', LIGHTPINK, PINK, DARKPINK, [400, 80], True)
     b.create(gameDisplay, 70)
 
     # menu
-    b = classes.Button([width/2 - 20-400, height - 500 + 40 + 80], 'Simulate', LIGHTTEAL, PINK, DARKPINK, [400, 80], True)
+    b = classes.Button([width/2 - 20-400, height - 500 + 40 + 80], 'Simulate', LIGHTPINK, PINK, DARKPINK, [400, 80], True)
     b.create(gameDisplay, 70)
     # Quit
-    b = classes.Button([width/2 + 20, height - 500 + 40 + 80], 'Quit', LIGHTTEAL, PINK, DARKPINK, [400, 80], True)
+    b = classes.Button([width/2 + 20, height - 500 + 40 + 80], 'Quit', LIGHTPINK, PINK, DARKPINK, [400, 80], True)
     b.create(gameDisplay, 70)
 
     pygame.display.update()

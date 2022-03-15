@@ -27,17 +27,16 @@ clock = pygame.time.Clock()
 
  
 # Setting up color objects
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (60,179,113)
 PINK = (216, 0, 115)
-TEAL = (0, 128, 128)
 DARKPINK = (102, 0, 51)
-DARKTEAL = (0,73,83)
-LIGHTTEAL = (95,158,160)
 LIGHTPINK = (250, 12, 139)
-OFFWHITE = (241, 235, 219)
-WRITING = (206, 183, 127)
+
+TEAL = (221,173,175)
+DARKTEAL = (216,105,105)
+LIGHTTEAL = (239,222,205)
+
+OFFWHITE = (242,233,222)
+WRITING = (255,153,153)
 
  
 # Setup a 1600x900 pixel display with caption
@@ -65,11 +64,11 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = Game(0, 1, False, 0, {})
+mygame = Game(0, 1, False, 100, {})
 myhand = Hand(0, [], [], 0, False, False, [], 0, 0)
 
 balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
-bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE])
+bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
 
 napaka = False
 

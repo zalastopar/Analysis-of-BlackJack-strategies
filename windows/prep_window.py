@@ -12,7 +12,7 @@ pygame.init()
  
 # Setting up color objects
 PINK = (242,233,222)
-DARKPINK = (250, 12, 139)
+DARKPINK = (222,93,131)#(212,112,162)
 LIGHTPINK = (239,187,204)
 
 TEAL = (221,173,175)

@@ -12,7 +12,7 @@ import functions.cards as cards
 
 #PINK = (216, 0, 115)
 PINK = (242,233,222)
-DARKPINK = (250, 12, 139)
+DARKPINK = (222,93,131)#(212,112,162)
 LIGHTPINK = (239,187,204)
 
 TEAL = (221,173,175)
@@ -172,7 +172,7 @@ def place_bet_buttons(game, mouse, hand, box):
         hand.dealer_hand.append(c)
         c.draw(gameDisplay)
 
-        #hand.player_hand = [classes.Card('S', 2, [500,500]), classes.Card('S', 2, [500+150,500])]
+        #hand.player_hand = [classes.Card('S', 14, [500,500]), classes.Card('S', 12, [500+150,500])]
         game.position = 5
     
 
@@ -266,11 +266,7 @@ def adding_buttons(hand, game): # game.position = 6
         d_card = classes.Card('S', 12, [game.dealer_position[0] + 150, game.dealer_position[1]])
         d_card.card_back(gameDisplay)
 
-    # Draw value of hand
-    value, k =  hand.hand_value('P')
-    text_font = pygame.font.SysFont('Bungee', 50)
-    v = text_font.render('Hand value: ' + str(value), TRUE, DARKTEAL)
-    gameDisplay.blit(v, (game.player_position[0], game.player_position[1] - 40))
+
 
 
     # Check if the game is over for player
@@ -280,6 +276,8 @@ def adding_buttons(hand, game): # game.position = 6
         if hand.take_split == 1:
             hand.take_split = 2
             game.position = 9
+        elif hand.take_split == 2 and v <= 21:
+            game.position = 8
         else:
             game.position = 10
     elif val > 21:
@@ -299,6 +297,12 @@ def adding_buttons(hand, game): # game.position = 6
         else:
             game.positoin = 8
     
+    # Draw value of hand
+    value, k =  hand.hand_value('P')
+    text_font = pygame.font.SysFont('Bungee', 50)
+    v = text_font.render('Hand value: ' + str(value), TRUE, DARKTEAL)
+    gameDisplay.blit(v, (game.player_position[0], game.player_position[1] - 40))
+
     # Check which buttons are necessary
     # Hit and stand
     if hand.hit:
@@ -347,6 +351,7 @@ def dealing_buttons(game, mouse, hand):
             c = classes.Card(sui, val, [position[0] + 120*num, position[1]])
         else:
             c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
+
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -396,7 +401,7 @@ def dealing_buttons(game, mouse, hand):
             game.balance = game.balance - hand.bet
             hand.bet = hand.bet*2
             game.position = 8
-    elif width - 955 - 140 - 10 <= mouse[0] <= width - 955 - 140 - 10 + 140 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.split(game): 
+    elif width - 955 - 140 - 10 <= mouse[0] <= width - 955 - 140 - 10 + 140 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.split(game): # split
         hand.take_split = 1
         c = hand.player_hand[0]
         d = hand.player_hand[1]
@@ -424,11 +429,9 @@ def add_dealer_cards(hand, game): # game.position = 8
     num = len(hand.dealer_hand)
     if val > 17:
         game.position = 10
-        print('d over')
     else:
         if hand.BlackJack('D'):
             game.position = 10
-            print('d BJ')
         
         if val == 17:
             if k:
@@ -441,10 +444,8 @@ def add_dealer_cards(hand, game): # game.position = 8
                 pygame.display.flip()
                 pygame.event.pump()
                 pygame.time.delay(500)
-                print('soft')
                 game.position = 8
             else:
-                print('17')
                 game.position = 10
 
         else:
@@ -457,7 +458,6 @@ def add_dealer_cards(hand, game): # game.position = 8
             pygame.display.flip()
             pygame.event.pump()
             pygame.time.delay(500)
-            print('next')
 
             game.position = 8
 
@@ -584,7 +584,7 @@ def winner(hand, game): # game.position = 10
             gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
 
     # Next button
-    next = classes.Button([width/2 - 140/2, height - 70], 'Next', LIGHTPINK, PINK, DARKTEAL, [140, 60], True)
+    next = classes.Button([width/2 - 140/2, height - 70], 'Next', WRITING, TEAL, DARKTEAL, [140, 60], True)
     next.create(gameDisplay, 60)
 
 
@@ -611,10 +611,11 @@ def winner_buttons(game, mouse, hand):
         # Change balance
         money = hand.who_wins('P')
         hand.winnings = hand.winnings + money * hand.split_bet
-
-        mon = hand.who_wins('S')
-        hand.winnings = hand.winnings + mon * hand.bet
         game.balance = game.balance + hand.winnings
+        if len(hand.split_hand) > 0:
+            mon = hand.who_wins('S')
+            hand.winnings = hand.winnings + mon * hand.bet
+            game.balance = game.balance + hand.winnings
 
         # Restart hand
         hand.player_hand = []
