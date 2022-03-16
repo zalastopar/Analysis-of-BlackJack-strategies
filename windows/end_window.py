@@ -62,7 +62,7 @@ def cash_out_buttons(game,mouse):
         game.position = 13
     elif width/2 - 300/2 <= mouse[0] <= width/2 - 300/2 + 300 and height - 500 <= mouse[1] <= height - 500 + 80 and game.balance > 0: # Play again
         game.position = 4
-    elif width/2 + 300/2 + 40 <= mouse[0] <= width/2 + 300/2 + 40 + 300 and height - 500 <= mouse[1] <= height - 500 + 80:
+    elif width/2 + 300/2 + 40 <= mouse[0] <= width/2 + 300/2 + 40 + 300 and height - 500 <= mouse[1] <= height - 500 + 80: # Add on
         game.position = 2
     
 
@@ -95,6 +95,7 @@ def finnish_buttons(game, mouse):
     if  width/2 - 20-300 <= mouse[0] <= width/2 - 20 and height - 500 <= mouse[1] <= height - 500 + 80: # Cash out
         game.balance = 0
         game.position = 1
+        game.shuffle_deck()
         game.help = False
     elif width/2 + 20 <= mouse[0] <= width/2 + 20 + 300 and height - 500 <= mouse[1] <= height - 500 + 80: # Quit
         pygame.quit()

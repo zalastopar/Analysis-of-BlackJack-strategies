@@ -89,6 +89,7 @@ def prep_buttons(game, mouse, box):
         game.balance = game.balance + float(box.text)
         box.text = ''
         box.txt_surface = box.text_font.render('', True, PINK)
+        game.shuffle_deck()
         game.position = 4 
                 
 

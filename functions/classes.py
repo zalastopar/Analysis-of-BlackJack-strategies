@@ -2,6 +2,7 @@ from pickle import TRUE
 import os.path
 import pygame
 from pygame.locals import *
+import random
 
 
 
@@ -38,9 +39,23 @@ class Game:
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
         self.balance = balance
-        self.deck = deck # dict of cards that already happened - currently we play with 6 decks
+        self.deck = deck # list of cards that can be chosen - currently we play with 6 decks
         self.dealer_position = [500, 70]
-        self.player_position = [500, 500]    
+        self.player_position = [500, 500]  
+
+    def shuffle_deck(self):
+        deck = []
+        suits = ['S', 'H', 'D', 'C']
+        values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        for s in suits:
+            for v in values:
+                c = s + str(v)
+                part = [c, c, c, c, c, c]
+                deck = deck + part
+        random.shuffle(deck)
+        self.deck = deck
+
+
 
 # card
 class Card:
@@ -152,9 +167,6 @@ class Card:
         screen.blit(value, (self.position[0] + 7, self.position[1] + 5))
         screen.blit(value, (self.position[0] + 200 -w - 6, self.position[1] + 320 - height + 4))
 
-        
-
-
     def card_back(self, screen):
         # Blank card
         pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
@@ -186,7 +198,7 @@ class Hand:
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
 
     def hand_value(self, who): # who 'D' for deaker and 'P' for player 'S' split hand
@@ -206,14 +218,19 @@ class Hand:
 
         hand_value = 0
         soft = False
-
-        if 11 in hand: # 11 ali 1??????????? zapis
+        #print(hand)
+        val = 0
+        ace = 0
+        if 11 in hand:
             '''Ace can count as 11 or as 1. There can be only 1 ace in hand that counts as 11
             otherwise hand value would be > 22. So max 1 ace counts as 11 and other as 1.'''
             ace = hand.count(11)
+            #print(ace)
             hand = [value for value in hand if value != 11]
             val = sum(hand) 
             val = val + ace # firstly count all aces as one
+            #print(val)
+            #print(val + 10 <= 21)
             if val + 10 <= 21:
                 val = val + 10 # if it is possible count one ace as 11
                 soft = True
@@ -242,7 +259,7 @@ class Hand:
     def insurance(self, game):
         s = False
         hand = self.dealer_hand[0]
-        if game.balance >= self.bet/2:
+        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0:
             if hand.value == 11:
                 s = True
         return s
@@ -273,7 +290,9 @@ class Hand:
         winnings = 0
         dealer, k = self.hand_value('D')
         player, k = self.hand_value(who)
-        if self.BlackJack(who):
+        if self.BlackJack(who) and self.BlackJack('D'):
+            winnings = 1
+        elif self.BlackJack(who):
             winnings = 2.5
         elif player > 21:  # over 21 - you lose
             winnings = 0

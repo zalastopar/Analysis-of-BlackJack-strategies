@@ -58,7 +58,7 @@ def empty_table(hand, game):
     if hand.take_split > 0:
         s_bet = text_font = pygame.font.SysFont('Bungee', 50)
         s_bet = text_font.render('Split bet: ' + str(hand.split_bet), TRUE, DARKTEAL)
-        gameDisplay.blit(s_bet, (width - 1498.5 + 15, height - 850 + 15 + 40 + 40))
+        gameDisplay.blit(s_bet, (width - 1498.5 + 15, height - 850 + 15 + 40 + 25))
 
     # Menu button
     menu = classes.Button([width - 65, 5], 'Menu', LIGHTPINK, PINK, DARKPINK, [65, 30], False)
@@ -67,7 +67,7 @@ def empty_table(hand, game):
     if hand.take_insurance > 0:
         text_font = pygame.font.SysFont('Bungee', 50)        
         ins = text_font.render('Insurance: ' + str(hand.take_insurance), TRUE, DARKTEAL)
-        gameDisplay.blit(ins, (width - 1498.5 + 15, height - 850 + 15 + 40 + 40))
+        gameDisplay.blit(ins, (width - 1498.5 + 15, height - 850 + 15 + 40 + 55))
 
     # Probabilities for play with help
     if game.help:
@@ -172,7 +172,8 @@ def place_bet_buttons(game, mouse, hand, box):
         hand.dealer_hand.append(c)
         c.draw(gameDisplay)
 
-        #hand.player_hand = [classes.Card('S', 14, [500,500]), classes.Card('S', 12, [500+150,500])]
+        hand.dealer_hand = [classes.Card('S', 11, game.dealer_position)]
+        hand.player_hand = [classes.Card('S', 14, [500,500]), classes.Card('S', 12, [500+150,500])]
         game.position = 5
     
 
@@ -268,7 +269,6 @@ def adding_buttons(hand, game): # game.position = 6
 
 
 
-
     # Check if the game is over for player
     val, k = hand.hand_value('P')
     v, k = hand.hand_value('S')
@@ -333,10 +333,8 @@ def adding_buttons(hand, game): # game.position = 6
 
 def dealing_buttons(game, mouse, hand):
     if width - 955 + 140 + 140 + 140 +140 + 50 <= mouse[0] <= width - 955 + 140 + 140 + 140 +140 + 50 + 200 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.insurance(game): #insurance
-        if hand.take_split == 2:
-            hand.take_insurance = hand.take_insurance + hand.split_bet/2
-        else:
-            hand.take_insurance = hand.take_insurance + hand.bet/2
+        hand.take_insurance = hand.bet/2
+        game.balance = game.balance - hand.take_insurance
 
     #if the mouse is clicked on the button smth happens:
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
@@ -351,9 +349,8 @@ def dealing_buttons(game, mouse, hand):
             c = classes.Card(sui, val, [position[0] + 120*num, position[1]])
         else:
             c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
-
+       
         hand.player_hand.append(c)
-
         pygame.display.flip()
         pygame.event.pump()
         pygame.time.delay(200)
@@ -477,6 +474,8 @@ def split(hand, game): #game.position = 9
         game.player_position = [150, 500]
         sui, val = cards.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
+        print(c)
+        print(game.deck)
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -504,6 +503,8 @@ def split(hand, game): #game.position = 9
 
         sui, val = cards.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
+        print(c)
+        print(game.deck)
         hand.player_hand.append(c)
         
 
@@ -524,6 +525,7 @@ def winner(hand, game): # game.position = 10
 
     empty_table(hand, game) 
 
+    # winner with split
     if hand.take_split == 2:
         # draw dealers cards
         if len(hand.dealer_hand) == 1:
@@ -559,9 +561,8 @@ def winner(hand, game): # game.position = 10
         gameDisplay.blit(first, (800, 500 - 80))
         gameDisplay.blit(second, (150, 500 - 80))
 
-
+    # normal winner
     else:
-         
         draw_hand(hand.player_hand)
         if len(hand.dealer_hand) == 1:
             draw_hand(hand.dealer_hand)
@@ -582,6 +583,14 @@ def winner(hand, game): # game.position = 10
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU WON: ' + str(money*hand.bet), TRUE, DARKTEAL)
             gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
+
+    # insurance
+    if hand.BlackJack('D') and hand.take_insurance > 0:
+        text_font = pygame.font.SysFont('Bungee', 60)
+        first = text_font.render('+ ' + str(hand.take_insurance + hand.split_bet + hand.bet), TRUE, DARKTEAL)
+        gameDisplay.blit(first, (width - 1498.5 + 15, height - 850 + 15 + 40 + 55 + 30))
+
+
 
     # Next button
     next = classes.Button([width/2 - 140/2, height - 70], 'Next', WRITING, TEAL, DARKTEAL, [140, 60], True)
@@ -616,6 +625,11 @@ def winner_buttons(game, mouse, hand):
             mon = hand.who_wins('S')
             hand.winnings = hand.winnings + mon * hand.bet
             game.balance = game.balance + hand.winnings
+
+        # insurance
+        if hand.BlackJack('D'):
+            game.balance = game.balance + hand.take_insurance + hand.split_bet + hand.bet
+
 
         # Restart hand
         hand.player_hand = []
