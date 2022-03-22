@@ -31,6 +31,13 @@ def print_error(txt, pos):
     warning = text_font.render(txt, TRUE, TEAL)
     gameDisplay.blit(warning, pos)
 
+def random_card(game):
+    c = game.deck.pop(1)
+    sui = c[0]
+    c = c[1:]
+    val = int(c)
+    return sui, val
+
 
 # game
 class Game:
@@ -201,7 +208,7 @@ class Hand:
     def __str__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
 
-    def hand_value(self, who): # who 'D' for deaker and 'P' for player 'S' split hand
+    def hand_value(self, who): # who 'D' for dealer and 'P' for player 'S' split hand
         '''The function takes a list of cards and calculates its value'''
         if who == 'D':
             cards = self.dealer_hand
@@ -311,7 +318,186 @@ class Hand:
                     winnings = 2
 
         return winnings
+
+
+
+decisions = {}
+
+decisions[9] = {2: 'H', 3: 'D', 4: 'D', 5: 'D', 6 : 'D', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[10] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'H', 11: 'H'}
+decisions[11] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'D', 11: 'D'}
+decisions[12] = {2: 'H', 3: 'H', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[13] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[14] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[15] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[16] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[17] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+# pod 9 hit, nad 17 stand
+
+
+# ace and smth
+soft = {}
+soft[2] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[3] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[4] = {2: 'H', 3: 'H', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[5] = {2: 'H', 3: 'H', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[6] = {2: 'H', 3: 'DH', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[7] = {2: 'DS', 3: 'DS', 4: 'DS', 5: 'DS', 6 : 'DS', 7: 'S', 8: 'S', 9: 'H', 10: 'H', 11: 'H'}
+soft[8] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'DS', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+soft[9] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+soft[10] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+
+# split
+splitgrid = {}
+splitgrid[2] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[3] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[4] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[5] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[6] = {2: 'N', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[7] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[8] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
+splitgrid[9] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'Y', 9: 'Y', 10: 'N', 11: 'N'}
+splitgrid[10] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[9] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
+
+
+class Hand_ai:
+    def __init__(self, bet, hand, dealer_hand, double, split, split_hand, winnings, split_bet):
+        self.bet = bet # float
+        self.player_hand = hand # sez with cards
+        self.dealer_hand = dealer_hand # sez with player cards
+        self.take_split = split # 0 - if not split, 1-dealing first hand, 2-dealing 2nd hand 
+        self.split_hand = split_hand
+        self.take_double = double # bool - if player doubled
+        self.winnings = winnings
+        self.split_bet = split_bet
+        self.splitgrid = splitgrid
+        self.soft = soft
+        self.decisions = decisions
+
+    def __repr__(self):
+        return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
+
+    def __str__(self):
+        return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
+
+    def hand_value(self, who): # who 'D' for dealer and 'P' for player 'S' split hand
+        '''The function takes a list of cards and calculates its value'''
+        if who == 'D':
+            cards = self.dealer_hand
+        elif who == 'S':
+            cards = self.split_hand
+        else:
+            cards = self.player_hand
             
+        hand = []
+        # remove suit and only look at value
+        for card in cards:
+            val = card.real_value()
+            hand.append(val)
+
+        hand_value = 0
+        soft = False
+        #print(hand)
+        val = 0
+        ace = 0
+        if 11 in hand:
+            '''Ace can count as 11 or as 1. There can be only 1 ace in hand that counts as 11
+            otherwise hand value would be > 22. So max 1 ace counts as 11 and other as 1.'''
+            ace = hand.count(11)
+            #print(ace)
+            hand = [value for value in hand if value != 11]
+            val = sum(hand) 
+            val = val + ace # firstly count all aces as one
+            #print(val)
+            #print(val + 10 <= 21)
+            if val + 10 <= 21:
+                val = val + 10 # if it is possible count one ace as 11
+                soft = True
+            hand_value = val
+        else:
+            hand_value = sum(hand)
+
+        return(hand_value, soft)
+
+    def split(self, game):
+        s = False
+        hand = self.player_hand
+        if game.balance >= self.bet:
+            if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
+                s = True
+        return s
+
+    def double(self, game):
+        d = False
+        hand = self.player_hand
+        if game.balance >= self.bet:
+            if len(hand) == 2:
+                d = True
+        return d
+    
+    def insurance(self, game):
+        s = False
+        hand = self.dealer_hand[0]
+        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0:
+            if hand.value == 11:
+                s = True
+        return s
+
+    def hit(self):    # goes also for stand
+        val, k = self.hand_value('P')
+        if val > 21:
+            return False
+        return True
+            
+    def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player or 'S' split
+        if who == 'D':
+            hand = self.dealer_hand
+            if len(hand) != 2:
+                return False
+        elif who == 'S':
+            hand = self.split_hand
+        else:
+            hand = self.player_hand
+        first = hand[0]
+        second= hand[1]
+        if len(hand) == 2 and [first.real_value(), second.real_value()] == [10, 11]:
+            return True
+        elif  len(hand) == 2 and [first.real_value(), second.real_value()] == [11, 10]:
+            return True
+ 
+    def who_wins(self, who): # 'P' player, 'S' split hand
+        winnings = 0
+        dealer, k = self.hand_value('D')
+        player, k = self.hand_value(who)
+        if self.BlackJack(who) and self.BlackJack('D'):
+            winnings = 1
+        elif self.BlackJack(who):
+            winnings = 2.5
+        elif player > 21:  # over 21 - you lose
+            winnings = 0
+        elif player <= 21: # you maybe win
+            # check dealers cards
+            if self.BlackJack('D'): # dealer BJ - you lose
+                winnings = 0
+            elif dealer > 21: # dealer over - you win
+                winnings = 2
+            else:
+                if dealer == player:
+                    winnings = 1
+                elif dealer > player:
+                    winnings = 0
+                else:
+                    winnings = 2
+
+        return winnings
+
+    def next_move(self):
+        val, k = self.hand_value('P')
+        val2, k = self.hand_value('D')
+        return self.decisions[val][val2]
+
+
 class Button:
     def __init__(self, position, txt, lightcol, col, darkcol, size, border):
         self.position = position

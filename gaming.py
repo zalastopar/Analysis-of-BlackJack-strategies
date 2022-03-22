@@ -12,12 +12,14 @@ import os
 import windows.menu_window as menu_window
 import windows.prep_window as prep_window
 import windows.end_window as end_window
+import windows.table_ai as table_ai
 
 import windows.table as table
 
 # functions
-from functions.classes import *
+import functions.classes as classes
 from functions.cards import *
+
 
 
 # Initialize program
@@ -64,13 +66,16 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = Game(0, 1, False, 100, {})
-myhand = Hand(0, [], [], 0, False, False, [], 0, 0)
+mygame = classes.Game(0, 21, False, 100, {})
+myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0)
+aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0)
 
 balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
 bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
 
 napaka = False
+
+mygame.shuffle_deck()
 
 def view(position):
     if position == 1:
@@ -97,6 +102,17 @@ def view(position):
         end_window.cash_out(mygame)
     elif position == 13:
         end_window.finnish(mygame)
+    elif position == 21:
+        table_ai.deal_first_hand(mygame, aihand)
+    elif position == 22:
+        table_ai.first_dealing(mygame, aihand)
+    elif position == 23:
+        table_ai.dealing(mygame, aihand)
+    elif position == 24:
+        table_ai.deal_dealer(mygame, aihand)
+    elif position == 25:
+        table_ai.ai_winner(mygame, aihand)
+
 
 
 

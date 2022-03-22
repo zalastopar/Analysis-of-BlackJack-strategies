@@ -159,15 +159,15 @@ def place_bet_buttons(game, mouse, hand, box):
         # Add random cards
 
         # Player gets 2 cards
-        sui, val = cards.random_card(game)
+        sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.player_position)
         hand.player_hand.append(c)
-        sui, val = cards.random_card(game)
+        sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 150, position[1]])
         hand.player_hand.append(c)
         # Dealer gets 1 card
-        sui, val = cards.random_card(game)
+        sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.dealer_position)
         hand.dealer_hand.append(c)
         c.draw(gameDisplay)
@@ -344,7 +344,7 @@ def dealing_buttons(game, mouse, hand):
 
         position = game.player_position
         num = len(hand.player_hand)
-        sui, val = cards.random_card(game)
+        sui, val = classes.random_card(game)
         if hand.take_split > 0:
             c = classes.Card(sui, val, [position[0] + 120*num, position[1]])
         else:
@@ -366,7 +366,7 @@ def dealing_buttons(game, mouse, hand):
 
     elif width - 955 + 140 + 10 + 140 + 10 <= mouse[0] <= width - 955 + 140 + 10 + 140 + 10 + 150 and height - 70 <= mouse[1] <= height - 70 + 60 and hand.double(game): # Double
         if hand.take_split == 1: 
-            sui, val = cards.random_card(game)
+            sui, val = classes.random_card(game)
             c = classes.Card(sui, val, [game.player_position[0] + 120*2, game.player_position[1]])
             hand.player_hand.append(c)
             pygame.display.flip()
@@ -379,7 +379,7 @@ def dealing_buttons(game, mouse, hand):
             game.position = 9
 
         elif hand.take_split == 2:
-            sui, val = cards.random_card(game)
+            sui, val = classes.random_card(game)
             c = classes.Card(sui, val, [game.player_position[0] + 120*2, game.player_position[1]])
             hand.player_hand.append(c)
             pygame.display.flip()
@@ -389,7 +389,7 @@ def dealing_buttons(game, mouse, hand):
             hand.split_bet = hand.split_bet*2
             game.position = 8
         else:
-            sui, val = cards.random_card(game)
+            sui, val = classes.random_card(game)
             c = classes.Card(sui, val, [game.player_position[0] + 150*2, game.player_position[1]])
             hand.player_hand.append(c)
             pygame.display.flip()
@@ -432,7 +432,7 @@ def add_dealer_cards(hand, game): # game.position = 8
         
         if val == 17:
             if k:
-                sui, val = cards.random_card(game)
+                sui, val = classes.random_card(game)
                 c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
                 hand.dealer_hand.append(c)
                 c.draw(gameDisplay)
@@ -446,7 +446,7 @@ def add_dealer_cards(hand, game): # game.position = 8
                 game.position = 10
 
         else:
-            sui, val = cards.random_card(game)
+            sui, val = classes.random_card(game)
             c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
             hand.dealer_hand.append(c)
             c.draw(gameDisplay)
@@ -472,7 +472,7 @@ def split(hand, game): #game.position = 9
 
 
         game.player_position = [150, 500]
-        sui, val = cards.random_card(game)
+        sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
         print(c)
         print(game.deck)
@@ -501,7 +501,7 @@ def split(hand, game): #game.position = 9
         d_card = classes.Card('S', 12, [game.dealer_position[0] + 150, game.dealer_position[1]])
         d_card.card_back(gameDisplay)
 
-        sui, val = cards.random_card(game)
+        sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
         print(c)
         print(game.deck)
