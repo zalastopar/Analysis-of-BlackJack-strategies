@@ -474,8 +474,6 @@ def split(hand, game): #game.position = 9
         game.player_position = [150, 500]
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
-        print(c)
-        print(game.deck)
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -503,8 +501,7 @@ def split(hand, game): #game.position = 9
 
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
-        print(c)
-        print(game.deck)
+
         hand.player_hand.append(c)
         
 
@@ -620,11 +617,15 @@ def winner_buttons(game, mouse, hand):
         # Change balance
         money = hand.who_wins('P')
         hand.winnings = hand.winnings + money * hand.split_bet
-        game.balance = game.balance + hand.winnings
+     
         if len(hand.split_hand) > 0:
             mon = hand.who_wins('S')
             hand.winnings = hand.winnings + mon * hand.bet
-            game.balance = game.balance + hand.winnings
+
+        game.balance = game.balance + hand.winnings
+
+
+
 
         # insurance
         if hand.BlackJack('D'):

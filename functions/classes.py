@@ -41,7 +41,7 @@ def random_card(game):
 
 # game
 class Game:
-    def __init__(self, simulation, position, help, balance, deck):
+    def __init__(self, simulation, position, help, balance, deck, initial_bet):
         self.simulation = simulation # save as int how many 0 to inf
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
@@ -49,6 +49,7 @@ class Game:
         self.deck = deck # list of cards that can be chosen - currently we play with 6 decks
         self.dealer_position = [500, 70]
         self.player_position = [500, 500]  
+        self.initial_bet = initial_bet
 
     def shuffle_deck(self):
         deck = []
@@ -374,6 +375,8 @@ class Hand_ai:
         self.splitgrid = splitgrid
         self.soft = soft
         self.decisions = decisions
+        self.winning_streak = 0
+        self.length = 0
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -492,10 +495,63 @@ class Hand_ai:
 
         return winnings
 
-    def next_move(self):
+    def next_move(self, game):
         val, k = self.hand_value('P')
         val2, k = self.hand_value('D')
-        return self.decisions[val][val2]
+        # check for split
+        if self.split(game):
+            num = self.player_hand[0].real_value()
+            print('split')
+            print(num)
+            check = self.splitgrid[num][val2]
+            if check == 'Y':
+                return 'split'
+
+        #check for ace
+        if 11 == self.player_hand[0].value and len(self.player_hand) == 2: # ace is first card
+            num = self.player_hand[1].real_value()
+            print('11 prva')
+            check = self.soft[num][val2]
+            # DH
+            if check == 'DH':
+                if self.double(game):
+                    return 'D'
+                else:
+                    return 'H'
+            # DS
+            elif check == 'DS':
+                if self.double(game):
+                    return 'D'
+                else:
+                    return 'H'
+            else:
+                return check
+        elif 11 == self.player_hand[1].value and len(self.player_hand) == 2: # ace is second card
+            num = self.player_hand[0].real_value()
+            print('11 druga')
+            check = self.soft[num][val2]
+            # DH
+            if check == 'DH':
+                if self.double(game):
+                    return 'D'
+                else:
+                    return 'H'
+            # DS
+            elif check == 'DS':
+                if self.double(game):
+                    return 'D'
+                else:
+                    return 'H'
+            else:
+                return check
+        else:
+            print(val)
+            if val <= 8:
+                return 'H'
+            elif val >= 18:
+                return 'S'
+            else:
+                return self.decisions[val][val2]
 
 
 class Button:
