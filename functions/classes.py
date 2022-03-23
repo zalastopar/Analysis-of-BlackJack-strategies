@@ -320,6 +320,17 @@ class Hand:
 
         return winnings
 
+    def restart_hand(self):
+        self.player_hand = []
+        self.dealer_hand = []
+        self.winnings = 0
+        self.bet = 0
+        self.take_insurance = 0
+        self.take_split = 0
+        self.split_hand = []
+        self.split_bet = 0
+        self.take_double = False
+
 
 
 decisions = {}
@@ -359,7 +370,7 @@ splitgrid[7] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N',
 splitgrid[8] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
 splitgrid[9] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'Y', 9: 'Y', 10: 'N', 11: 'N'}
 splitgrid[10] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[9] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
+splitgrid[11] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
 
 
 class Hand_ai:
@@ -375,6 +386,7 @@ class Hand_ai:
         self.splitgrid = splitgrid
         self.soft = soft
         self.decisions = decisions
+        ##### tega uspodi ni
         self.winning_streak = 0
         self.length = 0
 
@@ -553,6 +565,16 @@ class Hand_ai:
             else:
                 return self.decisions[val][val2]
 
+    def restart_hand(self):
+        self.player_hand = []
+        self.dealer_hand = []
+        self.winnings = 0
+        self.bet = 0
+        self.take_insurance = 0
+        self.take_split = 0
+        self.split_hand = []
+        self.split_bet = 0
+        self.take_double = False
 
 class Button:
     def __init__(self, position, txt, lightcol, col, darkcol, size, border):

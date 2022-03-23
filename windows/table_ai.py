@@ -1,12 +1,13 @@
 from pickle import TRUE
 import pygame
 from pygame.locals import *
-import functions.winning_streak as ws
+
 
 
 # functions
 import functions.classes as classes
 import functions.cards as cards
+import functions.strategies as strategies
 
 # Setting up color objects
 
@@ -83,14 +84,16 @@ def empty_table(hand, game):
 
 # deal first hand
 
-def deal_first_hand(game, hand): # game.position = 21
+def deal_first_hand(game, hand, strategy): # game.position = 21
         '''
         hand.bet = float(box.text)
         box.text = ''
         box.txt_surface = box.text_font.render('', True, PINK)
         game.balance = game.balance - hand.bet
         '''
-        ws.winning_streak(game, hand)
+        strategy.set_bet(game)
+        hand.restart_hand()
+        hand.bet = strategy.bet
 
         # Add random cards
 
@@ -356,7 +359,7 @@ def deal_dealer(game, hand): # game.position = 24
             game.position = 24
     
 
-def ai_winner(game, hand): # game.position = 25
+def ai_winner(game, hand, strategy): # game.position = 25
 
     empty_table(hand, game) 
 
@@ -427,7 +430,7 @@ def ai_winner(game, hand): # game.position = 25
     
     
     # new bet or cash out
-    if hand.length >= 10:  ### igramo 10 iger
+    if strategy.length >= 10:  ### igramo 10 iger
         # Change balance
         money = hand.who_wins('P')
         w = hand.winnings + money * hand.split_bet
@@ -438,21 +441,6 @@ def ai_winner(game, hand): # game.position = 25
             game.balance = game.balance + hand.winnings
 
 
-        
-
-        # Restart hand
-        '''
-        hand.player_hand = []
-        hand.dealer_hand = []
-        hand.winnings = 0
-        hand.bet = 0
-        hand.take_insurance = 0
-        hand.take_split = 0
-        hand.split_hand = []
-        hand.split_bet = 0
-        hand.take_double = False
-        hand.winning_streak = 0
-        '''
 
         game.player_position = [500, 500]
 
@@ -470,25 +458,11 @@ def ai_winner(game, hand): # game.position = 25
 
         # check winning streak
         if hand.winnings >= hand.bet + hand.split_bet:
-            hand.winning_streak += 1
+            strategy.winning_streak += 1
         else:
-            hand.winning_streak = 0
+            strategy.winning_streak = 0
 
-        hand.length += 1
-
-        # Restart hand
-        '''
-        hand.player_hand = []
-        hand.dealer_hand = []
-        hand.winnings = 0
-        hand.bet = 0
-        hand.take_insurance = 0
-        hand.take_split = 0
-        hand.split_hand = []
-        hand.split_bet = 0
-        hand.take_double = False
-        hand.winning_streak = 0
-        '''
+        strategy.length += 1
 
         game.player_position = [500, 500]
 

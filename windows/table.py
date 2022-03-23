@@ -599,15 +599,7 @@ def winner_buttons(game, mouse, hand):
 
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         # Restart hand
-        hand.player_hand = []
-        hand.dealer_hand = []
-        hand.winnings = 0
-        hand.bet = 0
-        hand.take_insurance = 0
-        hand.take_split = 0
-        hand.split_hand = []
-        hand.split_bet = 0
-        hand.take_double = False
+        hand.restart_hand()
         
         game.player_position = [500, 500]
 
@@ -633,15 +625,7 @@ def winner_buttons(game, mouse, hand):
 
 
         # Restart hand
-        hand.player_hand = []
-        hand.dealer_hand = []
-        hand.winnings = 0
-        hand.bet = 0
-        hand.take_insurance = 0
-        hand.take_split = 0
-        hand.split_hand = []
-        hand.split_bet = 0
-        hand.take_double = False
+        hand.restart_hand()
 
         game.player_position = [500, 500]
         game.position = 12

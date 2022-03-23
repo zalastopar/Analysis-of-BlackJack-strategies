@@ -19,6 +19,7 @@ import windows.table as table
 # functions
 import functions.classes as classes
 from functions.cards import *
+import functions.strategies as strategies
 
 
 
@@ -73,6 +74,12 @@ aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0)
 balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
 bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
 
+
+# strategies
+paroli = strategies.paroli(0, 0, 0)
+
+
+
 napaka = False
 
 mygame.shuffle_deck()
@@ -103,7 +110,7 @@ def view(position):
     elif position == 13:
         end_window.finnish(mygame)
     elif position == 21:
-        table_ai.deal_first_hand(mygame, aihand)
+        table_ai.deal_first_hand(mygame, aihand, ws)
     elif position == 22:
         table_ai.first_dealing(mygame, aihand)
     elif position == 23:
@@ -111,7 +118,7 @@ def view(position):
     elif position == 24:
         table_ai.deal_dealer(mygame, aihand)
     elif position == 25:
-        table_ai.ai_winner(mygame, aihand)
+        table_ai.ai_winner(mygame, aihand, ws)
     elif position == 26:
         table_ai.split(mygame, aihand)
 
