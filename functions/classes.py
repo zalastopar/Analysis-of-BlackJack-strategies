@@ -41,7 +41,7 @@ def random_card(game):
 
 # game
 class Game:
-    def __init__(self, simulation, position, help, balance, deck, initial_bet):
+    def __init__(self, simulation, position, help, balance, deck, initial_bet, length):
         self.simulation = simulation # save as int how many 0 to inf
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
@@ -50,6 +50,7 @@ class Game:
         self.dealer_position = [500, 70]
         self.player_position = [500, 500]  
         self.initial_bet = initial_bet
+        self.length = length
 
     def shuffle_deck(self):
         deck = []
@@ -513,16 +514,17 @@ class Hand_ai:
         # check for split
         if self.split(game):
             num = self.player_hand[0].real_value()
-            print('split')
-            print(num)
+            #print('split')
+            #print(num)
             check = self.splitgrid[num][val2]
             if check == 'Y':
+                #print('res ssplit')
                 return 'split'
 
         #check for ace
         if 11 == self.player_hand[0].value and len(self.player_hand) == 2: # ace is first card
             num = self.player_hand[1].real_value()
-            print('11 prva')
+            #print('11 prva')
             check = self.soft[num][val2]
             # DH
             if check == 'DH':
@@ -540,7 +542,7 @@ class Hand_ai:
                 return check
         elif 11 == self.player_hand[1].value and len(self.player_hand) == 2: # ace is second card
             num = self.player_hand[0].real_value()
-            print('11 druga')
+            #print('11 druga')
             check = self.soft[num][val2]
             # DH
             if check == 'DH':
@@ -557,7 +559,7 @@ class Hand_ai:
             else:
                 return check
         else:
-            print(val)
+            #print(val)
             if val <= 8:
                 return 'H'
             elif val >= 18:

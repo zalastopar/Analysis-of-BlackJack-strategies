@@ -91,7 +91,17 @@ def deal_first_hand(game, hand, strategy): # game.position = 21
         box.txt_surface = box.text_font.render('', True, PINK)
         game.balance = game.balance - hand.bet
         '''
+        # paroli
+        #strategy.set_bet(game)
+
+        #1326 #onehalf #reverselab
         strategy.set_bet(game)
+
+        # preveri ce je dovolj denarja ############################################################
+        if game.balance >= strategy.bet:
+            game.balance = game.balance - strategy.bet
+        else:
+            game.position = 13 ##################################################
         hand.restart_hand()
         hand.bet = strategy.bet
 
@@ -202,8 +212,8 @@ def first_dealing(game, hand): # game.position = 22
         hand.player_hand = [c]
         d.position = [800, 500]
         hand.split_hand = [d]
-        print(hand.player_hand)
-        print(hand.split_hand)
+        #print(hand.player_hand)
+        #print(hand.split_hand)
 
         game.balance = game.balance - hand.bet
         hand.split_bet = hand.bet
@@ -261,7 +271,7 @@ def dealing(game, hand): # game.position = 23
 def split(game, hand): #game.position = 26
 
     empty_table(hand, game)
-    print('aaa')
+    #print('aaa')
     if hand.take_split == 1:
         draw_hand(hand.player_hand)
         draw_hand(hand.split_hand)
@@ -425,12 +435,12 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
     pygame.display.flip()
     pygame.event.pump()
-    pygame.time.delay(4000)
+    pygame.time.delay(3000)
 
     
     
     # new bet or cash out
-    if strategy.length >= 10:  ### igramo 10 iger
+    if game.length >= 30:  ### igramo 10 iger
         # Change balance
         money = hand.who_wins('P')
         w = hand.winnings + money * hand.split_bet
@@ -456,13 +466,19 @@ def ai_winner(game, hand, strategy): # game.position = 25
             hand.winnings = hand.winnings + mon * hand.bet
         game.balance = game.balance + hand.winnings
 
-        # check winning streak
-        if hand.winnings >= hand.bet + hand.split_bet:
-            strategy.winning_streak += 1
-        else:
-            strategy.winning_streak = 0
 
-        strategy.length += 1
+        # check winning streak #################################################
+        # rabimo za paroli in 1326 in reverse lab in onehalf
+        if hand.winnings >= hand.bet + hand.split_bet:
+            # strategy.winning_streak += 1   w
+            strategy.losing_streak = 0
+        else:
+            strategy.losing_streak += 1
+            # strategy.winning_streak = 0    w
+
+
+
+        game.length += 1
 
         game.player_position = [500, 500]
 
