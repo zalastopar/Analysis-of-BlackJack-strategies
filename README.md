@@ -8,14 +8,14 @@ my program is written in python, user interface is created with [*pygame*](https
 * Analyse income from different betting strategies
 
 ## BlackJack strategies which I am going to analyse:
-* Counting Cards
-* Oscar's Grind
-* Winning streak strategies
-* Losing streak strategies
-* Martingale system
-* Steady betting strategy
+* Paroli system
+* 1 3 2 6 system
+* Reverse Labouchere
+* Martingale
+* Oscar’s Grind
+* Labouchere
 
 
 More about above strategies [here](https://upswingpoker.com/the-best-blackjack-betting-strategy-basic-explanation/)
-and [here](https://www.mypokercoaching.com/blackjack-betting-strategy/).
+and [here](https://www.mypokercoaching.com/blackjack-betting-strategy/) and [here](https://www.legitgamblingsites.com/blog/how-to-best-take-advantage-of-streaks-in-blackjack).
 
