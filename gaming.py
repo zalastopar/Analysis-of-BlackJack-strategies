@@ -67,7 +67,7 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game(0, 21, False, 100, {}, 0, 0)
+mygame = classes.Game(0, 1, False, 100, {}, 0, 0)
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0)
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0)
 
@@ -82,6 +82,7 @@ revlab = strategies.reverse_lab(10, [], 0, 0)
 onehalf = strategies.one_half_increase(0, 0)
 mart = strategies.martingale(0, 0)
 oscar = strategies.oscars_grind(5, 0, 0, 0)
+lab = strategies.labouchere(10, [], 0, 0)
 
 
 napaka = False
@@ -114,7 +115,7 @@ def view(position):
     elif position == 13:
         end_window.finnish(mygame)
     elif position == 21:
-        table_ai.deal_first_hand(mygame, aihand, oscar) ###########
+        table_ai.deal_first_hand(mygame, aihand, lab) ###########
     elif position == 22:
         table_ai.first_dealing(mygame, aihand)
     elif position == 23:
@@ -122,7 +123,7 @@ def view(position):
     elif position == 24:
         table_ai.deal_dealer(mygame, aihand)
     elif position == 25:
-        table_ai.ai_winner(mygame, aihand, oscar) #################
+        table_ai.ai_winner(mygame, aihand, lab) #################
     elif position == 26:
         table_ai.split(mygame, aihand)
 

@@ -138,8 +138,6 @@ class reverse_lab:
                         bet = self.seq[0]
                     else:
                         bet = self.seq[0] + self.seq[-1]
-        print(self.seq)
-        print(bet)
         
         self.bet = bet
 
@@ -221,3 +219,70 @@ class oscars_grind:
                 else:
                     self.bankroll += 1
                     self.bet = self.bet + self.unit
+
+class labouchere:
+    '''
+    Earlier I covered how the reverse Labouchere works, 
+    and the regular Labouchere has the same structure, only in a negative progression format.
+    This strategy begins by creating a number string that represents your bet amounts. 
+    The sequence can be however long you’d like, but I suggest keeping it to 5 to 8 numbers.
+    The next step is to make your first bet by combining the first and last numbers.
+    You cross both numbers off after a win and continue to the next wager. 
+    Following a loss, you add the combined bet to the end of the sequence.
+    The good thing about this system is that it’s less risky than the Martingale, 
+    but you still carry a fair amount of risk because it takes a while to complete each number string.'''
+
+    def __init__(self, profit, sequence, bet, losing_streak):
+        self.profit = profit
+        self.seq = sequence
+        self.bet = bet
+        self.losing_streak = losing_streak
+
+    def create_seq(self):
+        p = self.profit
+        seq = []
+        first = 0
+        while p > 0:
+            first = random.randint(1, p)
+            seq.append(first)
+            p = p-first
+        self.seq = seq
+
+    def set_bet(self, game):
+        self.bet = 0
+        # if sequence is empty, create new one
+        if len(self.seq) == 0:
+            self.create_seq()
+            print('dolzina 0')
+            if len(self.seq) == 1:
+                bet = self.seq[0]
+            else:
+                bet = self.seq[0] + self.seq[-1]
+        else: 
+            if self.losing_streak > 0:
+                print('w')
+                if len(self.seq) == 1:
+                    self.seq = self.seq + [self.seq[0]]
+                else:
+                    print('else')
+                    self.seq = self.seq + [self.seq[0] + self.seq[-1]]
+                bet = self.seq[0] + self.seq[-1]
+            else:
+                if len(self.seq) == 1 or len(self.seq) == 2:
+                    self.create_seq()
+                    print('dolzina 0')
+                    if len(self.seq) == 1:
+                        bet = self.seq[0]
+                    else:
+                        bet = self.seq[0] + self.seq[-1]
+                else:
+                    self.seq = self.seq[1:-1]
+                    if len(self.seq) == 1:
+                        bet = self.seq[0]
+                    else:
+                        bet = self.seq[0] + self.seq[-1]
+        print(self.seq)
+        print(bet)
+        
+        self.bet = bet
+
