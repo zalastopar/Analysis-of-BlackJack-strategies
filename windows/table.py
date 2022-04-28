@@ -140,7 +140,6 @@ def place_bet(hand, game, box): # game.position = 4
     menu = classes.Button([width - 65, 5], 'Menu', LIGHTPINK, PINK, DARKPINK, [65, 30], False)
     menu.create(gameDisplay, 30)
 
-    
 
     pygame.display.update()
 
@@ -172,8 +171,8 @@ def place_bet_buttons(game, mouse, hand, box):
         hand.dealer_hand.append(c)
         c.draw(gameDisplay)
 
-        hand.dealer_hand = [classes.Card('S', 11, game.dealer_position)]
-        hand.player_hand = [classes.Card('S', 14, [500,500]), classes.Card('S', 12, [500+150,500])]
+        #hand.dealer_hand = [classes.Card('S', 11, game.dealer_position)]
+        #hand.player_hand = [classes.Card('S', 14, [500,500]), classes.Card('S', 12, [500+150,500])]
         game.position = 5
     
 
@@ -626,6 +625,9 @@ def winner_buttons(game, mouse, hand):
 
         # Restart hand
         hand.restart_hand()
+        # shuffle deck if there is less than 20% cards left
+        if len(game.deck) <= 0.2*6*52:
+            game.shuffle_deck()
 
         game.player_position = [500, 500]
         game.position = 12

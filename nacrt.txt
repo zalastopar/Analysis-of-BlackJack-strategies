@@ -1,0 +1,3 @@
+Kaj je potrebno storiti:
+* zbiranje podatkov: balance po vsaki igri, kako hitro pride do 0
+* verjetnosti

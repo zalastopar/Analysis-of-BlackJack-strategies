@@ -23,6 +23,7 @@ class paroli:
     def __init__(self, winning_streak, bet):
         self.winning_streak = winning_streak
         self.bet = bet
+        self.strat = 'paroli'
 
     def set_bet(self, game):
         bet = 0
@@ -53,6 +54,7 @@ class system1326:
         self.winning_streak = winning_streak
         self.bet = bet
         self.round = round
+        self.strat = '1326'
 
     def set_bet(self, game):
         bet = 0
@@ -92,6 +94,7 @@ class reverse_lab:
         self.seq = seq # sequence of betting int
         self.winning_streak = winning_streak
         self.bet = bet
+        self.strat = 'rev_lab'
 
 
     def create_seq(self):
@@ -152,6 +155,7 @@ class one_half_increase:
     def __init__(self, winning_streak, bet):
         self.winning_streak = winning_streak
         self.bet = bet
+        self.strat = 'increase'
 
     def set_bet(self, game):
         initial = game.initial_bet
@@ -162,8 +166,45 @@ class one_half_increase:
             bet = initial + initial/2*(self.winning_streak - 1)
         self.bet = bet
 
+class card_counting:
+    ''' https://www.blackjackapprenticeship.com/how-to-count-cards/
+    With Hi-Lo, the most common card counting system, the card values are as follows:
+    2-6 = +1, 7-9 = 0, 10-Ace= -1.
+    As each card is dealt, you will either add 1, subtract 1, or do nothing based on each card’s value.
+    As each card is dealt, we will update our “running count” with the new information we are given.
+    Calculate A “True Count” Or Count Per Deck: true count = running count/decks remaining.
+    Change Your Bets As The True Count Rises And Falls. In order to capitalize on the information 
+    you get from counting, you have to raise your bets as the true count rises.
+    Bet the true count minus 1 betting unit.
+    '''
+    def __init__(self, count, cards, bet) -> None:
+        self.count = count
+        self.cards = cards # num of cards we have already seen
+        self.bet = bet
+        self.strat = 'counting'
+        
+    def set_bet(self, game):
+        # game with 6 decks --> 312 skupnih kart
+        remaining_decks = (312 - self.cards)/52
+        print(self.count)
+        if remaining_decks == 0:
+            true_count = 0
+        else:
+            true_count = round(self.count/remaining_decks, 2)
+        if true_count <= 1:
+            bet = 5
+        else :
+            bet = (true_count-1)*10
+        print(true_count)
+        self.bet = round(bet,2)
 
-############################################3 card counting
+    def change_count(self, card):
+        if card.value <= 6:
+            self.count = self.count + 1
+        elif card.value in [7,8,9]:
+            self.count = self.count
+        else:
+            self.count = self.count - 1
 
 class martingale:
     '''
@@ -179,6 +220,7 @@ class martingale:
     def __init__(self, losing_streak, bet):
         self.losing_streak = losing_streak
         self.bet = bet
+        self.strat = 'martingale'
 
     def set_bet(self, game):
         if self.losing_streak == 0:
@@ -202,6 +244,7 @@ class oscars_grind:
         self.bet = bet
         self.losing_streak = losing_streak
         self.bankroll = bankroll
+        self.strat = 'oscar'
 
     def set_bet(self, game):
         print(self.bet)
@@ -237,6 +280,7 @@ class labouchere:
         self.seq = sequence
         self.bet = bet
         self.losing_streak = losing_streak
+        self.strat = 'lab'
 
     def create_seq(self):
         p = self.profit

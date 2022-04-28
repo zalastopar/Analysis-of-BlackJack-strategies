@@ -91,10 +91,7 @@ def deal_first_hand(game, hand, strategy): # game.position = 21
         box.txt_surface = box.text_font.render('', True, PINK)
         game.balance = game.balance - hand.bet
         '''
-        # paroli
-        #strategy.set_bet(game)
 
-        #1326 #onehalf #reverselab
         strategy.set_bet(game)
 
         # preveri ce je dovolj denarja ############################################################
@@ -110,14 +107,23 @@ def deal_first_hand(game, hand, strategy): # game.position = 21
         # Player gets 2 cards
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.player_position)
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.player_hand.append(c)
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 150, position[1]])
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.player_hand.append(c)
         # Dealer gets 1 card
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.dealer_position)
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.dealer_hand.append(c)
 
         #hand.dealer_hand = [classes.Card('S', 4, game.dealer_position)]
@@ -151,7 +157,7 @@ def change_size(hand, pogoj):
             novi = novi - 1
 
 # draw hand
-def first_dealing(game, hand): # game.position = 22
+def first_dealing(game, hand,strategy): # game.position = 22
     'After the bet is placed dealer deals first round of cards. Player gets 2 and dealer gets only 1 face up.'
 
     empty_table(hand, game)
@@ -193,6 +199,9 @@ def first_dealing(game, hand): # game.position = 22
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 2*150, position[1]])
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -222,7 +231,7 @@ def first_dealing(game, hand): # game.position = 22
 
 
 
-def dealing(game, hand): # game.position = 23
+def dealing(game, hand, strategy): # game.position = 23
 
     empty_table(hand, game)
 
@@ -241,6 +250,9 @@ def dealing(game, hand): # game.position = 23
         position = game.player_position
         num = len(hand.player_hand)
         c = classes.Card(sui, val, [position[0] + num*150, position[1]])
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -268,7 +280,7 @@ def dealing(game, hand): # game.position = 23
 
 
     
-def split(game, hand): #game.position = 26
+def split(game, hand, strategy): #game.position = 26
 
     empty_table(hand, game)
     #print('aaa')
@@ -283,7 +295,9 @@ def split(game, hand): #game.position = 26
         game.player_position = [150, 500]
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
-
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -311,7 +325,9 @@ def split(game, hand): #game.position = 26
 
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
-
+        if strategy.strat == 'counting':
+            strategy.change_count(c) ###########################################################################
+            strategy.cards += 1
         hand.player_hand.append(c)
         
 
@@ -323,7 +339,7 @@ def split(game, hand): #game.position = 26
 
         game.position = 23
 
-def deal_dealer(game, hand): # game.position = 24
+def deal_dealer(game, hand, strategy): # game.position = 24
     empty_table(hand, game)
 
     # draw hand
@@ -344,6 +360,9 @@ def deal_dealer(game, hand): # game.position = 24
             if k:
                 sui, val = classes.random_card(game)
                 c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
+                if strategy.strat == 'counting':
+                    strategy.change_count(c) ###########################################################################
+                    strategy.cards += 1
                 hand.dealer_hand.append(c)
                 c.draw(gameDisplay)
                 val, k = hand.hand_value('D')
@@ -358,6 +377,9 @@ def deal_dealer(game, hand): # game.position = 24
         else:
             sui, val = classes.random_card(game)
             c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
+            if strategy.strat == 'counting':
+                strategy.change_count(c) ###########################################################################
+                strategy.cards += 1
             hand.dealer_hand.append(c)
             c.draw(gameDisplay)
             val, k = hand.hand_value('D')
@@ -370,7 +392,6 @@ def deal_dealer(game, hand): # game.position = 24
     
 
 def ai_winner(game, hand, strategy): # game.position = 25
-
     empty_table(hand, game) 
 
     # winner with split
@@ -469,18 +490,31 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
         # check winning streak #################################################
         # rabimo za paroli in 1326 in reverse lab in onehalf
-        if hand.winnings >= hand.bet + hand.split_bet:
-            # strategy.winning_streak += 1   w
-            strategy.losing_streak = 0
-        else:
-            strategy.losing_streak += 1
-            # strategy.winning_streak = 0    w
+        if strategy.strat in ['paroli', '1326', 'rev_lab', 'increase']: # wining streak
+            if hand.winnings >= hand.bet + hand.split_bet:
+                strategy.winning_streak += 1 
+            else:
+                strategy.winning_streak = 0 
+        elif strategy.strat == 'counting':
+            pass
+        else: # losing streak
+            if hand.winnings >= hand.bet + hand.split_bet:
+                strategy.losing_streak = 0
+            else:
+                strategy.losing_streak += 1
 
 
 
         game.length += 1
 
         game.player_position = [500, 500]
+
+
+        # shuffle deck if there is less than 20% cards left
+        if len(game.deck) <= 0.2*6*52:
+            game.shuffle_deck()
+            if strategy.strat == 'counting':
+                strategy.cards = 0
 
 
         game.position = 21
