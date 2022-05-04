@@ -1,4 +1,7 @@
+from numpy import NaN
 import functions.classes as classes
+import pandas as pd
+import os.path
 
 def save_simulation(hand, game):
     '''
@@ -17,7 +20,6 @@ def save_simulation(hand, game):
     # balance 
     if sim not in game.data_balance.keys():
         game.data_balance[sim] = [game.balance]
-    else: 
         game.data_balance[sim].append(game.balance)
     
     # bet
@@ -153,3 +155,52 @@ def save_prob(hand, game):
             else:  # player doesnt exist
                 game.prob_data[hand_val]= {}
                 game.prob_data[hand_val][dealer] = [0,1]
+
+def nicer_dict(dict):
+    new_dict = {}
+    for player in dict.keys():
+        new_dict[int(player)] = {}
+        for dealer in dict[player].keys():
+            if dict[player][dealer] != dict[player][dealer]:
+                pass
+            else:
+                sez = dict[player][dealer][1:-1]
+                sez = [int(x) for x in list(sez.split(", "))]
+                new_dict[int(player)][dealer] = sez
+    return new_dict
+
+def combine_dict(old, new):
+    updated = old
+    for player in new.keys():
+        if player in old.keys(): # player exists
+            for dealer in new[player].keys():
+                if dealer in old[player].keys(): # dealer exists
+                    sez = [old[player][dealer][0] + new[player][dealer][0], old[player][dealer][1] + new[player][dealer][1]]
+                    updated[player][dealer] = sez
+                else: # dealer doest exist
+                    updated[player][dealer] = new[player][dealer]
+        else: # player doest exist
+            updated[player] = new[player]
+    return updated
+
+
+def update_csv_prob(new_dict, csv_file):
+    # check if old data exists
+    if not os.path.exists(csv_file):
+        pd.DataFrame({}).to_csv(csv_file)
+        old_dict = {}
+    else: 
+        # get old data
+        df = pd.read_csv(csv_file, index_col = 0) 
+        old_dict = nicer_dict(df.to_dict())
+    # merge data
+    updated = combine_dict(old_dict, new_dict)
+    # save as csv
+    df = pd.DataFrame(updated)
+    df.to_csv(csv_file)
+    print('old')
+    print(old_dict)
+    print('new')
+    print(new_dict)
+    print('combined')
+    print(updated)

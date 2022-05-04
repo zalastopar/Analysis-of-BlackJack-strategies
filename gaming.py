@@ -1,7 +1,7 @@
 from pickle import TRUE
 import pygame
 from pygame.locals import *
-import time
+
 import sys
 import pygame_textinput
 import os
@@ -67,7 +67,7 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game(0, 1, False, 100, {}, 0, 0, 1, {}, {}, [], [], [], [], [], {}, {}, {})
+mygame = classes.Game(0, 21, False, 100, {}, 0, 0, 1, {}, {}, [], [], [], [], [], {}, {}, {})
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 

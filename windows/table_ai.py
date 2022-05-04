@@ -474,23 +474,23 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
     pygame.display.flip()
     pygame.event.pump()
-    pygame.time.delay(3000)
+    pygame.time.delay(1000)
 
     # save data
-    save_data.save_prob(hand,game)  
+    save_data.save_prob(hand, game)  
     save_data.save_simulation(hand, game)
     #print(game.prob_data)  
     #print(game.soft_data)
     #print(game.split_data)
     #print(hand.player_hand)
     #print(hand.dealer_hand)
-    print(game.data_balance)
-    print(game.balance)
-    print(game.data_bet)
-    print(hand.bet)
+    #print(game.data_balance)
+    #print(game.balance)
+    #print(game.data_bet)
+    #print(hand.bet)
 
     # new bet or cash out
-    if game.length >= 9:  ### igramo 100 iger
+    if game.length >= 5:  ### igramo 100 iger
         # Change balance
         money = hand.who_wins('P')
         w = hand.winnings + money * hand.split_bet
@@ -511,6 +511,9 @@ def ai_winner(game, hand, strategy): # game.position = 25
             game.length = 0
             game.balance = 100
         else:
+            save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
+            save_data.update_csv_prob(game.split_data, 'data/split_data.csv')
+            save_data.update_csv_prob(game.soft_data, 'data/soft_data.csv')
             game.position = 13
 
 
