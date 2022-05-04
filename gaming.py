@@ -67,7 +67,7 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game(0, 21, False, 100, {}, 0, 0, 1, {}, {}, [], [], [], [], [], {}, {}, {})
+mygame = classes.Game(0, 1, False, 100, {}, 0, 0, 1, {}, {}, [], [], [], [], [], {}, {}, {})
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 
@@ -143,9 +143,6 @@ while True:
     if konec:
         break
 
-
-
-
     view(mygame.position)
     pygame.display.update()
     events = pygame.event.get()
@@ -174,7 +171,6 @@ while True:
                 table.winner_buttons(mygame, mouse, myhand)
             elif position == 12:
                 end_window.cash_out_buttons(mygame, mouse)
-                konec = True
             elif position == 13:
                 end_window.finnish_buttons(mygame, mouse)
 

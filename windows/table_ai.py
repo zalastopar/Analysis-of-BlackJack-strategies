@@ -478,9 +478,16 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
     # save data
     save_data.save_prob(hand,game)  
-    print(game.prob_data)  
-    print(hand.player_hand)
-    print(hand.dealer_hand)
+    save_data.save_simulation(hand, game)
+    #print(game.prob_data)  
+    #print(game.soft_data)
+    #print(game.split_data)
+    #print(hand.player_hand)
+    #print(hand.dealer_hand)
+    print(game.data_balance)
+    print(game.balance)
+    print(game.data_bet)
+    print(hand.bet)
 
     # new bet or cash out
     if game.length >= 9:  ### igramo 100 iger
@@ -498,7 +505,7 @@ def ai_winner(game, hand, strategy): # game.position = 25
         game.player_position = [500, 500]
         
         # new round of simulation
-        if game.sim < 1:
+        if game.sim < 3:
             game.sim += 1
             game.shuffle_deck()
             game.length = 0
@@ -507,13 +514,8 @@ def ai_winner(game, hand, strategy): # game.position = 25
             game.position = 13
 
 
-
-
-
-
     else: # bet again
         
-
         # Change balance
         money = hand.who_wins('P')
         hand.winnings = hand.winnings + money * hand.split_bet

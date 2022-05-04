@@ -50,7 +50,7 @@ class Game:
         self.dealer_position = [500, 70]
         self.player_position = [500, 500]  
         self.initial_bet = initial_bet
-        self.length = length
+        self.length = length # int number of bets
 
         self.sim = sim # number of simulation
         self.data_balance = data_balance # dictionary: key = a number of simulation, value = list of balances after each dealings
@@ -61,9 +61,9 @@ class Game:
         self.data_10x = data_10x # list: 1 if balance gets to 10x, 0 else
         self.data_to0 = data_to0 # list: number or dealings needed to get to 0 balance 
 
-        self.prob_data = prob_data
-        self.split_data = split_data
-        self.soft_data = soft_data
+        self.prob_data = prob_data # dict
+        self.split_data = split_data # dict
+        self.soft_data = soft_data # dict
 
     def shuffle_deck(self):
         deck = []
@@ -128,25 +128,6 @@ class Card:
         value = text_font.render(sign, TRUE, WRITING)
         screen.blit(value, (self.position[0] - w/2 + 200/2, self.position[1] + 320/2 - h/2))
 
-        '''
-        # Write suits on cards
-        s = self.suit
-        if s == 'C':
-            s = 'CLUB'
-        elif s == 'H':
-            s = 'HEART'
-        elif s == 'D':
-            s = 'DIAMOND'
-        elif s == 'S':
-            s = 'SPADE'
-
-        text_font = pygame.font.SysFont('Bungee', 45)
-        text_surface = text_font.render(s, True, WRITING)
-        wi = text_surface.get_width()
-        hi = text_surface.get_height()
-        c_suit = value = text_font.render(s, TRUE, WRITING)
-        screen.blit(c_suit, (self.position[0] - wi/2 + 200/2, self.position[1] + 320/2 + h/2 -20))
-        '''
 
         # For small text
         text_font = pygame.font.SysFont('Agency FB', 50)
@@ -362,6 +343,7 @@ decisions[17] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'S', 8: 'S', 9: 'S',
 
 
 # ace and smth
+# only when player has 2 cards
 soft = {}
 soft[2] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
 soft[3] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
@@ -395,11 +377,11 @@ class Hand_ai:
         self.take_split = split # 0 - if not split, 1-dealing first hand, 2-dealing 2nd hand 
         self.split_hand = split_hand
         self.take_double = double # bool - if player doubled
-        self.winnings = winnings
+        self.winnings = winnings # float - 1 if push, 2.5 if BJ, 2 if win, 0 if lose
         self.split_bet = split_bet 
-        self.splitgrid = splitgrid
-        self.soft = soft
-        self.decisions = decisions
+        self.splitgrid = splitgrid # directions how to play
+        self.soft = soft # directions how to play
+        self.decisions = decisions # directions how to play 
         self.move = move # list of 'H', 'S', 'split', 'D'
 
     def __repr__(self):
