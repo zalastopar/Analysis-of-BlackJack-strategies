@@ -1,3 +1,3 @@
 Kaj je potrebno storiti:
-* zbiranje podatkov: balance po vsaki igri, kako hitro pride do 0
+* zbiranje podatkov: balance po vsaki igri, kako hitro pride do 0, kok od 1000 handov smo prisli do 0, 3x, 5x, 10x
 * verjetnosti

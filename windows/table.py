@@ -538,6 +538,9 @@ def winner(hand, game): # game.position = 10
         if money == 0: # lost
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU LOST', TRUE, DARKTEAL)
+        elif money == 1: # push
+            text_font = pygame.font.SysFont('Bungee', 100)
+            first = text_font.render('PUSH: ' + str(money*hand.split_bet), TRUE, DARKTEAL)
         else: # won
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU WON: ' + str(money*hand.split_bet), TRUE, DARKTEAL)
@@ -548,7 +551,9 @@ def winner(hand, game): # game.position = 10
         if mon == 0: # lost
             text_font = pygame.font.SysFont('Bungee', 100)
             second = text_font.render('YOU LOST', TRUE, DARKTEAL)
-
+        elif mon == 1: #push
+            text_font = pygame.font.SysFont('Bungee', 100)
+            second = text_font.render('PUSH: ' + str(mon*hand.bet), TRUE, DARKTEAL)
         else: # won
             text_font = pygame.font.SysFont('Bungee', 100)
             second = text_font.render('YOU WON: ' + str(mon*hand.bet), TRUE, DARKTEAL)
@@ -574,7 +579,10 @@ def winner(hand, game): # game.position = 10
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU LOST', TRUE, DARKTEAL)
             gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
-
+        elif money == 1: # push
+            text_font = pygame.font.SysFont('Bungee', 100)
+            first = text_font.render('PUSH: ' + str(money*hand.bet), TRUE, DARKTEAL)
+            gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
         else: # won
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU WON: ' + str(money*hand.bet), TRUE, DARKTEAL)
@@ -614,9 +622,6 @@ def winner_buttons(game, mouse, hand):
             hand.winnings = hand.winnings + mon * hand.bet
 
         game.balance = game.balance + hand.winnings
-
-
-
 
         # insurance
         if hand.BlackJack('D'):

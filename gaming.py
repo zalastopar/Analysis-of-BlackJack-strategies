@@ -67,9 +67,9 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game(0, 21, False, 100, {}, 0, 0)
-myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0)
-aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0)
+mygame = classes.Game(0, 21, False, 100, {}, 0, 0, 1, {}, {}, [], [], [], [], [], {}, {}, {})
+myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
+aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 
 balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
 bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
@@ -89,6 +89,8 @@ counting = strategies.card_counting(0, 0, 0)
 napaka = False
 
 mygame.shuffle_deck()
+
+strategy = counting
 
 def view(position):
     if position == 1:
@@ -116,31 +118,39 @@ def view(position):
     elif position == 13:
         end_window.finnish(mygame)
     elif position == 21:
-        table_ai.deal_first_hand(mygame, aihand, counting) ###########
+        table_ai.deal_first_hand(mygame, aihand, strategy)
     elif position == 22:
-        table_ai.first_dealing(mygame, aihand, counting) ##############
+        table_ai.first_dealing(mygame, aihand, strategy)
     elif position == 23:
-        table_ai.dealing(mygame, aihand, counting) ###############
+        table_ai.dealing(mygame, aihand, strategy)
     elif position == 24:
-        table_ai.deal_dealer(mygame, aihand, counting) ##################
+        table_ai.deal_dealer(mygame, aihand, strategy)
     elif position == 25:
-        table_ai.ai_winner(mygame, aihand, counting) #################
+        table_ai.ai_winner(mygame, aihand, strategy)
     elif position == 26:
-        table_ai.split(mygame, aihand, counting) ######################
+        table_ai.split(mygame, aihand, strategy)
 
 
 
+# ponovimo ga 100x? 1000x?
+# mogoce 1000x in imamo 100 rund
 
+    
 
-
+konec = False
 # Beginning Game Loop
 while True:
+    if konec:
+        break
+
+
+
+
     view(mygame.position)
     pygame.display.update()
     events = pygame.event.get()
     position = mygame.position
     mouse = pygame.mouse.get_pos()
-
 
 
     for event in events:
@@ -164,13 +174,19 @@ while True:
                 table.winner_buttons(mygame, mouse, myhand)
             elif position == 12:
                 end_window.cash_out_buttons(mygame, mouse)
+                konec = True
             elif position == 13:
                 end_window.finnish_buttons(mygame, mouse)
+
         if position == 2:
                 balance_box.handle_event(event, gameDisplay, mygame)
         elif position ==4:
                 bet_box.handle_event(event, gameDisplay, mygame, True)
 
 
-
+    
             
+
+
+
+#######3 nekje je treba spemenit sim

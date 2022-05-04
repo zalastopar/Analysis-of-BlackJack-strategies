@@ -41,7 +41,7 @@ def random_card(game):
 
 # game
 class Game:
-    def __init__(self, simulation, position, help, balance, deck, initial_bet, length):
+    def __init__(self, simulation, position, help, balance, deck, initial_bet, length, sim, data_balance, data_bet, data_0x, data_3x, data_5x, data_10x, data_to0, prob_data, split_data, soft_data):
         self.simulation = simulation # save as int how many 0 to inf
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
@@ -51,6 +51,19 @@ class Game:
         self.player_position = [500, 500]  
         self.initial_bet = initial_bet
         self.length = length
+
+        self.sim = sim # number of simulation
+        self.data_balance = data_balance # dictionary: key = a number of simulation, value = list of balances after each dealings
+        self.data_bet = data_bet # dictionary: key = a number of simulation, value = list of bets
+        self.data_0x = data_0x # list: 1 if balcance gets to 0, 0 else
+        self.data_3x = data_3x # list: 1 if balance gets to 3x, 0 else
+        self.data_5x = data_5x # list: 1 if balance gets to 5x, 0 else
+        self.data_10x = data_10x # list: 1 if balance gets to 10x, 0 else
+        self.data_to0 = data_to0 # list: number or dealings needed to get to 0 balance 
+
+        self.prob_data = prob_data
+        self.split_data = split_data
+        self.soft_data = soft_data
 
     def shuffle_deck(self):
         deck = []
@@ -193,7 +206,7 @@ class Card:
         screen.blit(image, (self.position[0] + (200-width)/2 + 3, self.position[1] + (320 - height)/2))
 
 class Hand:
-    def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings, split_bet):
+    def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings, split_bet, move):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
@@ -203,6 +216,7 @@ class Hand:
         self.take_double = double # bool - if player doubled
         self.winnings = winnings
         self.split_bet = split_bet
+        self.move = move
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -333,9 +347,8 @@ class Hand:
         self.take_double = False
 
 
-
+# first key = player, second keys = dealer
 decisions = {}
-
 decisions[9] = {2: 'H', 3: 'D', 4: 'D', 5: 'D', 6 : 'D', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
 decisions[10] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'H', 11: 'H'}
 decisions[11] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'D', 11: 'D'}
@@ -375,7 +388,7 @@ splitgrid[11] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y'
 
 
 class Hand_ai:
-    def __init__(self, bet, hand, dealer_hand, double, split, split_hand, winnings, split_bet):
+    def __init__(self, bet, hand, dealer_hand, double, split, split_hand, winnings, split_bet, move):
         self.bet = bet # float
         self.player_hand = hand # sez with cards
         self.dealer_hand = dealer_hand # sez with player cards
@@ -383,13 +396,11 @@ class Hand_ai:
         self.split_hand = split_hand
         self.take_double = double # bool - if player doubled
         self.winnings = winnings
-        self.split_bet = split_bet
+        self.split_bet = split_bet 
         self.splitgrid = splitgrid
         self.soft = soft
         self.decisions = decisions
-        ##### tega uspodi ni
-        self.winning_streak = 0
-        self.length = 0
+        self.move = move # list of 'H', 'S', 'split', 'D'
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -482,7 +493,7 @@ class Hand_ai:
         elif  len(hand) == 2 and [first.real_value(), second.real_value()] == [11, 10]:
             return True
  
-    def who_wins(self, who): # 'P' player, 'S' split hand
+    def who_wins(self, who): # 'P' player, 'S' split hand, 'D' dealer
         winnings = 0
         dealer, k = self.hand_value('D')
         player, k = self.hand_value(who)
@@ -524,7 +535,6 @@ class Hand_ai:
         #check for ace
         if 11 == self.player_hand[0].value and len(self.player_hand) == 2: # ace is first card
             num = self.player_hand[1].real_value()
-            #print('11 prva')
             check = self.soft[num][val2]
             # DH
             if check == 'DH':
@@ -542,7 +552,6 @@ class Hand_ai:
                 return check
         elif 11 == self.player_hand[1].value and len(self.player_hand) == 2: # ace is second card
             num = self.player_hand[0].real_value()
-            #print('11 druga')
             check = self.soft[num][val2]
             # DH
             if check == 'DH':
@@ -577,6 +586,7 @@ class Hand_ai:
         self.split_hand = []
         self.split_bet = 0
         self.take_double = False
+        self.move = []
 
 class Button:
     def __init__(self, position, txt, lightcol, col, darkcol, size, border):

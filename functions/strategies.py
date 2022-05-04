@@ -186,7 +186,6 @@ class card_counting:
     def set_bet(self, game):
         # game with 6 decks --> 312 skupnih kart
         remaining_decks = (312 - self.cards)/52
-        print(self.count)
         if remaining_decks == 0:
             true_count = 0
         else:
@@ -195,7 +194,6 @@ class card_counting:
             bet = 5
         else :
             bet = (true_count-1)*10
-        print(true_count)
         self.bet = round(bet,2)
 
     def change_count(self, card):

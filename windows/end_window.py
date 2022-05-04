@@ -74,10 +74,10 @@ def finnish(game): # game.position = 13
 
     # Successful cash out
     text_font = pygame.font.SysFont('Bungee', 100)
-    text_surface = text_font.render('You have successfully cashed out ' + str(game.balance) + '.', True, DARKPINK)
+    text_surface = text_font.render('You have successfully cashed out ' + str(round(game.balance,2)) + '.', True, DARKPINK)
     w = text_surface.get_width()
     h = text_surface.get_height()
-    first = text_font.render('You have successfully cashed out ' + str(game.balance) + '.', TRUE, DARKPINK)
+    first = text_font.render('You have successfully cashed out ' + str(round(game.balance,2)) + '.', TRUE, DARKPINK)
 
     gameDisplay.blit(first, ((width - w)/2, height - 650))
 

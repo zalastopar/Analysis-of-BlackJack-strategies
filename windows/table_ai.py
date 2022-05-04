@@ -8,7 +8,7 @@ from pygame.locals import *
 import functions.classes as classes
 import functions.cards as cards
 import functions.strategies as strategies
-
+import functions.save_data as save_data
 # Setting up color objects
 
 
@@ -60,14 +60,14 @@ def empty_table(hand, game):
     text_font = pygame.font.SysFont('Bungee', 50)
     bet = text_font.render('Bet: ' + str(hand.bet), TRUE, DARKTEAL)
     text_font = pygame.font.SysFont('Bungee', 35)
-    balance = text_font.render('Balance: ' + str(game.balance), TRUE, DARKTEAL)
+    balance = text_font.render('Balance: ' + str(round(game.balance, 2)), TRUE, DARKTEAL)
 
     gameDisplay.blit(bet, (width - 1498.5 + 15, height - 850 + 30 + 15))
     gameDisplay.blit(balance, (width - 1498.5 + 15, height - 850 + 15))
     
     if hand.take_split > 0:
         s_bet = text_font = pygame.font.SysFont('Bungee', 50)
-        s_bet = text_font.render('Split bet: ' + str(hand.split_bet), TRUE, DARKTEAL)
+        s_bet = text_font.render('Split bet: ' + str(round(hand.split_bet,2)), TRUE, DARKTEAL)
         gameDisplay.blit(s_bet, (width - 1498.5 + 15, height - 850 + 15 + 40 + 25))
 
     '''
@@ -127,7 +127,7 @@ def deal_first_hand(game, hand, strategy): # game.position = 21
         hand.dealer_hand.append(c)
 
         #hand.dealer_hand = [classes.Card('S', 4, game.dealer_position)]
-        #hand.player_hand = [classes.Card('S', 2, [500,500]), classes.Card('S', 2, [500+150,500])]
+        #hand.player_hand = [classes.Card('S', 11, [500,500]), classes.Card('S', 11, [500+150,500])]
         game.position = 22
     
 
@@ -194,8 +194,10 @@ def first_dealing(game, hand,strategy): # game.position = 22
     if move == 'H':
         game.position = 23
     elif move == 'S':
+        hand.move.append('S') # save move
         game.position = 24
     elif move == 'D':
+        hand.move.append('D') # save move
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 2*150, position[1]])
@@ -213,7 +215,7 @@ def first_dealing(game, hand,strategy): # game.position = 22
 
         game.position = 24
     elif move == 'split':
-
+        hand.move.append('split') # save move
         hand.take_split = 1
         c = hand.player_hand[0]
         d = hand.player_hand[1]
@@ -246,6 +248,7 @@ def dealing(game, hand, strategy): # game.position = 23
 
     move = hand.next_move(game)
     if move == 'H':
+        hand.move.append('H') # save move
         sui, val = classes.random_card(game)
         position = game.player_position
         num = len(hand.player_hand)
@@ -262,12 +265,15 @@ def dealing(game, hand, strategy): # game.position = 23
         game.position = 23
     else:
         if hand.take_split == 1:
+            hand.move.append('S') # save move
+            hand.move.append(',') # save move - split start new hand
             hand.take_split = 2
             pygame.display.flip()
             pygame.event.pump()
             pygame.time.delay(200)
             game.position = 26
         else:
+            hand.move.append('S') # save move 
             game.position = 24
 
 
@@ -393,6 +399,10 @@ def deal_dealer(game, hand, strategy): # game.position = 24
 
 def ai_winner(game, hand, strategy): # game.position = 25
     empty_table(hand, game) 
+    #print(hand.move)
+    #print(hand.player_hand)
+    #print(hand.dealer_hand)
+    #print(hand.split_hand)
 
     # winner with split
     if hand.take_split == 2:
@@ -411,6 +421,9 @@ def ai_winner(game, hand, strategy): # game.position = 25
         if money == 0: # lost
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU LOST', TRUE, DARKTEAL)
+        elif money == 1: # push
+            text_font = pygame.font.SysFont('Bungee', 100)
+            first = text_font.render('PUSH: ' + str(money*hand.split_bet), TRUE, DARKTEAL)
         else: # won
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU WON: ' + str(money*hand.split_bet), TRUE, DARKTEAL)
@@ -421,7 +434,9 @@ def ai_winner(game, hand, strategy): # game.position = 25
         if mon == 0: # lost
             text_font = pygame.font.SysFont('Bungee', 100)
             second = text_font.render('YOU LOST', TRUE, DARKTEAL)
-
+        elif mon == 1: # push
+            text_font = pygame.font.SysFont('Bungee', 100)
+            second = text_font.render('PUSH: ' + str(mon*hand.bet), TRUE, DARKTEAL)
         else: # won
             text_font = pygame.font.SysFont('Bungee', 100)
             second = text_font.render('YOU WON: ' + str(mon*hand.bet), TRUE, DARKTEAL)
@@ -447,7 +462,10 @@ def ai_winner(game, hand, strategy): # game.position = 25
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU LOST', TRUE, DARKTEAL)
             gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
-
+        elif money == 1: # push
+            text_font = pygame.font.SysFont('Bungee', 100)
+            first = text_font.render('PUSH: ' + str(money*hand.bet), TRUE, DARKTEAL)
+            gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
         else: # won
             text_font = pygame.font.SysFont('Bungee', 100)
             first = text_font.render('YOU WON: ' + str(money*hand.bet), TRUE, DARKTEAL)
@@ -458,10 +476,14 @@ def ai_winner(game, hand, strategy): # game.position = 25
     pygame.event.pump()
     pygame.time.delay(3000)
 
-    
-    
+    # save data
+    save_data.save_prob(hand,game)  
+    print(game.prob_data)  
+    print(hand.player_hand)
+    print(hand.dealer_hand)
+
     # new bet or cash out
-    if game.length >= 30:  ### igramo 10 iger
+    if game.length >= 9:  ### igramo 100 iger
         # Change balance
         money = hand.who_wins('P')
         w = hand.winnings + money * hand.split_bet
@@ -474,8 +496,21 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
 
         game.player_position = [500, 500]
+        
+        # new round of simulation
+        if game.sim < 1:
+            game.sim += 1
+            game.shuffle_deck()
+            game.length = 0
+            game.balance = 100
+        else:
+            game.position = 13
 
-        game.position = 13
+
+
+
+
+
     else: # bet again
         
 
@@ -488,8 +523,7 @@ def ai_winner(game, hand, strategy): # game.position = 25
         game.balance = game.balance + hand.winnings
 
 
-        # check winning streak #################################################
-        # rabimo za paroli in 1326 in reverse lab in onehalf
+        # check winning streak
         if strategy.strat in ['paroli', '1326', 'rev_lab', 'increase']: # wining streak
             if hand.winnings >= hand.bet + hand.split_bet:
                 strategy.winning_streak += 1 
@@ -503,12 +537,8 @@ def ai_winner(game, hand, strategy): # game.position = 25
             else:
                 strategy.losing_streak += 1
 
-
-
         game.length += 1
-
         game.player_position = [500, 500]
-
 
         # shuffle deck if there is less than 20% cards left
         if len(game.deck) <= 0.2*6*52:
