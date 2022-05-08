@@ -1,6 +1,7 @@
 from pickle import TRUE
 import pygame
 from pygame.locals import *
+import pandas as pd
 
 
 
@@ -168,7 +169,7 @@ def first_dealing(game, hand,strategy): # game.position = 22
     
     pygame.display.flip()
     pygame.event.pump()
-    pygame.time.delay(200)
+    #pygame.time.delay(200)
 
     # Dealer gets one card
     card = hand.dealer_hand[0]
@@ -176,7 +177,7 @@ def first_dealing(game, hand,strategy): # game.position = 22
 
     pygame.display.flip()
     pygame.event.pump()
-    pygame.time.delay(200)
+    #pygame.time.delay(200)
 
     # Player gets one more card
     card = hand.player_hand[1]
@@ -184,7 +185,7 @@ def first_dealing(game, hand,strategy): # game.position = 22
 
     pygame.display.flip()
     pygame.event.pump()
-    pygame.time.delay(200)
+    #pygame.time.delay(200)
 
     d_card = classes.Card('S', 12, [game.dealer_position[0] + 150, game.dealer_position[1]])
     d_card.card_back(gameDisplay)
@@ -208,7 +209,7 @@ def first_dealing(game, hand,strategy): # game.position = 22
 
         pygame.display.flip()
         pygame.event.pump()
-        pygame.time.delay(200)
+        #pygame.time.delay(200)
 
         game.balance = game.balance - hand.bet
         hand.bet = hand.bet*2
@@ -260,7 +261,7 @@ def dealing(game, hand, strategy): # game.position = 23
 
         pygame.display.flip()
         pygame.event.pump()
-        pygame.time.delay(200)
+        #pygame.time.delay(200)
 
         game.position = 23
     else:
@@ -270,7 +271,7 @@ def dealing(game, hand, strategy): # game.position = 23
             hand.take_split = 2
             pygame.display.flip()
             pygame.event.pump()
-            pygame.time.delay(200)
+            #pygame.time.delay(200)
             game.position = 26
         else:
             hand.move.append('S') # save move 
@@ -308,7 +309,7 @@ def split(game, hand, strategy): #game.position = 26
 
         pygame.display.flip()
         pygame.event.pump()
-        pygame.time.delay(600)
+        #pygame.time.delay(600)
 
         draw_hand(hand.player_hand)
 
@@ -339,7 +340,7 @@ def split(game, hand, strategy): #game.position = 26
 
         pygame.display.flip()
         pygame.event.pump()
-        pygame.time.delay(600)
+        #pygame.time.delay(600)
 
         c.draw(gameDisplay)
 
@@ -375,7 +376,7 @@ def deal_dealer(game, hand, strategy): # game.position = 24
             
                 pygame.display.flip()
                 pygame.event.pump()
-                pygame.time.delay(200)
+                #pygame.time.delay(200)
                 game.position = 24
             else:
                 game.position = 25
@@ -392,7 +393,7 @@ def deal_dealer(game, hand, strategy): # game.position = 24
 
             pygame.display.flip()
             pygame.event.pump()
-            pygame.time.delay(200)
+            #pygame.time.delay(200)
 
             game.position = 24
     
@@ -403,6 +404,8 @@ def ai_winner(game, hand, strategy): # game.position = 25
     #print(hand.player_hand)
     #print(hand.dealer_hand)
     #print(hand.split_hand)
+
+    # announce winner
 
     # winner with split
     if hand.take_split == 2:
@@ -474,11 +477,11 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
     pygame.display.flip()
     pygame.event.pump()
-    pygame.time.delay(1000)
+    #pygame.time.delay(1000)
 
     # save data
-    save_data.save_prob(hand, game)  
-    save_data.save_simulation(hand, game)
+    save_data.save_prob(hand, game)
+    
     #print(game.prob_data)  
     #print(game.soft_data)
     #print(game.split_data)
@@ -490,7 +493,7 @@ def ai_winner(game, hand, strategy): # game.position = 25
     #print(hand.bet)
 
     # new bet or cash out
-    if game.length >= 5:  ### igramo 100 iger
+    if game.length >=100:  ### igramo 100 mesanj
         # Change balance
         money = hand.who_wins('P')
         w = hand.winnings + money * hand.split_bet
@@ -500,20 +503,44 @@ def ai_winner(game, hand, strategy): # game.position = 25
             hand.winnings = hand.winnings + mon * hand.bet
             game.balance = game.balance + hand.winnings
 
-
+        # save balance data
+        save_data.save_simulation(hand, game)
+        print('multiple')
+        print(game.data_multiple)
+        print('balance')
+        print(game.data_balance)
+        print('bet')
+        print(game.data_bet)
+        df = pd.DataFrame(game.data_bet)
+        print(df)
 
         game.player_position = [500, 500]
         
         # new round of simulation
-        if game.sim < 3:
+        if game.sim < 5: # we have 100 simulations
             game.sim += 1
             game.shuffle_deck()
             game.length = 0
             game.balance = 100
-        else:
+        else: # finnish
+            
+            # save probabilities
             save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
             save_data.update_csv_prob(game.split_data, 'data/split_data.csv')
             save_data.update_csv_prob(game.soft_data, 'data/soft_data.csv')
+
+            # save balance
+            df = pd.DataFrame(game.data_multiple)
+            df.to_csv('data/' + strategy.strat + '.csv')
+
+            df = pd.DataFrame(game.data_bet)
+            df.to_csv('data/' + strategy.strat + '-bet.csv')
+
+            df = pd.DataFrame(game.data_balance)
+            df.to_csv('data/' + strategy.strat + '-balance.csv')
+            
+
+            
             game.position = 13
 
 
@@ -526,6 +553,9 @@ def ai_winner(game, hand, strategy): # game.position = 25
             mon = hand.who_wins('S')
             hand.winnings = hand.winnings + mon * hand.bet
         game.balance = game.balance + hand.winnings
+
+        # save balance data
+        save_data.save_simulation(hand, game)
 
 
         # check winning streak

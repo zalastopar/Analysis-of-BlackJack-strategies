@@ -6,6 +6,7 @@ from pygame.locals import *
 # functions
 import functions.classes as classes
 import functions.cards as cards
+import functions.save_data as save_data
 
 # Setting up color objects
 
@@ -603,6 +604,8 @@ def winner(hand, game): # game.position = 10
 
 
 def winner_buttons(game, mouse, hand):
+    # save data
+    save_data.save_prob(hand, game) 
 
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         # Restart hand
@@ -616,6 +619,8 @@ def winner_buttons(game, mouse, hand):
         # Change balance
         money = hand.who_wins('P')
         hand.winnings = hand.winnings + money * hand.split_bet
+        
+         
      
         if len(hand.split_hand) > 0:
             mon = hand.who_wins('S')
@@ -633,6 +638,8 @@ def winner_buttons(game, mouse, hand):
         # shuffle deck if there is less than 20% cards left
         if len(game.deck) <= 0.2*6*52:
             game.shuffle_deck()
+
+        
 
         game.player_position = [500, 500]
         game.position = 12

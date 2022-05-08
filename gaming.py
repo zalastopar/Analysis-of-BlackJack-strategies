@@ -67,7 +67,7 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game(0, 21, False, 100, {}, 0, 0, 1, {}, {}, [], [], [], [], [], {}, {}, {})
+mygame = classes.Game(0, 21, False, 100, {}, 0, 0, 1, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 

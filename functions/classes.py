@@ -41,7 +41,7 @@ def random_card(game):
 
 # game
 class Game:
-    def __init__(self, simulation, position, help, balance, deck, initial_bet, length, sim, data_balance, data_bet, data_0x, data_3x, data_5x, data_10x, data_to0, prob_data, split_data, soft_data):
+    def __init__(self, simulation, position, help, balance, deck, initial_bet, length, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
         self.simulation = simulation # save as int how many 0 to inf
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
@@ -55,10 +55,8 @@ class Game:
         self.sim = sim # number of simulation
         self.data_balance = data_balance # dictionary: key = a number of simulation, value = list of balances after each dealings
         self.data_bet = data_bet # dictionary: key = a number of simulation, value = list of bets
-        self.data_0x = data_0x # list: 1 if balcance gets to 0, 0 else
-        self.data_3x = data_3x # list: 1 if balance gets to 3x, 0 else
-        self.data_5x = data_5x # list: 1 if balance gets to 5x, 0 else
-        self.data_10x = data_10x # list: 1 if balance gets to 10x, 0 else
+        self.data_multiple = data_multiple # dict of dict: data_0x, data_3x, data_5x, data_10x
+
         self.data_to0 = data_to0 # list: number or dealings needed to get to 0 balance 
 
         self.prob_data = prob_data # dict
@@ -508,6 +506,9 @@ class Hand_ai:
         if self.split(game):
             num = self.player_hand[0].real_value()
             #print('split')
+            #print(self.player_hand[0])
+            #print(self.player_hand[1])
+            #print('split')
             #print(num)
             check = self.splitgrid[num][val2]
             if check == 'Y':
@@ -515,8 +516,11 @@ class Hand_ai:
                 return 'split'
 
         #check for ace
-        if 11 == self.player_hand[0].value and len(self.player_hand) == 2: # ace is first card
+        if 11 == self.player_hand[0].value and len(self.player_hand) == 2 and self.player_hand[1].value != 11: # ace is first card
             num = self.player_hand[1].real_value()
+            #print('a')
+            #print(self.player_hand[0])
+            #print(self.player_hand[1])
             check = self.soft[num][val2]
             # DH
             if check == 'DH':
@@ -532,9 +536,13 @@ class Hand_ai:
                     return 'H'
             else:
                 return check
-        elif 11 == self.player_hand[1].value and len(self.player_hand) == 2: # ace is second card
+        elif 11 == self.player_hand[1].value and len(self.player_hand) == 2 and self.player_hand[0].value != 11: # ace is second card
             num = self.player_hand[0].real_value()
+            #print('b')
+            #print(self.player_hand[0])
+            #print(self.player_hand[1])
             check = self.soft[num][val2]
+
             # DH
             if check == 'DH':
                 if self.double(game):

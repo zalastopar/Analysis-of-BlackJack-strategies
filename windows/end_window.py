@@ -62,6 +62,11 @@ def cash_out(game):  # game.position = 12
 def cash_out_buttons(game,mouse):
 
     if  width/2 - 300/2 - 40 - 300 <= mouse[0] <= width/2 - 300/2 - 40  and height - 500 <= mouse[1] <= height - 500 + 80: # Cash out
+        # update data
+        save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
+        save_data.update_csv_prob(game.split_data, 'data/split_data.csv')
+        save_data.update_csv_prob(game.soft_data, 'data/soft_data.csv')
+        
         game.position = 13
     elif width/2 - 300/2 <= mouse[0] <= width/2 - 300/2 + 300 and height - 500 <= mouse[1] <= height - 500 + 80 and game.balance > 0: # Play again
         game.position = 4
@@ -71,9 +76,6 @@ def cash_out_buttons(game,mouse):
 
 def finnish(game): # game.position = 13
     '''Window after cash out. Player can go on menu or leave game.'''
-    
-
-
 
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
