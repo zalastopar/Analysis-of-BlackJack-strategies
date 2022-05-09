@@ -10,12 +10,9 @@ import functions.classes as classes
 import functions.cards as cards
 import functions.strategies as strategies
 import functions.save_data as save_data
+
+
 # Setting up color objects
-
-
-
-
-
 #PINK = (216, 0, 115)
 PINK = (242,233,222)
 DARKPINK = (222,93,131)#(212,112,162)

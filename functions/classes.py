@@ -41,32 +41,34 @@ def random_card(game):
 
 # game
 class Game:
-    def __init__(self, strategy, num_games, position, help, balance, deck, initial_bet, length, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
+    def __init__(self, strategy, num_dealings, position, help, balance, initial_balance,
+    deck, initial_bet, length, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
-        self.balance = balance
         self.deck = deck # list of cards that can be chosen - currently we play with 6 decks
         self.dealer_position = [500, 70]
         self.player_position = [500, 500]  
+        self.balance = balance
+        self.initial_balance = initial_balance
         self.initial_bet = initial_bet
         self.length = length # int number of bets
 
-        # settings for simulationž
-        self.sim = sim # number of simulation
-        self.num_games = num_games
-        self.strategy = strategy
+        # settings for simulation
+        self.sim = sim # number of games we want to play
+        self.num_dealings = num_dealings # number of dealings we want to have
+        self.strategy = strategy # which betting strategy we use
 
+        # data storage
         self.data_balance = data_balance # dictionary: key = a number of simulation, value = list of balances after each dealings
         self.data_bet = data_bet # dictionary: key = a number of simulation, value = list of bets
         self.data_multiple = data_multiple # dict of dict: data_0x, data_3x, data_5x, data_10x
-
         self.data_to0 = data_to0 # list: number or dealings needed to get to 0 balance 
-
         self.prob_data = prob_data # dict
         self.split_data = split_data # dict
         self.soft_data = soft_data # dict
 
     def shuffle_deck(self):
+        '''Function adds all posible cards to self.deck in random order.'''
         deck = []
         suits = ['S', 'H', 'D', 'C']
         values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
@@ -77,8 +79,6 @@ class Game:
                 deck = deck + part
         random.shuffle(deck)
         self.deck = deck
-
-
 
 # card
 class Card:
@@ -125,10 +125,8 @@ class Card:
         w = text_surface.get_width()
         h = text_surface.get_height()
 
-
         value = text_font.render(sign, TRUE, WRITING)
         screen.blit(value, (self.position[0] - w/2 + 200/2, self.position[1] + 320/2 - h/2))
-
 
         # For small text
         text_font = pygame.font.SysFont('Agency FB', 50)
@@ -136,7 +134,6 @@ class Card:
         w = text_surface.get_width()
         h = text_surface.get_height()
         value = text_font.render(sign, TRUE, PINK)
-
 
         # Draw suit on card
         s = self.suit
@@ -149,7 +146,6 @@ class Card:
         elif s == 'S':
             path = os.path.join("suits/spade.png")
 
-        
         image = pygame.image.load(path)
         width, height = image.get_width(), image.get_height()
         image = pygame.transform.scale(image, (width*0.5, height*0.5))
@@ -157,10 +153,6 @@ class Card:
         screen.blit(image, (self.position[0] + 200 - width - 1, self.position[1] + 4))
         screen.blit(image, (self.position[0] + 3, self.position[1] + 320 - height - 4))
 
-
-
-
-        # self.position[1] - (self.position[1] + 320/2 - h/2)/2 - height/2
 
         # Small values
         text_font = pygame.font.SysFont('Bungee', 60)
@@ -176,8 +168,7 @@ class Card:
         pygame.draw.rect(screen, OFFWHITE, (self.position[0], self.position[1], 200, 320), border_radius=6)
         pygame.draw.rect(screen, DARKTEAL, (self.position[0], self.position[1], 200, 320), 5, 6)
 
-
-        # Add Kitten
+        # Add Kitten (image)
         path = os.path.join("suits/cat1.png")
         image = pygame.image.load(path)
 
@@ -198,7 +189,7 @@ class Hand:
         self.take_double = double # bool - if player doubled
         self.winnings = winnings
         self.split_bet = split_bet
-        self.move = move
+        self.move = move ############################### ne rabm?
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -248,7 +239,7 @@ class Hand:
     def split(self, game):
         s = False
         hand = self.player_hand
-        if game.balance >= self.bet:
+        if game.balance >= self.bet: # is there enough money
             if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
                 s = True
         return s
@@ -256,7 +247,7 @@ class Hand:
     def double(self, game):
         d = False
         hand = self.player_hand
-        if game.balance >= self.bet:
+        if game.balance >= self.bet: # is there enough money
             if len(hand) == 2:
                 d = True
         return d
@@ -264,7 +255,7 @@ class Hand:
     def insurance(self, game):
         s = False
         hand = self.dealer_hand[0]
-        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0:
+        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0: # is there enough money
             if hand.value == 11:
                 s = True
         return s
@@ -276,6 +267,7 @@ class Hand:
         return True
             
     def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player or 'S' split
+        '''Function checks is one has a BJ'''
         if who == 'D':
             hand = self.dealer_hand
             if len(hand) != 2:
@@ -292,6 +284,8 @@ class Hand:
             return True
  
     def who_wins(self, who): # 'P' player, 'S' split hand
+        '''Functions looks at all hands and determines the winner. 
+        It returns winnings: 0 - dealer won, 1 - push, 2 - player won, 2.5 - player had BJ'''
         winnings = 0
         dealer, k = self.hand_value('D')
         player, k = self.hand_value(who)
@@ -433,7 +427,7 @@ class Hand_ai:
     def split(self, game):
         s = False
         hand = self.player_hand
-        if game.balance >= self.bet:
+        if game.balance >= self.bet: # is there enough money
             if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
                 s = True
         return s
@@ -441,7 +435,7 @@ class Hand_ai:
     def double(self, game):
         d = False
         hand = self.player_hand
-        if game.balance >= self.bet:
+        if game.balance >= self.bet: # is there enough money
             if len(hand) == 2:
                 d = True
         return d
@@ -449,7 +443,7 @@ class Hand_ai:
     def insurance(self, game):
         s = False
         hand = self.dealer_hand[0]
-        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0:
+        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0: # is there enough money
             if hand.value == 11:
                 s = True
         return s
@@ -461,6 +455,7 @@ class Hand_ai:
         return True
             
     def BlackJack(self, who): # who can be either 'D' (dealer) or 'P' player or 'S' split
+        '''Function checks if specific hand is a BJ'''
         if who == 'D':
             hand = self.dealer_hand
             if len(hand) != 2:
@@ -477,6 +472,8 @@ class Hand_ai:
             return True
  
     def who_wins(self, who): # 'P' player, 'S' split hand, 'D' dealer
+        '''Functions looks at all hands and determines the winner. 
+        It returns winnings: 0 - dealer won, 1 - push, 2 - player won, 2.5 - player had BJ'''
         winnings = 0
         dealer, k = self.hand_value('D')
         player, k = self.hand_value(who)
@@ -503,6 +500,7 @@ class Hand_ai:
         return winnings
 
     def next_move(self, game):
+        '''Function checks given playeing (not betting) strategy and determines the next move.'''
         val, k = self.hand_value('P')
         val2, k = self.hand_value('D')
         # check for split
@@ -625,7 +623,6 @@ class Button:
  
         screen.blit(first, (position[0] + (width - w)/2, position[1] + (height -h)/2))
 
-
 class InputBox:   
     '''the main code for this class comes from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
     I have made some alternations.'''
@@ -667,7 +664,7 @@ class InputBox:
                         if bet and game.balance < money:
                             # write error
                             self.napaka = 2
-                        if self.is_int:
+                        if self.is_int: # only when we want the number to be integer
                             try:
                                 m = int(self.text)
                             except:
@@ -679,9 +676,6 @@ class InputBox:
 
                         # Set input to ''
                         self.text = ''
-
-
-
                 # Re-render the text.
                 self.txt_surface = self.text_font.render(self.text, TRUE, self.txtcol)
 
@@ -698,3 +692,57 @@ class InputBox:
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
+class StrategyButton:
+    def __init__(self, s1, s2, s3, s4, s5, s6, s7, s8):
+        self.paroli = s1
+        self.s1326 = s2
+        self.rev_lab = s3
+        self.half = s4
+        self.counting = s5
+        self.martingale = s6
+        self.oscar = s7
+        self.lab = s8
+        self.activated = 0
+
+    def draw(self):
+        self.paroli.create(gameDisplay, 70)
+        self.s1326.create(gameDisplay, 70)
+        self.rev_lab.create(gameDisplay, 70)
+        self.half.create(gameDisplay, 70)
+        self.counting.create(gameDisplay, 70)
+        self.martingale.create(gameDisplay, 70)
+        self.oscar.create(gameDisplay, 70)
+        self.lab.create(gameDisplay, 70)
+
+    def get_button(self, search):
+        if search == 'paroli':
+            return self.paroli
+        elif search == '1326':
+            return self.s1326
+        elif search == 'rev_lab':
+            return self.rev_lab
+        elif search == 'increase':
+            return self.half
+        elif search == 'counting':
+            return self.counting
+        elif search == 'martingale':
+            return self.martingale
+        elif search == 'oscar':
+            return self.oscar
+        elif search == 'lab':
+            return self.lab
+
+    def activate_button(self, new):
+        if self.activated == 0: # no button pressed yet
+            new = self.get_button(new)
+            new.darkcol = DARKPINK
+            self.activated = new
+        else: # one button to neutral and color new one
+            self.activated.darkcol = TEAL
+            new = self.get_button(new)
+            new.darkcol = DARKPINK
+            self.activated = new
+
+
+
+        
