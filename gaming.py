@@ -67,13 +67,15 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game(0, 21, False, 100, {}, 0, 0, 1, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
+mygame = classes.Game(0, '', 3, False, 100, {}, 0, 0, 1, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 
+# input boxes
 balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
 bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
-
+num_sim_box = classes.InputBox(width - 600, height-600, 300, 70, '', 100, is_int= True)
+num_game_box = classes.InputBox(width - 600, height-400, 300, 70, '', 100, is_int = True)
 
 # strategies
 paroli = strategies.paroli(0, 0)
@@ -97,10 +99,8 @@ def view(position):
         menu_window.menu()
     elif position == 2:
         prep_window.bet_window(mygame, balance_box)
-    elif position == 3:   
-        pass                               ############ simulation - bomo naredili pol
-        #prep_window.bet_window_sim(events, mygame)
-
+    elif position == 3:                           ############ simulation - bomo naredili pol
+        prep_window.bet_window_sim(mygame, num_sim_box, num_game_box)
     elif position == 4:
         table.place_bet(myhand, mygame, bet_box)
     elif position == 5:
@@ -162,7 +162,7 @@ while True:
             elif position == 2:
                 prep_window.prep_buttons(mygame, mouse, balance_box)   
             elif position == 3:
-                pass
+                prep_window.simulation_buttons(mygame, mouse, num_sim_box, num_game_box)
             elif position == 4:
                 table.place_bet_buttons(mygame, mouse, myhand, bet_box)
             elif position == 6:
@@ -175,9 +175,14 @@ while True:
                 end_window.finnish_buttons(mygame, mouse)
 
         if position == 2:
-                balance_box.handle_event(event, gameDisplay, mygame)
-        elif position ==4:
-                bet_box.handle_event(event, gameDisplay, mygame, True)
+            balance_box.handle_event(event, gameDisplay, mygame)
+        elif position == 4:
+            bet_box.handle_event(event, gameDisplay, mygame, True)
+        elif position == 3:
+            num_sim_box.handle_event(event, gameDisplay, mygame)
+            num_game_box.handle_event(event, gameDisplay, mygame)
+
+
 
 
     

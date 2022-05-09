@@ -14,16 +14,6 @@ import functions.save_data as save_data
 
 
 
-'''
-Miza za AI
--ne rabjo prvega beta - sam upisejo
-ne rabjo help
-
-rabjo hit
-stand
-double 
-split
-'''
 
 
 #PINK = (216, 0, 115)
@@ -517,7 +507,7 @@ def ai_winner(game, hand, strategy): # game.position = 25
         game.player_position = [500, 500]
         
         # new round of simulation
-        if game.sim < 5: # we have 100 simulations
+        if game.sim < 100: # we have 100 simulations
             game.sim += 1
             game.shuffle_deck()
             game.length = 0

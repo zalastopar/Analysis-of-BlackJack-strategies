@@ -41,8 +41,7 @@ def random_card(game):
 
 # game
 class Game:
-    def __init__(self, simulation, position, help, balance, deck, initial_bet, length, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
-        self.simulation = simulation # save as int how many 0 to inf
+    def __init__(self, strategy, num_games, position, help, balance, deck, initial_bet, length, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
         self.balance = balance
@@ -52,7 +51,11 @@ class Game:
         self.initial_bet = initial_bet
         self.length = length # int number of bets
 
+        # settings for simulationž
         self.sim = sim # number of simulation
+        self.num_games = num_games
+        self.strategy = strategy
+
         self.data_balance = data_balance # dictionary: key = a number of simulation, value = list of balances after each dealings
         self.data_bet = data_bet # dictionary: key = a number of simulation, value = list of bets
         self.data_multiple = data_multiple # dict of dict: data_0x, data_3x, data_5x, data_10x
@@ -545,7 +548,7 @@ class Hand_ai:
 
             # DH
             if check == 'DH':
-                if self.double(game):
+                if self.double(game): 
                     return 'D'
                 else:
                     return 'H'
@@ -627,7 +630,7 @@ class InputBox:
     '''the main code for this class comes from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
     I have made some alternations.'''
 
-    def __init__(self, x, y, w, h, text='', text_size = 50, col=[LIGHTPINK, DARKPINK, OFFWHITE], napaka = 0, txtcol = WRITING):
+    def __init__(self, x, y, w, h, text='', text_size = 50, col=[LIGHTPINK, DARKPINK, OFFWHITE], napaka = 0, txtcol = WRITING, is_int = False):
         self.rect = pygame.Rect(x, y, w, h)
         self.col = col
         self.color = col[0]
@@ -637,6 +640,7 @@ class InputBox:
         self.active = False
         self.napaka = napaka
         self.txtcol = txtcol
+        self.is_int = is_int
 
     def handle_event(self, event, screen, game, bet = False):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -663,12 +667,20 @@ class InputBox:
                         if bet and game.balance < money:
                             # write error
                             self.napaka = 2
+                        if self.is_int:
+                            try:
+                                m = int(self.text)
+                            except:
+                                self.napaka = 3
+
                     except:
                         # Write warning
                         self.napaka = 1 
 
                         # Set input to ''
                         self.text = ''
+
+
 
                 # Re-render the text.
                 self.txt_surface = self.text_font.render(self.text, TRUE, self.txtcol)
