@@ -508,7 +508,21 @@ def ai_winner(game, hand, strategy): # game.position = 25
             game.sim += 1
             game.shuffle_deck()
             game.length = 0
-            game.balance = 100
+            game.balance = game.initial_balance
+
+            # restart strategies
+            if strategy.strat == 'counting': # restart counting
+                strategy.cards = 0
+                strategy.count = 0
+            elif strategy.strat == 'paroli':
+                strategy.bet = game.initial_bet
+                strategy.winning_streak = 0
+            elif strategy.strat == '1326':
+                strategy.bet = game.initial_bet
+                strategy.winning_streak = 0
+                strategy.round = 1
+            
+
         else: # finnish
             
             # save probabilities
@@ -544,7 +558,6 @@ def ai_winner(game, hand, strategy): # game.position = 25
         # save balance data
         save_data.save_simulation(hand, game)
 
-
         # check winning streak
         if strategy.strat in ['paroli', '1326', 'rev_lab', 'increase']: # wining streak
             if hand.winnings >= hand.bet + hand.split_bet:
@@ -565,8 +578,9 @@ def ai_winner(game, hand, strategy): # game.position = 25
         # shuffle deck if there is less than 20% cards left
         if len(game.deck) <= 0.2*6*52:
             game.shuffle_deck()
-            if strategy.strat == 'counting':
+            if strategy.strat == 'counting': # restart counting
                 strategy.cards = 0
+                strategy.count = 0
 
 
         game.position = 21

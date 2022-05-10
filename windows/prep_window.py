@@ -87,7 +87,7 @@ def prep_buttons(game, mouse, box):
         box.text = ''
         box.txt_surface = box.text_font.render('', True, PINK)
         game.shuffle_deck()
-        game.position = 3 ############# 3  # za skip 4
+        game.position = 3 
 
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box.text != '' and float(box.text) > 0 and game.sim == 0: # start playing
         game.balance = game.balance + float(box.text)
@@ -160,7 +160,7 @@ def simulation_buttons(game, mouse, sim_box, deal_box):
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and sim_box.text != '' and deal_box.text != '' and int(sim_box.text) > 0 and int(deal_box.text) > 0: # next 
         game.sim = int(sim_box.text)
         game.num_dealings = int(deal_box.text)
-        game.position = '3a' ##########
+        game.position = '3a'
 
 
     pygame.display.update()

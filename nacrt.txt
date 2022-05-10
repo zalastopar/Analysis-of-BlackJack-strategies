@@ -5,3 +5,5 @@ Kaj je potrebno storiti:
 Opombe:
 -nekak je bilu balance negativen
 -countingu je treba povedat kdaj se pack zmesa?
+- restarti vse hande ko zacnes novo simulacijo in ko gres na zacetek - mogoce metoda
+- ko izberes strategijo je treba se kej vnest kaj hoces z njo dosest

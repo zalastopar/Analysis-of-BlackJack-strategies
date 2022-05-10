@@ -90,7 +90,7 @@ class reverse_lab:
     But the upside is that you can win solid profits after completing the number string.
     '''
     def __init__(self, profit, seq, winning_streak, bet):
-        self.profit = profit #number wanted profit (int)
+        self.profit = profit # int: wanted profit (int)
         self.seq = seq # sequence of betting int
         self.winning_streak = winning_streak
         self.bet = bet
