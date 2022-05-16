@@ -80,8 +80,9 @@ def bet_window(game, box): # game.position = 2
 def prep_buttons(game, mouse, box):
 
     if width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # go back (to Menu)
+        game.restart_game()
         game.position = 1 
-    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.sim == 1: #and game.balance >0: # select num of simulations
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.sim == 1 and box.text != '' and float(box.text) > 0:#and game.balance >0: # select num of simulations
         game.balance = game.balance + float(box.text)
         game.initial_balance = game.balance + float(box.text)
         box.text = ''
@@ -152,7 +153,7 @@ def simulation_buttons(game, mouse, sim_box, deal_box):
 
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
-        game.balance = 0
+        game.restart_game()
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # select deposit amount again
         game.balance = 0
@@ -215,10 +216,7 @@ def strategy_buttons(game, mouse, strat): ################## rabimo se eno umesn
 
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
-        game.strategy = ''
-        game.sim = 0
-        game.num_dealings = 0
-        game.balance = 0
+        game.restart_game()
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # select deposit amount again
         game.strategy = ''
@@ -229,26 +227,35 @@ def strategy_buttons(game, mouse, strat): ################## rabimo se eno umesn
     # color the buttons
     elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 <= mouse[1] <=  height - 600 + 80: # paroli
         strat.activate_button('paroli')
+        strat.active_strategy = strat.paroli
         game.strategy = 'paroli'
     elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 <= mouse[1] <=  height - 600 + 80: # 1326
         strat.activate_button('1326')
+        strat.active_strategy = strat.s1326
         game.strategy = '1326'
     elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 100 <= mouse[1] <=  height - 600 + 80 + 100: # rev_lab
         strat.activate_button('rev_lab')
+        strat.active_strategy = strat.rev_lab
         game.strategy = 'rev_lab'
     elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 100 <= mouse[1] <=  height - 600 + 80 + 100: # increase
         strat.activate_button('increase')
+        strat.active_strategy = strat.half
         game.strategy = 'increase'
     elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 200 <= mouse[1] <=  height - 600 + 80 + 200: # counting
         strat.activate_button('counting')
+        strat.active_strategy = strat.counting
+        game.strategy = 'counting'
     elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 200 <= mouse[1] <=  height - 600 + 80 + 200: # martingale
         strat.activate_button('martingale')
+        strat.active_strategy = strat.martingale
         game.strategy = 'martingale'
     elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 300 <= mouse[1] <=  height - 600 + 80 + 300: # oscar
         strat.activate_button('oscar')
+        strat.active_strategy = strat.oscar
         game.strategy = 'oscar'
     elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 300 <= mouse[1] <=  height - 600 + 80 + 300: # lab
         strat.activate_button('lab')
+        strat.active_strategy = strat.lab
         game.strategy = 'lab'
     
 

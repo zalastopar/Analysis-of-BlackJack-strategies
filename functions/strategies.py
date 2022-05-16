@@ -1,6 +1,24 @@
 
 # https://www.legitgamblingsites.com/blog/how-to-best-take-advantage-of-streaks-in-blackjack/
 import random
+import functions.classes as classes
+
+# Setting up color objects
+PINK = (242,233,222)
+DARKPINK = (222,93,131)#(212,112,162)
+LIGHTPINK = (239,187,204)
+
+TEAL = (221,173,175)
+DARKTEAL = (216,105,105)
+LIGHTTEAL = (239,187,204)
+
+OFFWHITE = (242,233,222)
+WRITING = (255,153,153)
+
+ 
+# Setup a 1600x900 pixel display with caption
+width = 1600
+height = 900
 
 
 class paroli:
@@ -24,6 +42,8 @@ class paroli:
         self.winning_streak = winning_streak
         self.bet = bet
         self.strat = 'paroli'
+
+        self.button = classes.Button([width - 1300, height - 600], 'Paroli system', PINK, PINK, TEAL, [500, 80], True)
 
     def set_bet(self, game):
         bet = 0
@@ -55,6 +75,8 @@ class system1326:
         self.bet = bet
         self.round = round
         self.strat = '1326'
+
+        self.button = classes.Button([width - 1300 + 500 + 40, height - 600], 'System 1326', PINK, PINK, TEAL, [500, 80], True)
 
     def set_bet(self, game):
         bet = 0
@@ -95,6 +117,8 @@ class reverse_lab:
         self.winning_streak = winning_streak
         self.bet = bet
         self.strat = 'rev_lab'
+
+        self.button = classes.Button([width - 1300, height - 600 + 100], 'Reverse Labouchere', PINK, PINK, TEAL, [500, 80], True)
 
 
     def create_seq(self):
@@ -157,6 +181,8 @@ class one_half_increase:
         self.bet = bet
         self.strat = 'increase'
 
+        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 100], 'One half increase', PINK, PINK, TEAL, [500, 80], True)
+
     def set_bet(self, game):
         initial = game.initial_bet
         bet = 0
@@ -182,6 +208,8 @@ class card_counting:
         self.cards = cards # num of cards we have already seen
         self.bet = bet
         self.strat = 'counting'
+
+        self.button = classes.Button([width - 1300, height - 600 + 200], 'Card counting', PINK, PINK, TEAL, [500, 80], True)
         
     def set_bet(self, game):
         # game with 6 decks --> 312 skupnih kart
@@ -220,6 +248,8 @@ class martingale:
         self.bet = bet
         self.strat = 'martingale'
 
+        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 200], 'Martingale system', PINK, PINK, TEAL, [500, 80], True)
+
     def set_bet(self, game):
         if self.losing_streak == 0:
             bet = game.initial_bet
@@ -237,17 +267,18 @@ class oscars_grind:
     The drawback is that some blackjack players won’t be happy with how slowly this system works.
     '''
 
-    def __init__(self, unit, bet, losing_streak, bankroll):
-        self.unit = unit
+    def __init__(self, bet, losing_streak, bankroll):
         self.bet = bet
         self.losing_streak = losing_streak
         self.bankroll = bankroll
         self.strat = 'oscar'
 
+        self.button = classes.Button([width - 1300, height - 600 + 300], "Oscar's grind", PINK, PINK, TEAL, [500, 80], True)
+
     def set_bet(self, game):
         print(self.bet)
         if self.bet == 0:
-            self.bet = self.unit
+            self.bet = game.initial_bet
         else:
             if self.losing_streak > 0:
                 self.bankroll = self.bankroll - 1
@@ -256,10 +287,10 @@ class oscars_grind:
                 if self.bankroll == 0: # we won so it is acutaly 1
                     # back to begining
                     self.bankroll = 0
-                    self.bet = self.unit
+                    self.bet = game.initial_bet
                 else:
                     self.bankroll += 1
-                    self.bet = self.bet + self.unit
+                    self.bet = self.bet + game.initial_bet
 
 class labouchere:
     '''
@@ -279,6 +310,8 @@ class labouchere:
         self.bet = bet
         self.losing_streak = losing_streak
         self.strat = 'lab'
+
+        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 300], 'Labouchere', PINK, PINK, TEAL, [500, 80], True)
 
     def create_seq(self):
         p = self.profit

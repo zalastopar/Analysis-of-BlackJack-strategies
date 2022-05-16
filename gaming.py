@@ -67,26 +67,11 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game('', 0, '3a', False, 0, 0, {}, 10, 1, 1, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
+mygame = classes.Game('', 0, 1, False, 0, 0, {}, 10, 1, 0, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 
-# define strategy buttons
-paroli = classes.Button([width - 1300, height - 600], 'Paroli system', PINK, PINK, TEAL, [500, 80], True)
-s1326 = classes.Button([width - 1300 + 500 + 40, height - 600], 'System 1326', PINK, PINK, TEAL, [500, 80], True)
-revLab = classes.Button([width - 1300, height - 600 + 100], 'Reverse Labouchere', PINK, PINK, TEAL, [500, 80], True)
-half = classes.Button([width - 1300 + 500 + 40, height - 600 + 100], 'One half increase', PINK, PINK, TEAL, [500, 80], True)
-counting = classes.Button([width - 1300, height - 600 + 200], 'Card counting', PINK, PINK, TEAL, [500, 80], True)
-martingale = classes.Button([width - 1300 + 500 + 40, height - 600 + 200], 'Martingale system', PINK, PINK, TEAL, [500, 80], True)
-oscar = classes.Button([width - 1300, height - 600 + 300], "Oscar's grind", PINK, PINK, TEAL, [500, 80], True)
-lab = classes.Button([width - 1300 + 500 + 40, height - 600 + 300], 'Labouchere', PINK, PINK, TEAL, [500, 80], True)
-strat_buttons = classes.StrategyButton(paroli, s1326, revLab, half, counting, martingale, oscar, lab)
 
-# input boxes
-balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
-bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
-num_sim_box = classes.InputBox(width - 600, height-400, 300, 70, '', 100, is_int = True)
-num_deal_box = classes.InputBox(width - 600, height-600, 300, 70, '', 100, is_int= True)
 
 # strategies
 paroli = strategies.paroli(0, 0)
@@ -94,16 +79,25 @@ sys1326 = strategies.system1326(0, 0, 1)
 revlab = strategies.reverse_lab(10, [], 0, 0)
 onehalf = strategies.one_half_increase(0, 0)
 mart = strategies.martingale(0, 0)
-oscar = strategies.oscars_grind(5, 0, 0, 0)
+oscar = strategies.oscars_grind(5, 0, 0)
 lab = strategies.labouchere(10, [], 0, 0)
 counting = strategies.card_counting(0, 0, 0)
+strat_buttons = classes.StrategyButton(paroli, sys1326, revlab, onehalf, counting, mart, oscar, lab, '')
+
+# input boxes
+balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
+bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
+num_sim_box = classes.InputBox(width - 600, height-400, 300, 70, '', 100, is_int = True)
+num_deal_box = classes.InputBox(width - 600, height-600, 300, 70, '', 100, is_int= True)
+
+
+
 
 
 napaka = False
 
 mygame.shuffle_deck()
 
-strategy = counting
 
 def view(position):
     if position == 1:
@@ -131,17 +125,17 @@ def view(position):
     elif position == 13:
         end_window.finnish(mygame)
     elif position == 21:
-        table_ai.deal_first_hand(mygame, aihand, strategy)
+        table_ai.deal_first_hand(mygame, aihand, )
     elif position == 22:
-        table_ai.first_dealing(mygame, aihand, strategy)
+        table_ai.first_dealing(mygame, aihand, strat_buttons)
     elif position == 23:
-        table_ai.dealing(mygame, aihand, strategy)
+        table_ai.dealing(mygame, aihand, strat_buttons)
     elif position == 24:
-        table_ai.deal_dealer(mygame, aihand, strategy)
+        table_ai.deal_dealer(mygame, aihand, strat_buttons)
     elif position == 25:
-        table_ai.ai_winner(mygame, aihand, strategy)
+        table_ai.ai_winner(mygame, aihand, strat_buttons)
     elif position == 26:
-        table_ai.split(mygame, aihand, strategy)
+        table_ai.split(mygame, aihand, strat_buttons)
 
 
 

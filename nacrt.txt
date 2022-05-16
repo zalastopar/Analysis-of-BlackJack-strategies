@@ -7,3 +7,8 @@ Opombe:
 -countingu je treba povedat kdaj se pack zmesa?
 - restarti vse hande ko zacnes novo simulacijo in ko gres na zacetek - mogoce metoda
 - ko izberes strategijo je treba se kej vnest kaj hoces z njo dosest
+- pri strategijah ne sporoci napak
+
+- kjer je v funkciji strategija na zacetku spremeni, da bo za strategy uzel active_strategy
+ - ce grem na menu iz simulacije ostane od simulacije nastavek in obarvana strategija
+ - pa iz izbire simulacije gre na normalno igro

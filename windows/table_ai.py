@@ -72,7 +72,7 @@ def empty_table(hand, game):
 
 # deal first hand
 
-def deal_first_hand(game, hand, strategy): # game.position = 21
+def deal_first_hand(game, hand, strat): # game.position = 21
         '''
         hand.bet = float(box.text)
         box.text = ''
@@ -80,38 +80,38 @@ def deal_first_hand(game, hand, strategy): # game.position = 21
         game.balance = game.balance - hand.bet
         '''
 
-        strategy.set_bet(game)
+        strat.active_strategy.set_bet(game)
 
         # preveri ce je dovolj denarja ############################################################
-        if game.balance >= strategy.bet:
-            game.balance = game.balance - strategy.bet
+        if game.balance >= strat.active_strategy.bet:
+            game.balance = game.balance - strat.active_strategy.bet
         else:
             game.position = 13 ##################################################
         hand.restart_hand()
-        hand.bet = strategy.bet
+        hand.bet = strat.active_strategy.bet
 
         # Add random cards
 
         # Player gets 2 cards
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.player_position)
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.player_hand.append(c)
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 150, position[1]])
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.player_hand.append(c)
         # Dealer gets 1 card
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.dealer_position)
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.dealer_hand.append(c)
 
         #hand.dealer_hand = [classes.Card('S', 4, game.dealer_position)]
@@ -145,7 +145,7 @@ def change_size(hand, pogoj):
             novi = novi - 1
 
 # draw hand
-def first_dealing(game, hand,strategy): # game.position = 22
+def first_dealing(game, hand,strat): # game.position = 22
     'After the bet is placed dealer deals first round of cards. Player gets 2 and dealer gets only 1 face up.'
 
     empty_table(hand, game)
@@ -189,9 +189,9 @@ def first_dealing(game, hand,strategy): # game.position = 22
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 2*150, position[1]])
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -221,7 +221,7 @@ def first_dealing(game, hand,strategy): # game.position = 22
 
 
 
-def dealing(game, hand, strategy): # game.position = 23
+def dealing(game, hand, strat): # game.position = 23
 
     empty_table(hand, game)
 
@@ -241,9 +241,9 @@ def dealing(game, hand, strategy): # game.position = 23
         position = game.player_position
         num = len(hand.player_hand)
         c = classes.Card(sui, val, [position[0] + num*150, position[1]])
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -274,7 +274,7 @@ def dealing(game, hand, strategy): # game.position = 23
 
 
     
-def split(game, hand, strategy): #game.position = 26
+def split(game, hand, strat): #game.position = 26
 
     empty_table(hand, game)
     #print('aaa')
@@ -289,9 +289,9 @@ def split(game, hand, strategy): #game.position = 26
         game.player_position = [150, 500]
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.player_hand.append(c)
 
         pygame.display.flip()
@@ -319,9 +319,9 @@ def split(game, hand, strategy): #game.position = 26
 
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, [game.player_position[0] + 120, game.player_position[1]])
-        if strategy.strat == 'counting':
-            strategy.change_count(c) ###########################################################################
-            strategy.cards += 1
+        if strat.active_strategy.strat == 'counting':
+            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.cards += 1
         hand.player_hand.append(c)
         
 
@@ -333,7 +333,7 @@ def split(game, hand, strategy): #game.position = 26
 
         game.position = 23
 
-def deal_dealer(game, hand, strategy): # game.position = 24
+def deal_dealer(game, hand, strat): # game.position = 24
     empty_table(hand, game)
 
     # draw hand
@@ -354,9 +354,9 @@ def deal_dealer(game, hand, strategy): # game.position = 24
             if k:
                 sui, val = classes.random_card(game)
                 c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
-                if strategy.strat == 'counting':
-                    strategy.change_count(c) ###########################################################################
-                    strategy.cards += 1
+                if strat.active_strategy.strat == 'counting':
+                    strat.active_strategy.change_count(c) ###########################################################################
+                    strat.active_strategy.cards += 1
                 hand.dealer_hand.append(c)
                 c.draw(gameDisplay)
                 val, k = hand.hand_value('D')
@@ -371,9 +371,9 @@ def deal_dealer(game, hand, strategy): # game.position = 24
         else:
             sui, val = classes.random_card(game)
             c = classes.Card(sui, val, [position[0] + 150*num, position[1]])
-            if strategy.strat == 'counting':
-                strategy.change_count(c) ###########################################################################
-                strategy.cards += 1
+            if strat.active_strategy.strat == 'counting':
+                strat.active_strategy.change_count(c) ###########################################################################
+                strat.active_strategy.cards += 1
             hand.dealer_hand.append(c)
             c.draw(gameDisplay)
             val, k = hand.hand_value('D')
@@ -385,7 +385,7 @@ def deal_dealer(game, hand, strategy): # game.position = 24
             game.position = 24
     
 
-def ai_winner(game, hand, strategy): # game.position = 25
+def ai_winner(game, hand, strat): # game.position = 25
     empty_table(hand, game) 
     #print(hand.move)
     #print(hand.player_hand)
@@ -511,16 +511,11 @@ def ai_winner(game, hand, strategy): # game.position = 25
             game.balance = game.initial_balance
 
             # restart strategies
-            if strategy.strat == 'counting': # restart counting
-                strategy.cards = 0
-                strategy.count = 0
-            elif strategy.strat == 'paroli':
-                strategy.bet = game.initial_bet
-                strategy.winning_streak = 0
-            elif strategy.strat == '1326':
-                strategy.bet = game.initial_bet
-                strategy.winning_streak = 0
-                strategy.round = 1
+            strat.restart_strategies(game)
+
+
+
+            
             
 
         else: # finnish
@@ -532,15 +527,13 @@ def ai_winner(game, hand, strategy): # game.position = 25
 
             # save balance
             df = pd.DataFrame(game.data_multiple)
-            df.to_csv('data/' + strategy.strat + '.csv')
+            df.to_csv('data/' + strat.active_strategy.strat + '.csv')
 
             df = pd.DataFrame(game.data_bet)
-            df.to_csv('data/' + strategy.strat + '-bet.csv')
+            df.to_csv('data/' + strat.active_strategy.strat + '-bet.csv')
 
             df = pd.DataFrame(game.data_balance)
-            df.to_csv('data/' + strategy.strat + '-balance.csv')
-            
-
+            df.to_csv('data/' + strat.active_strategy.strat + '-balance.csv')
             
             game.position = 13
 
@@ -559,18 +552,18 @@ def ai_winner(game, hand, strategy): # game.position = 25
         save_data.save_simulation(hand, game)
 
         # check winning streak
-        if strategy.strat in ['paroli', '1326', 'rev_lab', 'increase']: # wining streak
+        if strat.active_strategy.strat in ['paroli', '1326', 'rev_lab', 'increase']: # wining streak
             if hand.winnings >= hand.bet + hand.split_bet:
-                strategy.winning_streak += 1 
+                strat.active_strategy.winning_streak += 1 
             else:
-                strategy.winning_streak = 0 
-        elif strategy.strat == 'counting':
+                strat.active_strategy.winning_streak = 0 
+        elif strat.active_strategy.strat == 'counting':
             pass
         else: # losing streak
             if hand.winnings >= hand.bet + hand.split_bet:
-                strategy.losing_streak = 0
+                strat.active_strategy.losing_streak = 0
             else:
-                strategy.losing_streak += 1
+                strat.active_strategy.losing_streak += 1
 
         game.length += 1
         game.player_position = [500, 500]
@@ -578,9 +571,9 @@ def ai_winner(game, hand, strategy): # game.position = 25
         # shuffle deck if there is less than 20% cards left
         if len(game.deck) <= 0.2*6*52:
             game.shuffle_deck()
-            if strategy.strat == 'counting': # restart counting
-                strategy.cards = 0
-                strategy.count = 0
+            if strat.active_strategy.strat == 'counting': # restart counting
+                strat.active_strategy.cards = 0
+                strat.active_strategy.count = 0
 
 
         game.position = 21

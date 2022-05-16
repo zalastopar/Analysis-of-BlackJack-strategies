@@ -80,6 +80,28 @@ class Game:
         random.shuffle(deck)
         self.deck = deck
 
+    def restart_game(self):
+        self.shuffle_deck
+        self.balance = 0
+        self.length = 0
+        self.dealer_position = [500, 70]
+        self.player_position = [500, 500]  
+        self.sim = 1
+        self.num_dealings = 0 # number of dealings we want to have
+        self.strategy = '' 
+        self.help = False
+
+        self.data_balance = {}
+        self.data_bet = {}
+        self.data_multiple = {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}
+        self.data_to0 =  []
+        self.prob_data = {}
+        self.split_data =  {}
+        self.soft_data = {}
+
+
+
+
 # card
 class Card:
     def __init__(self, suit, value, position):
@@ -693,7 +715,7 @@ class InputBox:
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class StrategyButton:
-    def __init__(self, s1, s2, s3, s4, s5, s6, s7, s8):
+    def __init__(self, s1, s2, s3, s4, s5, s6, s7, s8, active_strat):
         self.paroli = s1
         self.s1326 = s2
         self.rev_lab = s3
@@ -704,15 +726,17 @@ class StrategyButton:
         self.lab = s8
         self.activated = 0
 
+        self.active_strategy = active_strat
+
     def draw(self):
-        self.paroli.create(gameDisplay, 70)
-        self.s1326.create(gameDisplay, 70)
-        self.rev_lab.create(gameDisplay, 70)
-        self.half.create(gameDisplay, 70)
-        self.counting.create(gameDisplay, 70)
-        self.martingale.create(gameDisplay, 70)
-        self.oscar.create(gameDisplay, 70)
-        self.lab.create(gameDisplay, 70)
+        self.paroli.button.create(gameDisplay, 70)
+        self.s1326.button.create(gameDisplay, 70)
+        self.rev_lab.button.create(gameDisplay, 70)
+        self.half.button.create(gameDisplay, 70)
+        self.counting.button.create(gameDisplay, 70)
+        self.martingale.button.create(gameDisplay, 70)
+        self.oscar.button.create(gameDisplay, 70)
+        self.lab.button.create(gameDisplay, 70)
 
     def get_button(self, search):
         if search == 'paroli':
@@ -734,14 +758,42 @@ class StrategyButton:
 
     def activate_button(self, new):
         if self.activated == 0: # no button pressed yet
-            new = self.get_button(new)
+            new = self.get_button(new).button
             new.darkcol = DARKPINK
             self.activated = new
         else: # one button to neutral and color new one
             self.activated.darkcol = TEAL
-            new = self.get_button(new)
+            new = self.get_button(new).button
             new.darkcol = DARKPINK
             self.activated = new
+
+    def restart_strategies(self, game):
+        if self.active_strategy.strat == 'counting': # restart counting ############################################33333333333333333333333333
+            self.active.cards = 0
+            self.active.count = 0
+            self.active.bet = game.initial_bet
+        elif self.active_strategy.strat == 'paroli' or self.active_strategy.strat == 'increase':
+            self.active.bet = game.initial_bet
+            self.active.winning_streak = 0
+        elif self.active_strategy.strat == '1326':
+            self.active.bet = game.initial_bet
+            self.active.winning_streak = 0
+            self.active.round = 1
+        elif self.active_strategy.strat == 'rev_lab':
+            self.active.bet = game.initial_bet
+            self.active.winning_streak = 0
+            self.active.seq = []
+        elif self.active_strategy.strat == 'martingale':
+            self.active.bet = game.initial_bet
+            self.active.losing_streak = 0
+        elif self.active_strategy.strat == 'oscar':
+            self.active.bet = game.initial_bet
+            self.active.losing_streak = 0
+            self.active.bankroll = 0
+        elif self.active_strategy.strat == 'lab':
+            self.active.seq = []
+            self.active.bet = game.initial_bet
+            self.active.losing_streak = 0
 
 
 

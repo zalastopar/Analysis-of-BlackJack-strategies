@@ -147,8 +147,8 @@ def place_bet(hand, game, box): # game.position = 4
 def place_bet_buttons(game, mouse, hand, box):
 
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
-        game.help = False
-        game.balance =0
+        game.restart_game()
+        hand.restart_hand()
         game.position = 1
     elif width/2 + 100 <= mouse[0] <= width/2 + 100 + 300 and height - 400 <= mouse[1] <= height - 400 + 80 and box.text !='' and float(box.text) > 0 and float(box.text) <= game.balance: # bet
         hand.bet = float(box.text)
@@ -157,7 +157,6 @@ def place_bet_buttons(game, mouse, hand, box):
         game.balance = game.balance - hand.bet
             
         # Add random cards
-
         # Player gets 2 cards
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.player_position)
@@ -338,6 +337,8 @@ def dealing_buttons(game, mouse, hand):
 
     #if the mouse is clicked on the button smth happens:
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
+        game.restart_game()
+        hand.restart_hand()
         game.position = 1
 
     elif width - 955 <= mouse[0] <= width - 955 + 140 and height - 70 <= mouse[1] <= height - 70 + 60: # Hit
@@ -609,8 +610,8 @@ def winner_buttons(game, mouse, hand):
 
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         # Restart hand
+        game.restart_game()
         hand.restart_hand()
-        
         game.player_position = [500, 500]
 
         game.position = 1
