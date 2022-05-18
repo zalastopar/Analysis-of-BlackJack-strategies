@@ -76,11 +76,11 @@ aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 # strategies
 paroli = strategies.paroli(0, 0)
 sys1326 = strategies.system1326(0, 0, 1)
-revlab = strategies.reverse_lab(10, [], 0, 0)
+revlab = strategies.reverse_lab(0, [], 0, 0)
 onehalf = strategies.one_half_increase(0, 0)
 mart = strategies.martingale(0, 0)
-oscar = strategies.oscars_grind(5, 0, 0)
-lab = strategies.labouchere(10, [], 0, 0)
+oscar = strategies.oscars_grind(0, 0, 0)
+lab = strategies.labouchere(0, [], 0, 0)
 counting = strategies.card_counting(0, 0, 0)
 strat_buttons = classes.StrategyButton(paroli, sys1326, revlab, onehalf, counting, mart, oscar, lab, '')
 
@@ -89,6 +89,8 @@ balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
 bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHTTEAL, DARKTEAL, OFFWHITE], txtcol = OFFWHITE)
 num_sim_box = classes.InputBox(width - 600, height-400, 300, 70, '', 100, is_int = True)
 num_deal_box = classes.InputBox(width - 600, height-600, 300, 70, '', 100, is_int= True)
+bet_unit = classes.InputBox(width - 530, height-700, 300, 70, '', 100)
+desired_profit = classes.InputBox(width - 530, height-500, 300, 70, '', 100)
 
 
 
@@ -108,6 +110,8 @@ def view(position):
         prep_window.bet_window_sim(mygame, num_sim_box, num_deal_box)
     elif position == '3a':
         prep_window.select_strategy_window(mygame, strat_buttons)
+    elif position == '3b':
+        prep_window.unit_strategy(mygame, strat_buttons, bet_unit, desired_profit)
     elif position == 4:
         table.place_bet(myhand, mygame, bet_box)
     elif position == 5:
@@ -125,7 +129,7 @@ def view(position):
     elif position == 13:
         end_window.finnish(mygame)
     elif position == 21:
-        table_ai.deal_first_hand(mygame, aihand, )
+        table_ai.deal_first_hand(mygame, aihand, strat_buttons)
     elif position == 22:
         table_ai.first_dealing(mygame, aihand, strat_buttons)
     elif position == 23:
@@ -172,6 +176,8 @@ while True:
                 prep_window.simulation_buttons(mygame, mouse, num_sim_box, num_deal_box)
             elif position == '3a':
                 prep_window.strategy_buttons(mygame, mouse, strat_buttons)
+            elif position == '3b':
+                prep_window.unit_strategy_button(mygame, mouse, strat_buttons, bet_unit, desired_profit)
             elif position == 4:
                 table.place_bet_buttons(mygame, mouse, myhand, bet_box)
             elif position == 6:
@@ -190,6 +196,10 @@ while True:
         elif position == 3:
             num_sim_box.handle_event(event, gameDisplay, mygame)
             num_deal_box.handle_event(event, gameDisplay, mygame)
+        elif position == '3b':
+            bet_unit.handle_event(event, gameDisplay, mygame)
+            desired_profit.handle_event(event, gameDisplay, mygame)
+
 
 
 

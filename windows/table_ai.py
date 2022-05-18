@@ -79,7 +79,6 @@ def deal_first_hand(game, hand, strat): # game.position = 21
         box.txt_surface = box.text_font.render('', True, PINK)
         game.balance = game.balance - hand.bet
         '''
-
         strat.active_strategy.set_bet(game)
 
         # preveri ce je dovolj denarja ############################################################

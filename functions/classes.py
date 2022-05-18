@@ -683,7 +683,7 @@ class InputBox:
                     try:
                         money = float(self.text)
                         self.napaka = 0
-                        if bet and game.balance < money:
+                        if bet and game.balance < money and not self.is_int:
                             # write error
                             self.napaka = 2
                         if self.is_int: # only when we want the number to be integer
@@ -757,43 +757,59 @@ class StrategyButton:
             return self.lab
 
     def activate_button(self, new):
-        if self.activated == 0: # no button pressed yet
+        if self.active_strategy == '': # no button pressed yet
             new = self.get_button(new).button
             new.darkcol = DARKPINK
-            self.activated = new
+            self.active_strategy = new
         else: # one button to neutral and color new one
-            self.activated.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
             new = self.get_button(new).button
             new.darkcol = DARKPINK
-            self.activated = new
+            self.active_strategy = new
 
     def restart_strategies(self, game):
+
         if self.active_strategy.strat == 'counting': # restart counting ############################################33333333333333333333333333
-            self.active.cards = 0
-            self.active.count = 0
-            self.active.bet = game.initial_bet
+            self.active_strategy.cards = 0
+            self.active_strategy.count = 0
+            self.active_strategy.bet = game.initial_bet
+            self.counting.button.darkcol = DARKPINK
+            self.active_strategy = ''
         elif self.active_strategy.strat == 'paroli' or self.active_strategy.strat == 'increase':
-            self.active.bet = game.initial_bet
-            self.active.winning_streak = 0
+            self.active_strategy.bet = game.initial_bet
+            self.active_strategy.winning_streak = 0
+            self.paroli.button.darkcol = DARKPINK
+            self.half.button.darkcol = DARKPINK
+            self.active_strategy = ''
         elif self.active_strategy.strat == '1326':
-            self.active.bet = game.initial_bet
-            self.active.winning_streak = 0
-            self.active.round = 1
+            self.active_strategy.bet = game.initial_bet
+            self.active_strategy.winning_streak = 0
+            self.active_strategy.round = 1
+            self.s1326.button.darkcol = DARKPINK
+            self.active_strategy = ''
         elif self.active_strategy.strat == 'rev_lab':
-            self.active.bet = game.initial_bet
-            self.active.winning_streak = 0
+            self.active_strategy.bet = game.initial_bet
+            self.active_strategy.winning_streak = 0
             self.active.seq = []
+            self.rev_lab.button.darkcol = DARKPINK
+            self.active_strategy = ''
         elif self.active_strategy.strat == 'martingale':
-            self.active.bet = game.initial_bet
-            self.active.losing_streak = 0
+            self.active_strategy.bet = game.initial_bet
+            self.active_strategy.losing_streak = 0
+            self.martingale.button.darkcol = DARKPINK
+            self.active_strategy = ''
         elif self.active_strategy.strat == 'oscar':
-            self.active.bet = game.initial_bet
-            self.active.losing_streak = 0
-            self.active.bankroll = 0
+            self.active_strategy.bet = game.initial_bet
+            self.active_strategy.losing_streak = 0
+            self.active_strategy.bankroll = 0
+            self.oscar.button.darkcol = DARKPINK
+            self.active_strategy = ''
         elif self.active_strategy.strat == 'lab':
-            self.active.seq = []
-            self.active.bet = game.initial_bet
-            self.active.losing_streak = 0
+            self.active_strategy.seq = []
+            self.active_strategy.bet = game.initial_bet
+            self.active_strategy.losing_streak = 0
+            self.lab.button.darkcol = DARKPINK
+            self.active_strategy = ''
 
 
 

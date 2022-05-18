@@ -47,6 +47,8 @@ class paroli:
 
     def set_bet(self, game):
         bet = 0
+        if self.bet == 0:
+            bet = game.initial_bet
         if self.winning_streak >= 3:
             bet = game.initial_bet
         elif self.winning_streak == 2 or self.winning_streak == 1:
@@ -123,6 +125,7 @@ class reverse_lab:
 
     def create_seq(self):
         p = self.profit
+        print('profit' + str(p))
         seq = []
         first = 0
         while p > 0:
@@ -138,6 +141,8 @@ class reverse_lab:
         if len(self.seq) == 0:
             self.create_seq()
             print('dolzina 0')
+            print(len(self.seq))
+            print(self.seq)
             if len(self.seq) == 1:
                 bet = self.seq[0]
             else:
@@ -219,9 +224,9 @@ class card_counting:
         else:
             true_count = round(self.count/remaining_decks, 2)
         if true_count <= 1:
-            bet = 5
+            bet = game.initial_bet
         else :
-            bet = (true_count-1)*10
+            bet = (true_count-1)*game.initial_bet
         self.bet = round(bet,2)
 
     def change_count(self, card):
@@ -329,6 +334,8 @@ class labouchere:
         if len(self.seq) == 0:
             self.create_seq()
             print('dolzina 0')
+            print(len(self.seq))
+            print(self.seq)
             if len(self.seq) == 1:
                 bet = self.seq[0]
             else:
