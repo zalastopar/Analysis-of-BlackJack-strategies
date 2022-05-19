@@ -82,13 +82,11 @@ def deal_first_hand(game, hand, strat): # game.position = 21
         strat.active_strategy.set_bet(game)
 
         # preveri ce je dovolj denarja ############################################################
-        if game.balance >= strat.active_strategy.bet:
-            game.balance = game.balance - strat.active_strategy.bet
-        else:
-            game.position = 13 ##################################################
+        if strat.active_strategy.bet == 'not enough':
+            game.position = 13
+
         hand.restart_hand()
         hand.bet = strat.active_strategy.bet
-
         # Add random cards
 
         # Player gets 2 cards
@@ -181,10 +179,10 @@ def first_dealing(game, hand,strat): # game.position = 22
     if move == 'H':
         game.position = 23
     elif move == 'S':
-        hand.move.append('S') # save move
+        #hand.move.append('S') # save move
         game.position = 24
     elif move == 'D':
-        hand.move.append('D') # save move
+        #hand.move.append('D') # save move
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 2*150, position[1]])
@@ -202,7 +200,7 @@ def first_dealing(game, hand,strat): # game.position = 22
 
         game.position = 24
     elif move == 'split':
-        hand.move.append('split') # save move
+        #hand.move.append('split') # save move
         hand.take_split = 1
         c = hand.player_hand[0]
         d = hand.player_hand[1]
@@ -235,7 +233,7 @@ def dealing(game, hand, strat): # game.position = 23
 
     move = hand.next_move(game)
     if move == 'H':
-        hand.move.append('H') # save move
+        #hand.move.append('H') # save move
         sui, val = classes.random_card(game)
         position = game.player_position
         num = len(hand.player_hand)
@@ -252,15 +250,15 @@ def dealing(game, hand, strat): # game.position = 23
         game.position = 23
     else:
         if hand.take_split == 1:
-            hand.move.append('S') # save move
-            hand.move.append(',') # save move - split start new hand
+            #hand.move.append('S') # save move
+            #hand.move.append(',') # save move - split start new hand
             hand.take_split = 2
             pygame.display.flip()
             pygame.event.pump()
             #pygame.time.delay(200)
             game.position = 26
         else:
-            hand.move.append('S') # save move 
+            #hand.move.append('S') # save move 
             game.position = 24
 
 
@@ -335,6 +333,7 @@ def split(game, hand, strat): #game.position = 26
 def deal_dealer(game, hand, strat): # game.position = 24
     empty_table(hand, game)
 
+
     # draw hand
     draw_hand(hand.player_hand)
     draw_hand(hand.dealer_hand)
@@ -385,6 +384,7 @@ def deal_dealer(game, hand, strat): # game.position = 24
     
 
 def ai_winner(game, hand, strat): # game.position = 25
+
     empty_table(hand, game) 
     #print(hand.move)
     #print(hand.player_hand)
@@ -461,6 +461,7 @@ def ai_winner(game, hand, strat): # game.position = 25
             gameDisplay.blit(first, (game.player_position[0], game.player_position[1] - 80))
 
 
+
     pygame.display.flip()
     pygame.event.pump()
     #pygame.time.delay(1000)
@@ -478,46 +479,46 @@ def ai_winner(game, hand, strat): # game.position = 25
     #print(game.data_bet)
     #print(hand.bet)
 
-    # new bet or cash out
-    if game.length >=100:  ### igramo 100 mesanj
-        # Change balance
-        money = hand.who_wins('P')
-        w = hand.winnings + money * hand.split_bet
-        game.balance = game.balance + w
-        if len(hand.split_hand) > 0:
-            mon = hand.who_wins('S')
-            hand.winnings = hand.winnings + mon * hand.bet
-            game.balance = game.balance + hand.winnings
 
-        # save balance data
-        save_data.save_simulation(hand, game)
-        print('multiple')
-        print(game.data_multiple)
-        print('balance')
-        print(game.data_balance)
-        print('bet')
-        print(game.data_bet)
-        df = pd.DataFrame(game.data_bet)
-        print(df)
+    # Change balance
+    money = hand.who_wins('P')
+    hand.winnings = hand.winnings + money * hand.split_bet
+    if len(hand.split_hand) > 0:
+        mon = hand.who_wins('S')
+        hand.winnings = hand.winnings + mon * hand.bet
+    game.balance = game.balance + hand.winnings
+
+    # save balance data
+    save_data.save_simulation(hand, game)
+    print(game.sim)
+    print(hand.bet)
+    print(game.balance)
+    #print('multiple')
+    #print(game.data_multiple)
+    print('balance')
+    print(game.data_balance)
+    print('bet')
+    print(game.data_bet)
+    #df = pd.DataFrame(game.data_bet)
+    #print(df)
+
+    # new bet or cash out
+    if game.length >= game.num_dealings:  # we play n number of dealings 
 
         game.player_position = [500, 500]
-        
+    
         # new round of simulation
-        if game.sim < 100: # we have 100 simulations
+        if game.sim < game.simulation: # we have 100 simulations
             game.sim += 1
             game.shuffle_deck()
-            game.length = 0
+            game.length = 1
             game.balance = game.initial_balance
-
+            print(game.balance)
             # restart strategies
             strat.restart_strategies(game)
 
-
-
-            
-            
-
         else: # finnish
+            print('saving')
             
             # save probabilities
             save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
@@ -526,6 +527,7 @@ def ai_winner(game, hand, strat): # game.position = 25
 
             # save balance
             df = pd.DataFrame(game.data_multiple)
+            print(df)
             df.to_csv('data/' + strat.active_strategy.strat + '.csv')
 
             df = pd.DataFrame(game.data_bet)
@@ -538,19 +540,9 @@ def ai_winner(game, hand, strat): # game.position = 25
 
 
     else: # bet again
-        
-        # Change balance
-        money = hand.who_wins('P')
-        hand.winnings = hand.winnings + money * hand.split_bet
-        if len(hand.split_hand) > 0:
-            mon = hand.who_wins('S')
-            hand.winnings = hand.winnings + mon * hand.bet
-        game.balance = game.balance + hand.winnings
-
-        # save balance data
-        save_data.save_simulation(hand, game)
 
         # check winning streak
+        #print(strat.active_strategy.strat)
         if strat.active_strategy.strat in ['paroli', '1326', 'rev_lab', 'increase']: # wining streak
             if hand.winnings >= hand.bet + hand.split_bet:
                 strat.active_strategy.winning_streak += 1 
