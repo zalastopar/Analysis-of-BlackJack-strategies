@@ -51,7 +51,7 @@ def bet_window(game, box): # game.position = 2
     gameDisplay.blit(first, (width - 1400, height-700))
 
 
-    if game.sim >0: # Button Next
+    if game.simulation > 0: # Button Next
         b = classes.Button([width - 955, height - 200], 'Back', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
         b.create(gameDisplay, 70)
 
@@ -80,19 +80,20 @@ def prep_buttons(game, mouse, box):
 
     if width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # go back (to Menu)
         game.restart_game()
-        game.position = 1 
-    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.sim == 1 and box.text != '' and float(box.text) > 0:#and game.balance >0: # select num of simulations
-        game.balance = game.balance + float(box.text)
-        game.initial_balance = game.balance + float(box.text)
         box.text = ''
+        game.position = 1 
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.simulation == 1 and box.text != '' and float(box.text) > 0:#and game.balance >0: # select num of simulations
+        game.balance = game.balance + float(box.text)
+        game.initial_balance = float(box.text)
+        #box.text = ''
         box.txt_surface = box.text_font.render('', True, PINK)
         game.shuffle_deck()
         game.position = 3 
 
-    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box.text != '' and float(box.text) > 0 and game.sim == 0: # start playing
+    elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box.text != '' and float(box.text) > 0 and game.simulation == 0: # start playing
         game.balance = game.balance + float(box.text)
         game.initial_balance = game.balance + float(box.text)
-        box.text = ''
+        #box.text = ''
         box.txt_surface = box.text_font.render('', True, PINK)
         game.shuffle_deck()
         game.position = 4 
@@ -145,7 +146,6 @@ def bet_window_sim(game, sim_box, deal_box): # game.position = 3
         print_error('Your amount must be an integer!', [width - 600, height-400 + 70], 28, DARKPINK)
 
 
-
     # Create textbox
     deal_box.update()
     deal_box.draw(gameDisplay)
@@ -159,13 +159,19 @@ def simulation_buttons(game, mouse, sim_box, deal_box):
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
+        sim_box.text = ''
+        deal_box.text = ''
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # select deposit amount again
         game.balance = 0
+        #sim_box.text = ''
+        #deal_box.text = ''
         game.position = 2
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and sim_box.text != '' and deal_box.text != '' and int(sim_box.text) > 0 and int(deal_box.text) > 0: # next 
-        game.sim = int(sim_box.text)
+        game.simulation = int(sim_box.text)
         game.num_dealings = int(deal_box.text)
+        #sim_box.text = ''
+        #deal_box.text = ''
         game.position = '3a'
 
 
@@ -216,17 +222,17 @@ def select_strategy_window(game, strat_buttons): # game.position = '3a'
     b = classes.Button([width - 955 + 300 + 40, height - 200], 'Next', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
     b.create(gameDisplay, 70)
 
-def strategy_buttons(game, mouse, strat): ################## rabimo se eno umesno
+def strategy_buttons(game, mouse, strat): 
 
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
         strat.restart_strategies(game)
         game.position = 1
-    elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # select deposit amount again
-        game.strategy = ''
-        game.balance = 0
-        game.position = 2
+    elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # back select deposit amount again
+        #game.strategy = ''
+        #game.balance = 0
+        game.position = 3
         strat.restart_strategies(game)
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.strategy != '':  # play 
         game.position = '3b'
@@ -269,7 +275,7 @@ def strategy_buttons(game, mouse, strat): ################## rabimo se eno umesn
 def unit_strategy(game, strat, box_unit, box_profit): # game.position = '3b'
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
-
+    
     # Place your money
     text_font = pygame.font.SysFont('Bungee', 100)
     first = text_font.render('Select your betting unit: ', TRUE, DARKPINK)
@@ -279,6 +285,8 @@ def unit_strategy(game, strat, box_unit, box_profit): # game.position = '3b'
     box_unit.draw(gameDisplay)
     if box_unit.napaka == 1:
         print_error('Your amount must be a number!', [width - 530, height-700 + 70], 28, DARKPINK)
+    if box_unit.napaka == 2:
+        print_error("Unit can't be more than balance!", [width - 530, height-700 + 70], 28, DARKPINK)
 
     # wanted profit
     if strat.active_strategy.strat == 'rev_lab' or strat.active_strategy.strat == 'lab':
@@ -297,30 +305,33 @@ def unit_strategy(game, strat, box_unit, box_profit): # game.position = '3b'
     b = classes.Button([width - 955 + 300 + 40, height - 200], 'Play', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
     b.create(gameDisplay, 70)
 
-    if box_profit.napaka == 1:
-        print_error('Your amount must be a number!', [width - 600, height-695 + 70], 28, DARKPINK)
+    pygame.display.update()
 
 def unit_strategy_button(game, mouse, strat, box_unit, box_profit):
-    print(game.strategy)
-    print('a')
-    print(strat.active_strategy.strat)
+
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
         strat.restart_strategies(game)
+        #box_unit.text = ''
+        #box_profit.text = ''
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # back - select simulation
         strat.restart_strategies(game)
+        #box_unit.text = ''
+        #box_profit.text = ''
         game.position = '3a'
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box_unit.text != '' and float(box_unit.text) > 0:# play 
         if strat.active_strategy.strat not in ['rev_lab', 'lab']:#if strategy is not lab or rev_lab
             game.initial_bet = float(box_unit.text)
+            #box_unit.text = ''
+            #box_profit.text = ''
             game.position = 21
         elif (strat.active_strategy.strat == 'rev_lab' or strat.active_strategy.strat == 'lab') and box_profit.text != ''  and float(box_profit.text) > 0: # player
             game.initial_bet = float(box_unit.text)
             strat.active_strategy.profit = float(box_profit.text)
-            print('ena' + str(strat.active_strategy.profit))
-            print('dva' + str(game.initial_bet))
+            #box_unit.text = ''
+            #box_profit.text = ''
             game.position = 21
 
 

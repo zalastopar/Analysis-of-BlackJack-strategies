@@ -74,7 +74,7 @@ def menu_buttons(game, mouse):
     elif width/2 - 20-400 <= mouse[0] <= width/2 - 20-400 + 400 and height - 500 + 40 + 80 <= mouse[1] <= height - 500 + 40 + 80 + 80: # Simulations
         game.balance = 0
         game.help = False
-        game.sim = 1 #########
+        game.simulation = 1 
         game.position = 2
     elif width/2 + 20 <= mouse[0] <= width/2 + 20 + 400 and height - 500 + 40 + 80 <= mouse[1] <= height - 500 + 40 + 80 + 80: # Quit
         pygame.quit()

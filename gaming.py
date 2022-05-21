@@ -67,7 +67,7 @@ pygame.display.set_caption("BlackJack Table")
 
 # When menu player deletes 
 
-mygame = classes.Game('', 0, 1, False, 0, 0, {}, 10, 1, 0, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
+mygame = classes.Game('', 0, 1, False, 0, 0, {}, 10, 1, 0, 1, {}, {}, {'data_0x': {}, 'data_3x': {}, 'data_5x': {}, 'data_10x': {}}, [], {}, {}, {})
 myhand = classes.Hand(0, [], [], 0, False, False, [], 0, 0, [])
 aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 
@@ -197,16 +197,9 @@ while True:
             num_sim_box.handle_event(event, gameDisplay, mygame)
             num_deal_box.handle_event(event, gameDisplay, mygame)
         elif position == '3b':
-            bet_unit.handle_event(event, gameDisplay, mygame)
+            bet_unit.handle_event(event, gameDisplay, mygame, True)
             desired_profit.handle_event(event, gameDisplay, mygame)
 
 
 
 
-
-    
-            
-
-
-
-#######3 nekje je treba spemenit sim

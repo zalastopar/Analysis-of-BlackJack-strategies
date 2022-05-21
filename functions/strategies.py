@@ -56,7 +56,18 @@ class paroli:
         else:
             bet = game.initial_bet
         
-        self.bet = bet
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
+            
+
 
 class system1326:
     '''
@@ -98,7 +109,17 @@ class system1326:
         else:
             bet = game.initial_bet
             self.round = 1
-        self.bet = bet
+ 
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
 
 class reverse_lab:
     '''
@@ -171,7 +192,16 @@ class reverse_lab:
                     else:
                         bet = self.seq[0] + self.seq[-1]
         
-        self.bet = bet
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
 
 class one_half_increase:
     '''
@@ -195,7 +225,17 @@ class one_half_increase:
             bet = initial
         elif self.winning_streak >= 2:
             bet = initial + initial/2*(self.winning_streak - 1)
-        self.bet = bet
+        
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
 
 class card_counting:
     ''' https://www.blackjackapprenticeship.com/how-to-count-cards/
@@ -227,7 +267,18 @@ class card_counting:
             bet = game.initial_bet
         else :
             bet = (true_count-1)*game.initial_bet
-        self.bet = round(bet,2)
+
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
+
 
     def change_count(self, card):
         if card.value <= 6:
@@ -256,11 +307,23 @@ class martingale:
         self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 200], 'Martingale system', PINK, PINK, TEAL, [500, 80], True)
 
     def set_bet(self, game):
-        if self.losing_streak == 0:
+        if self.bet == 0:
+            bet = game.initial_bet
+        elif self.losing_streak == 0:
             bet = game.initial_bet
         else:
             bet = self.bet*2
-        self.bet = bet
+        
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
 
 class oscars_grind:
     '''
@@ -281,21 +344,32 @@ class oscars_grind:
         self.button = classes.Button([width - 1300, height - 600 + 300], "Oscar's grind", PINK, PINK, TEAL, [500, 80], True)
 
     def set_bet(self, game):
-        print(self.bet)
+        bet = 0
         if self.bet == 0:
-            self.bet = game.initial_bet
+            bet = game.initial_bet
         else:
             if self.losing_streak > 0:
                 self.bankroll = self.bankroll - 1
-                #bet stays the same
+                bet = self.bet # bet stays the same
             else:
                 if self.bankroll == 0: # we won so it is acutaly 1
                     # back to begining
                     self.bankroll = 0
-                    self.bet = game.initial_bet
+                    bet = game.initial_bet
                 else:
                     self.bankroll += 1
-                    self.bet = self.bet + game.initial_bet
+                    bet = self.bet + game.initial_bet
+
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
 
 class labouchere:
     '''
@@ -333,26 +407,20 @@ class labouchere:
         # if sequence is empty, create new one
         if len(self.seq) == 0:
             self.create_seq()
-            print('dolzina 0')
-            print(len(self.seq))
-            print(self.seq)
             if len(self.seq) == 1:
                 bet = self.seq[0]
             else:
                 bet = self.seq[0] + self.seq[-1]
         else: 
             if self.losing_streak > 0:
-                print('w')
                 if len(self.seq) == 1:
                     self.seq = self.seq + [self.seq[0]]
                 else:
-                    print('else')
                     self.seq = self.seq + [self.seq[0] + self.seq[-1]]
                 bet = self.seq[0] + self.seq[-1]
             else:
                 if len(self.seq) == 1 or len(self.seq) == 2:
                     self.create_seq()
-                    print('dolzina 0')
                     if len(self.seq) == 1:
                         bet = self.seq[0]
                     else:
@@ -363,8 +431,16 @@ class labouchere:
                         bet = self.seq[0]
                     else:
                         bet = self.seq[0] + self.seq[-1]
-        print(self.seq)
-        print(bet)
+        # change balance
+        if bet > game.balance: 
+            if game.balance == 0: # no more money
+                self.bet = 0
+            else: # bet as much as you have
+                self.bet = game.balance
+                game.balance = 0
+        else: 
+            self.bet = round(bet,2)
+            game.balance = game.balance - self.bet
         
-        self.bet = bet
+
 

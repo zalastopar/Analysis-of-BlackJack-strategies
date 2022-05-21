@@ -42,7 +42,7 @@ def random_card(game):
 # game
 class Game:
     def __init__(self, strategy, num_dealings, position, help, balance, initial_balance,
-    deck, initial_bet, length, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
+    deck, initial_bet, length, simulation, sim, data_balance, data_bet, data_multiple, data_to0, prob_data, split_data, soft_data):
         self.position = position # which window is open
         self.help = help # TRUE or FALSE ################################################# popravi v window
         self.deck = deck # list of cards that can be chosen - currently we play with 6 decks
@@ -54,7 +54,8 @@ class Game:
         self.length = length # int number of bets
 
         # settings for simulation
-        self.sim = sim # number of games we want to play
+        self.simulation = simulation # number of games we want to play
+        self.sim = sim # number of hames we played
         self.num_dealings = num_dealings # number of dealings we want to have
         self.strategy = strategy # which betting strategy we use
 
@@ -261,7 +262,7 @@ class Hand:
     def split(self, game):
         s = False
         hand = self.player_hand
-        if game.balance >= self.bet: # is there enough money
+        if float(game.balance) >= float(self.bet): # is there enough money
             if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
                 s = True
         return s
@@ -269,7 +270,7 @@ class Hand:
     def double(self, game):
         d = False
         hand = self.player_hand
-        if game.balance >= self.bet: # is there enough money
+        if float(game.balance) >= float(self.bet): # is there enough money
             if len(hand) == 2:
                 d = True
         return d
@@ -277,14 +278,14 @@ class Hand:
     def insurance(self, game):
         s = False
         hand = self.dealer_hand[0]
-        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0: # is there enough money
+        if float(game.balance) >= float(self.bet/2) and self.take_split == 0 and self.take_insurance == 0: # is there enough money
             if hand.value == 11:
                 s = True
         return s
 
     def hit(self):    # goes also for stand
         val, k = self.hand_value('P')
-        if val > 21:
+        if val >= 21:
             return False
         return True
             
@@ -449,7 +450,7 @@ class Hand_ai:
     def split(self, game):
         s = False
         hand = self.player_hand
-        if game.balance >= self.bet: # is there enough money
+        if float(game.balance) >= float(self.bet): # is there enough money
             if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
                 s = True
         return s
@@ -457,7 +458,7 @@ class Hand_ai:
     def double(self, game):
         d = False
         hand = self.player_hand
-        if game.balance >= self.bet: # is there enough money
+        if float(game.balance) >= float(self.bet): # is there enough money
             if len(hand) == 2:
                 d = True
         return d
@@ -465,14 +466,14 @@ class Hand_ai:
     def insurance(self, game):
         s = False
         hand = self.dealer_hand[0]
-        if game.balance >= self.bet/2 and self.take_split == 0 and self.take_insurance == 0: # is there enough money
+        if float(game.balance) >= float(self.bet/2) and self.take_split == 0 and self.take_insurance == 0: # is there enough money
             if hand.value == 11:
                 s = True
         return s
 
     def hit(self):    # goes also for stand
         val, k = self.hand_value('P')
-        if val > 21:
+        if val >= 21:
             return False
         return True
             
@@ -685,7 +686,7 @@ class InputBox:
                         self.napaka = 0
                         if bet and game.balance < money and not self.is_int:
                             # write error
-                            self.napaka = 2
+                            self.napaka = 2 # cant bet more than you have
                         if self.is_int: # only when we want the number to be integer
                             try:
                                 m = int(self.text)
@@ -694,8 +695,7 @@ class InputBox:
 
                     except:
                         # Write warning
-                        self.napaka = 1 
-
+                        self.napaka = 1 # not a number
                         # Set input to ''
                         self.text = ''
                 # Re-render the text.
@@ -758,58 +758,53 @@ class StrategyButton:
 
     def activate_button(self, new):
         if self.active_strategy == '': # no button pressed yet
-            new = self.get_button(new).button
-            new.darkcol = DARKPINK
+            new = self.get_button(new)
+            new.button.darkcol = DARKPINK
             self.active_strategy = new
         else: # one button to neutral and color new one
-            self.active_strategy.darkcol = TEAL
-            new = self.get_button(new).button
-            new.darkcol = DARKPINK
+            self.active_strategy.button.darkcol = TEAL
+            new = self.get_button(new)
+            new.button.darkcol = DARKPINK
             self.active_strategy = new
 
     def restart_strategies(self, game):
-
-        if self.active_strategy.strat == 'counting': # restart counting ############################################33333333333333333333333333
+        if self.active_strategy == '':
+            pass
+        elif self.active_strategy.strat == 'counting': # restart counting ############################################33333333333333333333333333
             self.active_strategy.cards = 0
             self.active_strategy.count = 0
             self.active_strategy.bet = game.initial_bet
             self.counting.button.darkcol = DARKPINK
-            self.active_strategy = ''
         elif self.active_strategy.strat == 'paroli' or self.active_strategy.strat == 'increase':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.winning_streak = 0
             self.paroli.button.darkcol = DARKPINK
             self.half.button.darkcol = DARKPINK
-            self.active_strategy = ''
         elif self.active_strategy.strat == '1326':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.winning_streak = 0
             self.active_strategy.round = 1
             self.s1326.button.darkcol = DARKPINK
-            self.active_strategy = ''
         elif self.active_strategy.strat == 'rev_lab':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.winning_streak = 0
-            self.active.seq = []
+            self.active_strategy.seq = []
             self.rev_lab.button.darkcol = DARKPINK
-            self.active_strategy = ''
         elif self.active_strategy.strat == 'martingale':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.losing_streak = 0
             self.martingale.button.darkcol = DARKPINK
-            self.active_strategy = ''
         elif self.active_strategy.strat == 'oscar':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.losing_streak = 0
             self.active_strategy.bankroll = 0
             self.oscar.button.darkcol = DARKPINK
-            self.active_strategy = ''
         elif self.active_strategy.strat == 'lab':
             self.active_strategy.seq = []
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.losing_streak = 0
             self.lab.button.darkcol = DARKPINK
-            self.active_strategy = ''
+
 
 
 

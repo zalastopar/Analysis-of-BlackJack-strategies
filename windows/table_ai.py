@@ -71,7 +71,6 @@ def empty_table(hand, game):
 
 
 # deal first hand
-
 def deal_first_hand(game, hand, strat): # game.position = 21
         '''
         hand.bet = float(box.text)
@@ -82,9 +81,11 @@ def deal_first_hand(game, hand, strat): # game.position = 21
         strat.active_strategy.set_bet(game)
 
         # preveri ce je dovolj denarja ############################################################
-        if strat.active_strategy.bet == 'not enough':
+        if strat.active_strategy.bet == 0:
             game.position = 13
-
+        if game.balance <= 0:
+            game.position = 13
+        #print(strat.active_strategy.bet)
         hand.restart_hand()
         hand.bet = strat.active_strategy.bet
         # Add random cards
@@ -466,8 +467,6 @@ def ai_winner(game, hand, strat): # game.position = 25
     pygame.event.pump()
     #pygame.time.delay(1000)
 
-    # save data
-    save_data.save_prob(hand, game)
     
     #print(game.prob_data)  
     #print(game.soft_data)
@@ -488,13 +487,12 @@ def ai_winner(game, hand, strat): # game.position = 25
         hand.winnings = hand.winnings + mon * hand.bet
     game.balance = game.balance + hand.winnings
 
-    # save balance data
+    # Save data
     save_data.save_simulation(hand, game)
-    print(game.sim)
-    print(hand.bet)
-    print(game.balance)
-    #print('multiple')
-    #print(game.data_multiple)
+    save_data.save_prob(hand, game)
+
+    print('multiple')
+    print(game.data_multiple)
     print('balance')
     print(game.data_balance)
     print('bet')
@@ -503,19 +501,24 @@ def ai_winner(game, hand, strat): # game.position = 25
     #print(df)
 
     # new bet or cash out
+    print('game.length')
+    print(game.length)
+
     if game.length >= game.num_dealings:  # we play n number of dealings 
 
         game.player_position = [500, 500]
-    
+
         # new round of simulation
         if game.sim < game.simulation: # we have 100 simulations
             game.sim += 1
             game.shuffle_deck()
             game.length = 1
             game.balance = game.initial_balance
-            print(game.balance)
+            #print(game.balance)
             # restart strategies
             strat.restart_strategies(game)
+            print('game.sim')
+            print(game.sim)
 
         else: # finnish
             print('saving')

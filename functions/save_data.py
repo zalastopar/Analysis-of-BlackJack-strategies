@@ -25,21 +25,29 @@ def save_simulation(hand, game):
     if sim not in game.data_multiple['data_0x'].keys():
         if game.balance == 0: 
             game.data_multiple['data_0x'][sim] = game.length
+        if (sim - 1) not in game.data_multiple['data_0x'].keys() and (sim - 1) != 0 and sim != 0:
+            game.data_multiple['data_0x'][sim-1] = 0
 
     # data 3x
     if sim not in game.data_multiple['data_3x'].keys(): # not yet to 300
-        if game.balance >= 300: # startin balance = 100
+        if game.balance >= 3*game.initial_balance: # startin balance = 100
             game.data_multiple['data_3x'][sim] = game.length
+        if (sim - 1) not in game.data_multiple['data_0x'].keys() and (sim - 1) != 0 and sim != 0:
+            game.data_multiple['data_3x'][sim-1] = 0
 
     # data 5x
     if sim not in game.data_multiple['data_5x'].keys(): # not yet to 500
-        if game.balance >= 500: # startin balance = 100
+        if game.balance >= 5*game.initial_balance: # startin balance = 100
             game.data_multiple['data_5x'][sim] = game.length
+        if (sim - 1) not in game.data_multiple['data_0x'].keys() and (sim - 1) != 0 and sim != 0:
+            game.data_multiple['data_5x'][sim-1] = 0
 
-    # data 0x
+    # data 10x
     if sim not in game.data_multiple['data_10x'].keys(): # not yet to 1000
-        if game.balance >= 1000: # startin balance = 100
+        if game.balance >= 10*game.initial_balance: # startin balance = 100
             game.data_multiple['data_10x'][sim] = game.length
+        if (sim - 1) not in game.data_multiple['data_10x'].keys() and (sim - 1) != 0 and sim != 0:
+            game.data_multiple['data_10x'][sim-1] = 0
 
 
     

@@ -149,6 +149,7 @@ def place_bet_buttons(game, mouse, hand, box):
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
         hand.restart_hand()
+        box.text = ''
         game.position = 1
     elif width/2 + 100 <= mouse[0] <= width/2 + 100 + 300 and height - 400 <= mouse[1] <= height - 400 + 80 and box.text !='' and float(box.text) > 0 and float(box.text) <= game.balance: # bet
         hand.bet = float(box.text)
