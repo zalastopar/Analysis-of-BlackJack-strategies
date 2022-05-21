@@ -12,6 +12,8 @@ Opombe:
  - ce grem na menu iz simulacije ostane od simulacije nastavek in obarvana strategija
  - pa iz izbire simulacije gre na normalno igro
 
-- naredi za set bet, če se začne z 0
-- poglej funkcije za shranjevanje
+
+- #poglej funkcije za shranjevanje
 - prever backe ce usi delajo
+
+- bet unit pr strategy ne more bit vecji kokr balance
