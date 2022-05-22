@@ -453,6 +453,10 @@ class Hand_ai:
         if float(game.balance) >= float(self.bet): # is there enough money
             if len(hand) == 2 and hand[0].real_value() == hand[1].real_value() and self.take_split == 0:
                 s = True
+                print('S')
+                print('bet: ' + str(self.bet*2))
+                print('balance: ' + str(game.balance))
+                print(s)
         return s
 
     def double(self, game):
@@ -461,6 +465,10 @@ class Hand_ai:
         if float(game.balance) >= float(self.bet): # is there enough money
             if len(hand) == 2:
                 d = True
+                print('D')
+                print('bet: ' + str(self.bet*2))
+                print('balance: ' + str(game.balance))
+                print(d)
         return d
     
     def insurance(self, game):

@@ -326,13 +326,13 @@ def unit_strategy_button(game, mouse, strat, box_unit, box_profit):
             game.initial_bet = float(box_unit.text)
             #box_unit.text = ''
             #box_profit.text = ''
-            game.position = 21
+            game.position = 28
         elif (strat.active_strategy.strat == 'rev_lab' or strat.active_strategy.strat == 'lab') and box_profit.text != ''  and float(box_profit.text) > 0: # player
             game.initial_bet = float(box_unit.text)
             strat.active_strategy.profit = float(box_profit.text)
             #box_unit.text = ''
             #box_profit.text = ''
-            game.position = 21
+            game.position = 28
 
 
 

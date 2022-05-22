@@ -70,6 +70,27 @@ def empty_table(hand, game):
     '''
 
 
+def set_bet(game, hand, strat): # game.position = 28
+    strat.active_strategy.set_bet(game)
+
+    # preveri ce je dovolj denarja ############################################################
+    if strat.active_strategy.bet <= 0:
+        strat.active_strategy.bet = 0
+        game.position = 27
+    if game.balance <= 0 and strat.active_strategy.bet == 0:
+        game.balance = 0
+        game.position = 27
+    #print(strat.active_strategy.bet)
+    hand.restart_hand()
+    hand.bet = strat.active_strategy.bet
+    if hand.bet > 0 and game.balance >= 0:
+        game.position = 21
+    else: 
+        game.position = 27
+
+        
+
+
 # deal first hand
 def deal_first_hand(game, hand, strat): # game.position = 21
         '''
@@ -78,37 +99,28 @@ def deal_first_hand(game, hand, strat): # game.position = 21
         box.txt_surface = box.text_font.render('', True, PINK)
         game.balance = game.balance - hand.bet
         '''
-        strat.active_strategy.set_bet(game)
 
-        # preveri ce je dovolj denarja ############################################################
-        if strat.active_strategy.bet == 0:
-            game.position = 13
-        if game.balance <= 0:
-            game.position = 13
-        #print(strat.active_strategy.bet)
-        hand.restart_hand()
-        hand.bet = strat.active_strategy.bet
         # Add random cards
 
         # Player gets 2 cards
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.player_position)
         if strat.active_strategy.strat == 'counting':
-            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.change_count(c) # change count in counting strategy
             strat.active_strategy.cards += 1
         hand.player_hand.append(c)
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 150, position[1]])
         if strat.active_strategy.strat == 'counting':
-            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.change_count(c) # change count in counting strategy
             strat.active_strategy.cards += 1
         hand.player_hand.append(c)
         # Dealer gets 1 card
         sui, val = classes.random_card(game)
         c = classes.Card(sui, val, game.dealer_position)
         if strat.active_strategy.strat == 'counting':
-            strat.active_strategy.change_count(c) ###########################################################################
+            strat.active_strategy.change_count(c) # change count in counting strategy
             strat.active_strategy.cards += 1
         hand.dealer_hand.append(c)
 
@@ -195,11 +207,12 @@ def first_dealing(game, hand,strat): # game.position = 22
         pygame.display.flip()
         pygame.event.pump()
         #pygame.time.delay(200)
-
-        game.balance = game.balance - hand.bet
-        hand.bet = hand.bet*2
-
-        game.position = 24
+        if game.balance - hand.bet < 0:
+            game.position = 23
+        else:
+            game.balance = game.balance - hand.bet
+            hand.bet = hand.bet*2
+            game.position = 24
     elif move == 'split':
         #hand.move.append('split') # save move
         hand.take_split = 1
@@ -212,10 +225,12 @@ def first_dealing(game, hand,strat): # game.position = 22
         #print(hand.player_hand)
         #print(hand.split_hand)
 
-        game.balance = game.balance - hand.bet
-        hand.split_bet = hand.bet
-
-        game.position = 26
+        if game.balance - hand.bet < 0:
+            game.balance = 23
+        else: 
+            game.balance = game.balance - hand.bet
+            hand.split_bet = hand.bet
+            game.position = 26
 
 
 
@@ -467,7 +482,15 @@ def ai_winner(game, hand, strat): # game.position = 25
     pygame.event.pump()
     #pygame.time.delay(1000)
 
+    # Change balance
+    money = hand.who_wins('P')
+    hand.winnings = hand.winnings + money * hand.split_bet
+    if len(hand.split_hand) > 0:
+        mon = hand.who_wins('S')
+        hand.winnings = hand.winnings + mon * hand.bet
+    game.balance = game.balance + hand.winnings
     
+    game.position = 27
     #print(game.prob_data)  
     #print(game.soft_data)
     #print(game.split_data)
@@ -478,25 +501,19 @@ def ai_winner(game, hand, strat): # game.position = 25
     #print(game.data_bet)
     #print(hand.bet)
 
-
-    # Change balance
-    money = hand.who_wins('P')
-    hand.winnings = hand.winnings + money * hand.split_bet
-    if len(hand.split_hand) > 0:
-        mon = hand.who_wins('S')
-        hand.winnings = hand.winnings + mon * hand.bet
-    game.balance = game.balance + hand.winnings
+def saving_data(game, hand, strat): # game.position = 27
 
     # Save data
     save_data.save_simulation(hand, game)
-    save_data.save_prob(hand, game)
+    if hand.player_hand != []:
+        save_data.save_prob(hand, game)
 
-    print('multiple')
-    print(game.data_multiple)
-    print('balance')
-    print(game.data_balance)
-    print('bet')
-    print(game.data_bet)
+    #print('multiple')
+    #print(game.data_multiple)
+    #print('balance')
+    #print(game.data_balance)
+    #print('bet')
+    #print(game.data_bet)
     #df = pd.DataFrame(game.data_bet)
     #print(df)
 
@@ -521,7 +538,7 @@ def ai_winner(game, hand, strat): # game.position = 25
             print(game.sim)
 
         else: # finnish
-            print('saving')
+            #print('saving')
             
             # save probabilities
             save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
@@ -530,7 +547,7 @@ def ai_winner(game, hand, strat): # game.position = 25
 
             # save balance
             df = pd.DataFrame(game.data_multiple)
-            print(df)
+            #print(df)
             df.to_csv('data/' + strat.active_strategy.strat + '.csv')
 
             df = pd.DataFrame(game.data_bet)
@@ -570,4 +587,4 @@ def ai_winner(game, hand, strat): # game.position = 25
                 strat.active_strategy.count = 0
 
 
-        game.position = 21
+        game.position = 28

@@ -32,14 +32,14 @@ def save_simulation(hand, game):
     if sim not in game.data_multiple['data_3x'].keys(): # not yet to 300
         if game.balance >= 3*game.initial_balance: # startin balance = 100
             game.data_multiple['data_3x'][sim] = game.length
-        if (sim - 1) not in game.data_multiple['data_0x'].keys() and (sim - 1) != 0 and sim != 0:
+        if (sim - 1) not in game.data_multiple['data_3x'].keys() and (sim - 1) != 0 and sim != 0:
             game.data_multiple['data_3x'][sim-1] = 0
 
     # data 5x
     if sim not in game.data_multiple['data_5x'].keys(): # not yet to 500
         if game.balance >= 5*game.initial_balance: # startin balance = 100
             game.data_multiple['data_5x'][sim] = game.length
-        if (sim - 1) not in game.data_multiple['data_0x'].keys() and (sim - 1) != 0 and sim != 0:
+        if (sim - 1) not in game.data_multiple['data_5x'].keys() and (sim - 1) != 0 and sim != 0:
             game.data_multiple['data_5x'][sim-1] = 0
 
     # data 10x
@@ -92,7 +92,7 @@ def save_prob(hand, game):
     if hand.split_bet > 0: # it was split
         card_value = hand.player_hand[0].real_value()
 
-        if winnings > hand.bet + hand.split_bet: # player wins
+        if hand.winnings > hand.bet + hand.split_bet: # player wins
             if card_value in game.split_data.keys(): # player value exists
                 if dealer in game.split_data[card_value].keys(): # dealer value exists
                     game.split_data[card_value][dealer][0] += 1

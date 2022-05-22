@@ -140,7 +140,10 @@ def view(position):
         table_ai.ai_winner(mygame, aihand, strat_buttons)
     elif position == 26:
         table_ai.split(mygame, aihand, strat_buttons)
-
+    elif position == 27:
+        table_ai.saving_data(mygame, aihand, strat_buttons)
+    elif position == 28:
+        table_ai.set_bet(mygame, aihand, strat_buttons)
 
 
 # ponovimo ga 100x? 1000x?

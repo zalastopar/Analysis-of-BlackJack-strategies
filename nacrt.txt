@@ -6,14 +6,12 @@ Opombe:
 -nekak je bilu balance negativen !!!!!!!!!!!
 -countingu je treba povedat kdaj se pack zmesa?
 - restarti vse hande ko zacnes novo simulacijo in ko gres na zacetek - mogoce metoda
-- ko izberes strategijo je treba se kej vnest kaj hoces z njo dosest
 
-- kjer je v funkciji strategija na zacetku spremeni, da bo za strategy uzel active_strategy - mislm da je
+
+
  - ce grem na menu iz simulacije ostane od simulacije nastavek in obarvana strategija
- - pa iz izbire simulacije gre na normalno igro
+
 
 
 - #poglej funkcije za shranjevanje
-- prever backe ce usi delajo
-
-- bet unit pr strategy ne more bit vecji kokr balance
+- #prever backe ce usi delajo

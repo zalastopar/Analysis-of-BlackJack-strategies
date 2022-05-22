@@ -56,15 +56,21 @@ class paroli:
         else:
             bet = game.initial_bet
         
+        bet = round(bet, 2)
         # change balance
-        if bet > game.balance: 
+        if bet > game.balance and game.balance >= 0: 
             if game.balance == 0: # no more money
                 self.bet = 0
             else: # bet as much as you have
                 self.bet = game.balance
                 game.balance = 0
+        elif game.balance <= 0:
+            self.bet = 0
+        elif game.balance == bet:
+            self.bet = bet
+            game.balance = 0
         else: 
-            self.bet = round(bet,2)
+            self.bet = bet
             game.balance = game.balance - self.bet
             
 
