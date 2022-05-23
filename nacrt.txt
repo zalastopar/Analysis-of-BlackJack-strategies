@@ -11,7 +11,7 @@ Opombe:
 
  - ce grem na menu iz simulacije ostane od simulacije nastavek in obarvana strategija
 
-
-
 - #poglej funkcije za shranjevanje
 - #prever backe ce usi delajo
+
+- pri labu ko se ustvari zaporedje ne more biti več kot balance
