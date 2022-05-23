@@ -101,8 +101,6 @@ class Game:
         self.soft_data = {}
 
 
-
-
 # card
 class Card:
     def __init__(self, suit, value, position):

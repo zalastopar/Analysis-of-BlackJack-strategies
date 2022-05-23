@@ -20,7 +20,7 @@
 
 Za projekt pri predmetu Matematika z računalnikom sem raziskovala različne strategije stavljanja. Svoj program sem napisala v programskem jeziku \textit{Python}. Aplikacijo sem oblikovala s pomočjo paketa \textit{Pygame}. Glavni del igre je napisan v datoteki \textbf{gaming.py}\\
 
-\noindent Na začetku sem se lotila programiranja in dizajniranja navadne igre BlackJack, ki sem jo tudi dokončala. Posameznik se lahko pomeri proti hiši. Skupaj je v igri 6 kompletov kart. Na vsakem koraku ima igralec na voljo akciji HIT in STAND, v pravih okoliščinah pa tudi INSURANCE, DOUBLE DOWN in SPLIT. V različih igralnicah se pravila malo razlikujejo. Za moj program sem določila, da po tem, ko igralec izbere opcijo SPLIT, nima več na voljo opciji DOUBLE in INSURANCE. \\
+\noindent Na začetku sem se lotila programiranja in dizajniranja navadne igre BlackJack, ki sem jo tudi dokončala. Posameznik se lahko pomeri proti hiši. Skupaj je v igri 6 kompletov kart. Na vsakem koraku ima igralec na voljo akciji \textsc{hit} in \textsc{stand}, v pravih okoliščinah pa tudi \textsc{insurance}, \textsc{double down} in \textsc{split}. V različih igralnicah se pravila malo razlikujejo. Za moj program sem določila, da po tem, ko igralec izbere opcijo \textsc{split}, nima več na voljo opciji \textsc{double} in \textsc{insurance}. \\
 
 
 \noindent Opazovala sem rezultate sledečih strategij:
@@ -81,20 +81,28 @@ Ker sem se z omenjeno knjižnjico šele spoznavala, sem se za začetek lotila ob
 Ne glede na možnost, ki jo izberemo, nas aplikacija postavi na stran, kjer položimo vsoto, s katero bi radi igrali. V primeru navadne igre in igre s pomočjo se nato znajdemo na strani, kjer stavimo prvo stavo. To stran lahko tudi vidimo na sliki \ref{fig:menu}.V nasprotenm primeru se odpravimo na stran (izbira simulacije), kjer poleg vsote, s katero bi radi igrali izberemo tudi število igre, ki bi jih radi igrali in število mešanj v posamezni igri. Poleg tega izberemo tudi strategijo stavljanja, ki bi jo radi igrali in osnovno enoto stave.
 Ko končamo z igranjem igre nas vrže na zaključno stran, kjer lahko prevzamemo dobitek. \\
 
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{cards.png} \,%
+  \end{center}
+  \caption{Card, King of Hearts}
+\end{wrapfigure}
 % slika kart
 Nekaj novih stvari sem se tudi nučila pri oblikovanju kart. Da nisem risala usake karte posebej, sem ustvarila razred po imenu \textbf{Card} s parametri brava, vrednost in pozicija karte. Z metodo \textit{.draw()} lahko karto narišemo, z metodo \textit{.card\_back()} pa narišemo hrbtno stran karte. Za sliko na hrbtni strani karte in za simbole barv sem poiskala ikone na spletni strani \url{https://www.flaticon.com/}.
 
 
-% Strategije so opisane \href{https://www.legitgamblingsites.com/blog/how-to-best-take-advantage-of-streaks-in-blackjack/}{tukaj,}
+\section{Pisanje programa}
 
-\section{Še sledi}
-\begin{itemize}
-\item dokončati igro, kjer je navoljo pomoč
-\item napisati funkcijo za računanje verjetnosti zmage v določeni situaciji
- \item dodati strategijo štetja kart
-\item napisati funkcijo za hranjenje podatkov iz simulacije različnih strategij
-\item analizirati dobljene podatke
-\end{itemize}
+Funkcije, ki poganjajo moj program so večinoma metode na razredih, ki sem jih ustvarila. Razred \textbf{Game} vsebuje podatke o stanju na računu, še ne razdeljen kup kart, strategija, ki jo igramo v simulaciji, \dots poleg tega pa ima tudi nekaj parametrov kamor shranjujemo simulirane podatke. Poleg tega je zelo pomemben razred \textbf{Hand} oziroma \textbf{Hand\_ai}. Prvi je malo bolj preprost, saj se uporablja le za normalno igranje. Vsebuje podatke o kartah igrlca, hiše, velikost stave. \textbf{Hand\_ai} pa dodatno vsebuje navodila za odločanje v posamezni situaciji (izbrala sem način igre, ki ga prikažejo kot optimalnega na \href{https://www.blackjackapprenticeship.com/blackjack-strategy-charts/}{tej strani}). Oba razreda imata vsebujeta metode, ki povejo ali so \textsc{double}, \textsc{insurance}, \textsc{split}; prav tako pa tudi pomembno metodo \textit{.who\_wins()}, ki na koncu handa določi izkupiček za igralca.
+Prav tako ima datoteka \textit{table.py} svojo različico za simulacijo \textit{table\_ai.py}. Obe sta si zelo podobni, do razlike pride, ker je pri simulaciji potrebno beležiti določene podatke in upravljati s strategijo.
+
+\section{Simulacija}
+
+Opazujem 8 različnih strategij. Odločila sem se, da bom vsako simulirala $500$-krat po $100$ mešanj. Začetno stanje bo pri vseh igrah enako $100$, osnovna enota stavljanja pa $10$. Do razlike bo prišlo pri strategijah \textit{Reverse Labouchere} in \textit{Labouchere}, ker je potrebno na začetku določiti tudi željeni dobiček.
+
+Zbirala bom podatke o vejrjetnosti zmage in jih primerjala z optimimalno odločitvijo na \href{https://www.blackjackapprenticeship.com/blackjack-strategy-charts/}{tej strani}. Poleg tega bom za vsako strategijo stavljanja opazovala kako hitro pride do trikratnika začetnega zneska, petkratnika in desetkratnika, če se to sploh zgodi v roku 100 mešanj. Primerjala bom tudi velikosti stav in stanje na računu v posamezni igri. 
+Kot zadnje bom za vsako strategijo simulirala $100$ iger z neomejenim številom mešanj in opazovala kdaj bo stanje na računu enako 0. 
 
 
 
