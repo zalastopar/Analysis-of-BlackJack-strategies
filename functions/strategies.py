@@ -272,7 +272,7 @@ class card_counting:
         if true_count <= 1:
             bet = game.initial_bet
         else :
-            bet = (true_count-1)*game.initial_bet
+            bet = (true_count-1)*game.initial_bet #######
 
         # change balance
         if bet > game.balance: 
