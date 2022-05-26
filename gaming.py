@@ -56,7 +56,7 @@ pygame.display.set_caption("BlackJack Table")
 # 3 - prep and sim
 # 4 - table bet
 # 5 - table - first round
-# 6 - table - add buttons
+# 6 - table - add buttonst
 # 7 - table - add player card
 # 8 - table - add dealer cards
 # 9 - table - split

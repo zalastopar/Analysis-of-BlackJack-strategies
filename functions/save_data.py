@@ -3,21 +3,20 @@ import functions.classes as classes
 import pandas as pd
 import os.path
 
-def save_simulation(hand, game):
-
+def save_bet_sim(hand, game):
     sim = game.sim
+    if sim not in game.data_bet.keys():
+        game.data_bet[sim] = []
+    game.data_bet[sim].append(hand.bet + hand.split_bet)
 
+def save_simulation(hand, game):
+    sim = game.sim
     # balance 
     if sim not in game.data_balance.keys():
         game.data_balance[sim] = [game.balance]
     else:
         game.data_balance[sim].append(game.balance)
     
-    # bet
-    if sim not in game.data_bet.keys():
-        game.data_bet[sim] = [hand.bet + hand.split_bet]
-    else: 
-        game.data_bet[sim].append(hand.bet + hand.split_bet)
 
 
     #self.data_multiple = data_multiple

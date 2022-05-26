@@ -83,6 +83,10 @@ def set_bet(game, hand, strat): # game.position = 28
     #print(strat.active_strategy.bet)
     hand.restart_hand()
     hand.bet = strat.active_strategy.bet
+    print(game.sim)
+    print(game.length)
+    save_data.save_bet_sim(hand, game)
+
     if hand.bet > 0 and game.balance >= 0:
         game.position = 21
     else: 
@@ -520,6 +524,8 @@ def saving_data(game, hand, strat): # game.position = 27
     # new bet or cash out
     print('game.length')
     print(game.length)
+    print('game.sim')
+    print(game.sim)
 
     if game.length >= game.num_dealings:  # we play n number of dealings 
 
@@ -531,11 +537,11 @@ def saving_data(game, hand, strat): # game.position = 27
             game.shuffle_deck()
             game.length = 1
             game.balance = game.initial_balance
+            hand.bet = 0
             #print(game.balance)
             # restart strategies
             strat.restart_strategies(game)
-            print('game.sim')
-            print(game.sim)
+            game.position = 28
 
         else: # finnish
             #print('saving')

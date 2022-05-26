@@ -15,3 +15,5 @@ Opombe:
 - #prever backe ce usi delajo
 
 - pri labu ko se ustvari zaporedje ne more biti več kot balance
+
+- shrani bet na zacetku
