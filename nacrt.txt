@@ -1,13 +1,8 @@
-Kaj je potrebno storiti:
-* zbiranje podatkov: balance po vsaki igri, kako hitro pride do 0, kok od 1000 handov smo prisli do 0, 3x, 5x, 10x
-* verjetnosti
+
 
 Opombe:
 -nekak je bilu balance negativen !!!!!!!!!!!
 -countingu je treba povedat kdaj se pack zmesa?
-- restarti vse hande ko zacnes novo simulacijo in ko gres na zacetek - mogoce metoda
-
-
 
  - ce grem na menu iz simulacije ostane od simulacije nastavek in obarvana strategija
 
