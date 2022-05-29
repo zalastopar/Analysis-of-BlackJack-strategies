@@ -150,7 +150,7 @@ class reverse_lab:
         self.button = classes.Button([width - 1300, height - 600 + 100], 'Reverse Labouchere', PINK, PINK, TEAL, [500, 80], True)
 
 
-    def create_seq(self):
+    def create_seq(self, game):
         p = self.profit
         print('profit' + str(p))
         seq = []
@@ -166,7 +166,7 @@ class reverse_lab:
         self.bet = 0
         # if sequence is empty, create new one
         if len(self.seq) == 0:
-            self.create_seq()
+            self.create_seq(game)
             print('dolzina 0')
             print(len(self.seq))
             print(self.seq)
@@ -185,7 +185,7 @@ class reverse_lab:
                 bet = self.seq[0] + self.seq[-1]
             else:
                 if len(self.seq) == 1 or len(self.seq) == 2:
-                    self.create_seq()
+                    self.create_seq(game)
                     print('dolzina 0')
                     if len(self.seq) == 1:
                         bet = self.seq[0]
@@ -398,7 +398,7 @@ class labouchere:
 
         self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 300], 'Labouchere', PINK, PINK, TEAL, [500, 80], True)
 
-    def create_seq(self):
+    def create_seq(self, game):
         p = self.profit
         seq = []
         first = 0
@@ -412,7 +412,7 @@ class labouchere:
         self.bet = 0
         # if sequence is empty, create new one
         if len(self.seq) == 0:
-            self.create_seq()
+            self.create_seq(game)
             if len(self.seq) == 1:
                 bet = self.seq[0]
             else:
@@ -426,7 +426,7 @@ class labouchere:
                 bet = self.seq[0] + self.seq[-1]
             else:
                 if len(self.seq) == 1 or len(self.seq) == 2:
-                    self.create_seq()
+                    self.create_seq(game)
                     if len(self.seq) == 1:
                         bet = self.seq[0]
                     else:

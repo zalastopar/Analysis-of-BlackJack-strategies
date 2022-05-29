@@ -1,28 +1,41 @@
 library(readr)
 library("ggplot2")
-
-paroli_bet <- data.frame(read_csv("data/paroli-bet.csv")[,-1])
-paroli_balance <- data.frame(read_csv("data/paroli-balance.csv")[,-1])
-paroli <- data.frame(read_csv("data/paroli.csv")[,-1])
-paroli[is.na(paroli)] <-0
-paroli_balance[is.na(paroli_balance)] <-0
-paroli_bet[is.na(paroli_bet)] <-0
-#X1326_balance <- read_csv("data/1326-balance.csv")
-
-
-plot(paroli_bet[,1], type = 'l')
-for (i in 2:50){
-  lines(paroli_bet[,i], type = 'l')
+for (el in c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar')) {
+  assign(paste(el, '_bet', sep = ''), data.frame(read_csv(paste("data/", el, "-bet.csv", sep = ''))[,-1]))
+  assign(paste(el, '_balance', sep = ''), data.frame(read_csv(paste("data/", el, "-balance.csv", sep = ''))[,-1]))
+  assign(el, data.frame(read_csv(paste("data/", el, ".csv", sep = ''))[,-1]))
+  
+  eval(parse(text = el))[is.na(eval(parse(text = el)))] <-0
+  eval(parse(text = paste(el, '_balance', sep = '')))[is.na(eval(parse(text = paste(el, '_balance', sep = ''))))] <-0
+  eval(parse(text = paste(el, '_bet', sep = '')))[is.na(eval(parse(text = paste(el, '_bet', sep = ''))))] <-0
 }
 
-# data 0x, 3x, 5x, 10x
-avg_data <- data.frame(colMeans(paroli[sapply(paroli, is.numeric)]), c('0x', '3x', '5x', '10x'))
-colnames(avg_data) <- c('a', 'b')
-plot_avg_data <- ggplot(avg_data, aes(x=b, y = a)) + geom_histogram(stat = "identity", fill = 'deeppink3') + 
-  scale_x_discrete(limits=avg_data$b) + theme_classic() + 
+
+# isto se za balance
+avg_balance <- c()
+for (i in 1:100){
+  avg_balance <- c(avg_balance, mean(as.numeric(paroli_balance[i,])))
+}
+
+plot(paroli_balance[,1], type = 'l', col='#ffc0cb80')
+for (i in 1:500){
+  lines(paroli_balance[,i], type = 'l', col='#ffc0cb80')
+}
+lines(avg_balance, type = 'l', col = 'deeppink3')
+
+
+
+# data 0x, 3x, 5x, 10x - brez 0
+avg_data_0_paroli <- data.frame(colSums(paroli)/colSums(!!paroli), c('0x', '3x', '5x', '10x'))
+avg_data_0_paroli[is.na(avg_data_0_paroli)] = 0
+colnames(avg_data_0_paroli) <- c('a', 'b')
+plot_avg_data_0_paroli <- ggplot(avg_data_0_paroli, aes(x=b, y = a)) + geom_histogram(stat = "identity", fill = 'deeppink3') + 
+  scale_x_discrete(limits=avg_data_0_paroli$b) + theme_classic() + 
   labs(x = 'Balance value', y = 'Average number of dealings', title = 'Average number of dealings to get to the multiple of balance', 
        subtitle = 'Paroli system')
-plot_avg_data
+plot_avg_data_0_paroli
+
+
 
 # data 0x
 plot_data_0 <- ggplot(paroli, aes(x=c(1:500), y = data_0x)) + geom_histogram(stat = "identity", fill = 'palevioletred2') + theme_classic() + 
@@ -48,7 +61,7 @@ plot_data_5
 # data 10x
 plot_data_10 <- ggplot(paroli, aes(x=c(1:500), y = data_10x)) + geom_histogram(stat = "identity", fill = 'khaki2') + theme_classic() + 
   labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 10x balance', 
-       subtitle = 'Paroli system') + 
+       subtitle = 'Paroli system') + ylim(0, 1) + 
   geom_hline(yintercept=avg_data[4,1], color = 'tan2', size = 1, linetype="dashed")
 plot_data_10
 
@@ -74,4 +87,5 @@ plot(avg_balance, type = 'l')
 
 
 
+## lab
 
