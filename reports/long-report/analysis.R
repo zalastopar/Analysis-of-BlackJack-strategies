@@ -1,71 +1,92 @@
+setwd("~/AMAT/Analysis-of-BlackJack-strategies")
 library(readr)
 library("ggplot2")
+
+na_to_0 <- function(tab) {
+  tab[is.na(tab)] <- 0
+  return(tab)
+}
+
+for (el in c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar', 'lab20', 'lab50', 'lab100', 'rev_lab20', 'rev_lab50', 'rev_lab100')) {
+  assign(paste(el, '_bet', sep = ''), na_to_0(data.frame(read_csv(paste("data/", el, "-bet.csv", sep = ''))[,-1])))
+  assign(paste(el, '_balance', sep = ''), na_to_0(data.frame(read_csv(paste("data/", el, "-balance.csv", sep = ''))[,-1])))
+  assign(el, na_to_0(data.frame(read.csv(paste("data/", el, ".csv", sep = ''))[,-1])))
+}
+
 for (el in c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar')) {
-  assign(paste(el, '_bet', sep = ''), data.frame(read_csv(paste("data/", el, "-bet.csv", sep = ''))[,-1]))
-  assign(paste(el, '_balance', sep = ''), data.frame(read_csv(paste("data/", el, "-balance.csv", sep = ''))[,-1]))
-  assign(el, data.frame(read_csv(paste("data/", el, ".csv", sep = ''))[,-1]))
+  # isto se za balance
+  tab <- get(paste(el, '_balance', sep = ''))
+  avg_balance <- c()
+  for (i in 1:100){
+    avg_balance <- c(avg_balance, mean(as.numeric(tab[i,])))
+  }
+
+  png(paste("reports/analysis/", el, '-balance.png', sep = ''), height =600 , width = 700)
+  plot(tab[,1], type = 'l', col=rgb(red=1, green=0.6, blue=0.5, alpha=0.4), xlab = 'Dealing', ylab = 'Balance', main = paste('Balance after each dealing \n', el, sep = ''),
+       ylim = c(0, 1800))
+  for (i in 1:500){
+    lines(tab[,i], type = 'l', col=rgb(red=1, green=0.6, blue=0.5, alpha=0.4))
+  }
+  lines(avg_balance, type = 'l', col = 'hotpink', lwd = 3)
+  dev.off()
+
+  tab2 <- get(el)
+  # data 0x, 3x, 5x, 10x - brez 0
+  avg_data_0 <- data.frame(colSums(tab2)/colSums(!!tab2), c('0x', '3x', '5x', '10x'))
+  colnames(avg_data_0) <- c('a', 'b')
+  plot_avg_data_0 <- ggplot(avg_data_0, aes(x=b, y = a)) + geom_col(fill = 'deeppink3') + 
+    scale_x_discrete(limits=avg_data_0$b) + theme_classic() + 
+    labs(x = 'Balance value', y = 'Average number of dealings', title = 'Average number of dealings to get to the multiple of balance', 
+         subtitle = el)
   
-  eval(parse(text = el))[is.na(eval(parse(text = el)))] <-0
-  eval(parse(text = paste(el, '_balance', sep = '')))[is.na(eval(parse(text = paste(el, '_balance', sep = ''))))] <-0
-  eval(parse(text = paste(el, '_bet', sep = '')))[is.na(eval(parse(text = paste(el, '_bet', sep = ''))))] <-0
+  png(paste("reports/analysis/", el, '-hist.png', sep = ''), height =600 , width = 700)
+  print(plot_avg_data_0)
+  dev.off()
+
+
+
+  # data 0x
+  avg_data_0 <- data.frame(colSums(tab2)/colSums(!!tab2), c('0x', '3x', '5x', '10x'))
+  plot_data_0 <- ggplot(tab2, aes(x=c(1:500), y = data_0x)) + geom_col(fill = 'palevioletred2') + theme_classic() + 
+    labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 0 balance', 
+         subtitle = el) + 
+    geom_hline(yintercept=avg_data_0[1,1], color = 'deeppink', size = 1, linetype="dashed")
+  
+  png(paste("reports/analysis/", el, '-data_0.png', sep = ''), height =600 , width = 700)
+  print(plot_data_0)
+  dev.off()
+  
+  # data 3x
+  plot_data_3 <- ggplot(tab2, aes(x=c(1:500), y = data_3x)) + geom_col(fill = 'plum3') + theme_classic() + 
+    labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 3x balance', 
+         subtitle = el) + 
+    geom_hline(yintercept=avg_data_0[2,1], color = 'mediumorchid4', size = 1, linetype="dashed")
+  
+  png(paste("reports/analysis/", el, '-data_3.png', sep = ''), height =600 , width = 700)
+  print(plot_data_3)
+  dev.off()
+  
+  # data 5x
+  plot_data_5 <- ggplot(tab2, aes(x=c(1:500), y = data_5x)) + geom_col(fill = 'rosybrown3') + theme_classic() + 
+    labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 5x balance', 
+         subtitle = el) + 
+    geom_hline(yintercept=avg_data_0[3,1], color = 'wheat4', size = 1, linetype="dashed")
+  
+  png(paste("reports/analysis/", el, '-data_5.png', sep = ''), height =600 , width = 700)
+  print(plot_data_5)
+  dev.off()
+  
+  # data 10x
+  plot_data_10 <- ggplot(tab2, aes(x=c(1:500), y = data_10x)) + geom_col(fill = 'khaki2') + theme_classic() + 
+    labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 10x balance', 
+         subtitle = el) + ylim(0, 1) + 
+    geom_hline(yintercept=avg_data_0[4,1], color = 'tan2', size = 1, linetype="dashed")
+  
+  png(paste("reports/analysis/", el, '-data_10.png', sep = ''), height =600 , width = 700)
+  print(plot_data_10)
+  dev.off()
+
 }
-
-
-# isto se za balance
-avg_balance <- c()
-for (i in 1:100){
-  avg_balance <- c(avg_balance, mean(as.numeric(paroli_balance[i,])))
-}
-
-plot(paroli_balance[,1], type = 'l', col='#ffc0cb80')
-for (i in 1:500){
-  lines(paroli_balance[,i], type = 'l', col='#ffc0cb80')
-}
-lines(avg_balance, type = 'l', col = 'deeppink3')
-
-
-
-# data 0x, 3x, 5x, 10x - brez 0
-avg_data_0_paroli <- data.frame(colSums(paroli)/colSums(!!paroli), c('0x', '3x', '5x', '10x'))
-avg_data_0_paroli[is.na(avg_data_0_paroli)] = 0
-colnames(avg_data_0_paroli) <- c('a', 'b')
-plot_avg_data_0_paroli <- ggplot(avg_data_0_paroli, aes(x=b, y = a)) + geom_histogram(stat = "identity", fill = 'deeppink3') + 
-  scale_x_discrete(limits=avg_data_0_paroli$b) + theme_classic() + 
-  labs(x = 'Balance value', y = 'Average number of dealings', title = 'Average number of dealings to get to the multiple of balance', 
-       subtitle = 'Paroli system')
-plot_avg_data_0_paroli
-
-
-
-# data 0x
-plot_data_0 <- ggplot(paroli, aes(x=c(1:500), y = data_0x)) + geom_histogram(stat = "identity", fill = 'palevioletred2') + theme_classic() + 
-  labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 0 balance', 
-       subtitle = 'Paroli system') + 
-  geom_hline(yintercept=avg_data[1,1], color = 'deeppink', size = 1, linetype="dashed")
-plot_data_0
-
-# data 3x
-plot_data_3 <- ggplot(paroli, aes(x=c(1:500), y = data_3x)) + geom_histogram(stat = "identity", fill = 'plum3') + theme_classic() + 
-  labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 3x balance', 
-       subtitle = 'Paroli system') + 
-  geom_hline(yintercept=avg_data[2,1], color = 'mediumorchid4', size = 1, linetype="dashed")
-plot_data_3
-
-# data 5x
-plot_data_5 <- ggplot(paroli, aes(x=c(1:500), y = data_5x)) + geom_histogram(stat = "identity", fill = 'rosybrown3') + theme_classic() + 
-  labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 5x balance', 
-       subtitle = 'Paroli system') + 
-  geom_hline(yintercept=avg_data[3,1], color = 'wheat4', size = 1, linetype="dashed")
-plot_data_5
-
-# data 10x
-plot_data_10 <- ggplot(paroli, aes(x=c(1:500), y = data_10x)) + geom_histogram(stat = "identity", fill = 'khaki2') + theme_classic() + 
-  labs(x = 'Game', y = 'Number of dealings', title = 'Number of dealings in each game to get to 10x balance', 
-       subtitle = 'Paroli system') + ylim(0, 1) + 
-  geom_hline(yintercept=avg_data[4,1], color = 'tan2', size = 1, linetype="dashed")
-plot_data_10
-
-
 
 
 

@@ -37,6 +37,31 @@ def print_error(txt, pos, size, col):
     gameDisplay.blit(warning, pos)
 
 
+def help_probability(hand,game):
+    # Probabilities for play with help
+    if game.help:
+        # create grid
+        if len(hand.help_soft(game)) > 0:
+            move = hand.help_soft(game)
+            m = classes.Button([width - 1498.5 + 10, height - 115 + 10], move[0], TEAL, TEAL, DARKTEAL, [150, 40], True)
+            m.create(gameDisplay, 40, 2)
+            prob = classes.Button([width - 1498.5 + 10 + 150, height - 115 + 10], str(move[1]) + ' %', TEAL, TEAL, DARKTEAL, [150, 40], True)
+            prob.create(gameDisplay, 40, 2)
+        elif len(hand.help_split(game)) > 0:
+            move = hand.help_soft(game)
+            m = classes.Button([width - 1498.5 + 10, height - 115 + 10], move[0], TEAL, TEAL, DARKTEAL, [150, 40], True)
+            m.create(gameDisplay, 40, 2)
+            prob = classes.Button([width - 1498.5 + 10 + 150, height - 115 + 10], str(move[1]) + ' %', TEAL, TEAL, DARKTEAL, [150, 40], True)
+            prob.create(gameDisplay, 40, 2)
+
+        else: 
+            move = hand.help_prob(game)
+            #pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5 + 10, height - 850 + 10, 150, 40), 2)
+            hit = classes.Button([width - 1498.5 + 10, height - 115 + 10], move[0], TEAL, TEAL, DARKTEAL, [150, 40], True)
+            hit.create(gameDisplay, 40, 2)
+            prob = classes.Button([width - 1498.5 + 10 + 150, height - 115 + 10], str(move[1]) + ' %', TEAL, TEAL, DARKTEAL, [150, 40], True)
+            prob.create(gameDisplay, 40, 2)
+
 def empty_table(hand, game):
     'Function creates an empty table. Later different figures will be added to it.'
 
@@ -51,7 +76,7 @@ def empty_table(hand, game):
     text_font = pygame.font.SysFont('Bungee', 50)
     bet = text_font.render('Bet: ' + str(hand.bet), TRUE, DARKTEAL)
     text_font = pygame.font.SysFont('Bungee', 35)
-    balance = text_font.render('Balance: ' + str(game.balance), TRUE, DARKTEAL)
+    balance = text_font.render('Balance: ' + str(round(game.balance, 2)), TRUE, DARKTEAL)
 
     gameDisplay.blit(bet, (width - 1498.5 + 15, height - 850 + 30 + 15))
     gameDisplay.blit(balance, (width - 1498.5 + 15, height - 850 + 15))
@@ -70,31 +95,7 @@ def empty_table(hand, game):
         ins = text_font.render('Insurance: ' + str(hand.take_insurance), TRUE, DARKTEAL)
         gameDisplay.blit(ins, (width - 1498.5 + 15, height - 850 + 15 + 40 + 55))
 
-    # Probabilities for play with help
-    if game.help:
-        # create grid
-        if hand.hit:
-            #pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5 + 10, height - 850 + 10, 150, 40), 2)
-            
-            hit = classes.Button([width - 1498.5 + 10, height - 850 + 10], 'Hit:', TEAL, TEAL, DARKTEAL, [150, 40], True)
-            hit.create(gameDisplay, 40, 2)
-            # place for prob
-            pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5 + 10 + 150, height - 850 + 10, 150, 40), 2)
 
-            stand = classes.Button([width - 1498.5 + 10, height - 850 + 10 + 40], 'Stand:', TEAL, TEAL, DARKTEAL, [150, 40], True)
-            stand.create(gameDisplay, 40, 2)
-            # prob
-            pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5 + 10 + 150, height - 850 + 10 + 40, 150, 40), 2)
-        if hand.double(game):
-            double = classes.Button([width - 1498.5 + 10, height - 850 + 10 + 80], 'Double:', TEAL, TEAL, DARKTEAL, [150, 40], True)
-            double.create(gameDisplay, 40, 2)
-            #
-            pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5 + 10 + 150, height - 850 + 10 + 80, 150, 40), 2)
-        if hand.split(game):
-            split = classes.Button([width - 1498.5 + 10, height - 850 + 10 + 120], 'Split:', TEAL, TEAL, DARKTEAL, [150, 40], True)
-            split.create(gameDisplay, 40, 2)
-            #
-            pygame.draw.rect(gameDisplay, DARKTEAL, (width - 1498.5 + 10 + 150, height - 850 + 10 + 120, 150, 40), 2)
 
     
 
@@ -243,6 +244,7 @@ def adding_buttons(hand, game): # game.position = 6
     'Function draws hands and adds action buttons.'
 
     empty_table(hand, game)
+    help_probability(hand, game)
 
     # Different setting for split
     if hand.take_split == 1:
@@ -419,6 +421,7 @@ def dealing_buttons(game, mouse, hand):
 def add_dealer_cards(hand, game): # game.position = 8
 
     empty_table(hand, game)
+
     draw_hand(hand.player_hand)
     draw_hand(hand.split_hand)
     draw_hand(hand.dealer_hand)
@@ -464,6 +467,7 @@ def add_dealer_cards(hand, game): # game.position = 8
 def split(hand, game): #game.position = 9
 
     empty_table(hand, game)
+    help_probability(hand, game)
 
     if hand.take_split == 1:
         draw_hand(hand.player_hand)
@@ -607,7 +611,7 @@ def winner(hand, game): # game.position = 10
 
 def winner_buttons(game, mouse, hand):
     # save data
-    save_data.save_prob(hand, game) 
+    #save_data.save_prob(hand, game) 
 
     if  width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         # Restart hand

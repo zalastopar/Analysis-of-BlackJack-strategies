@@ -101,6 +101,8 @@ napaka = False
 mygame.shuffle_deck()
 
 
+
+
 def view(position):
     if position == 1:
         menu_window.menu()

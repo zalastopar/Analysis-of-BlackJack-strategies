@@ -1,8 +1,13 @@
 from pickle import TRUE
 import os.path
+from re import M
 import pygame
 from pygame.locals import *
 import random
+import pandas as pd
+
+from pyparsing import opAssoc
+import functions.save_data as save_data
 
 
 
@@ -199,6 +204,49 @@ class Card:
         width, height = image.get_width(), image.get_height()
         screen.blit(image, (self.position[0] + (200-width)/2 + 3, self.position[1] + (320 - height)/2))
 
+
+# first key = player, second keys = dealer
+decisions = {}
+decisions[9] = {2: 'H', 3: 'D', 4: 'D', 5: 'D', 6 : 'D', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[10] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'H', 11: 'H'}
+decisions[11] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'D', 11: 'D'}
+decisions[12] = {2: 'H', 3: 'H', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[13] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[14] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[15] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[16] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+decisions[17] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+# pod 9 hit, nad 17 stand
+
+
+# ace and smth
+# only when player has 2 cards
+soft = {}
+soft[2] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[3] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[4] = {2: 'H', 3: 'H', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[5] = {2: 'H', 3: 'H', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[6] = {2: 'H', 3: 'DH', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
+soft[7] = {2: 'DS', 3: 'DS', 4: 'DS', 5: 'DS', 6 : 'DS', 7: 'S', 8: 'S', 9: 'H', 10: 'H', 11: 'H'}
+soft[8] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'DS', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+soft[9] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+soft[10] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+
+# split
+splitgrid = {}
+splitgrid[2] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[3] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[4] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[5] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[6] = {2: 'N', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[7] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[8] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
+splitgrid[9] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'Y', 9: 'Y', 10: 'N', 11: 'N'}
+splitgrid[10] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
+splitgrid[11] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
+
+
+
 class Hand:
     def __init__(self, bet, hand, dealer_hand, insurance, double, split, split_hand, winnings, split_bet, move):
         self.bet = bet # float
@@ -211,6 +259,12 @@ class Hand:
         self.winnings = winnings
         self.split_bet = split_bet
         self.move = move ############################### ne rabm?
+
+        # help
+        self.splitgrid = splitgrid # directions how to play
+        self.soft = soft # directions how to play
+        self.decisions = decisions # directions how to play 
+
 
     def __repr__(self):
         return 'Bet: ' + str(self.bet) + '\nPlayer:' + str(self.player_hand) + '\nDealer: ' + str(self.dealer_hand)
@@ -343,47 +397,126 @@ class Hand:
         self.split_bet = 0
         self.take_double = False
 
+    def help_prob(self, game):
+        val, k = self.hand_value('P')
+        val2, k = self.hand_value('D')
+        df = pd.read_csv('data/prob_data.csv', index_col = 0)
+        data = save_data.nicer_dict(df)
 
-# first key = player, second keys = dealer
-decisions = {}
-decisions[9] = {2: 'H', 3: 'D', 4: 'D', 5: 'D', 6 : 'D', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-decisions[10] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'H', 11: 'H'}
-decisions[11] = {2: 'D', 3: 'D', 4: 'D', 5: 'D', 6: 'D', 7: 'D', 8: 'D', 9: 'D', 10: 'D', 11: 'D'}
-decisions[12] = {2: 'H', 3: 'H', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-decisions[13] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-decisions[14] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-decisions[15] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-decisions[16] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-decisions[17] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
-# pod 9 hit, nad 17 stand
+        move = []
+        #print(val)
+        if val <= 8:
+            move.append('Hit')
+        elif val >= 18:
+            move.append('Stand')
+        else:
+            d = self.decisions[val][val2]
+            if d == 'H':
+                move.append('Hit')
+            elif d == 'D':
+                if self.double(game):
+                    move.append('Double')
+                else:
+                    move.append('Hit')
+            elif d == 'S':
+                move.append('Stand')
+        if val2 in data[val].keys():
+            prob = round(data[val][val2][0]/data[val][val2][1], 4)*100
+            move.append(round(prob, 2))
+        else: 
+            move.append('')
+        return move
+
+    def help_soft(self, game):
+        val2, k = self.hand_value('D')
+        df = pd.read_csv('data/soft_data.csv', index_col = 0)
+        data = save_data.nicer_dict(df)
+
+        move = []
+        #check for ace
+        if 11 == self.player_hand[0].value and len(self.player_hand) == 2 and self.player_hand[1].value != 11: # ace is first card
+            num = self.player_hand[1].real_value()
+            check = self.soft[num][val2]
+            # DH
+            if check == 'DH':
+                if self.double(game):
+                    move.append('Double')
+                else:
+                    move.append('Hit')
+            # DS
+            elif check == 'DS':
+                if self.double(game):
+                    move.append('Double')
+                else:
+                    move.append('Stand')
+            elif check == 'H':
+                move.append('Hit')
+            else:
+                move.append('Stand')
+
+            if val2 in data[num].keys():
+                prob = round(data[num][val2][0]/data[num][val2][1], 4)*100
+                move.append(round(prob, 2))
+            else:
+                move.append('')
+        elif 11 == self.player_hand[1].value and len(self.player_hand) == 2 and self.player_hand[0].value != 11: # ace is second card
+            num = self.player_hand[0].real_value()
+            #print('b')
+            #print(self.player_hand[0])
+            #print(self.player_hand[1])
+            check = self.soft[num][val2]
+
+            # DH
+            if check == 'DH':
+                if self.double(game): 
+                    move.append('Double')
+                else:
+                    move.append('Hit')
+            # DS
+            elif check == 'DS':
+                if self.double(game):
+                    move.append('Double')
+                else:
+                    move.append('Stand')
+            elif check == 'H':
+                move.append('Hit')
+            else:
+                move.append('Stand')
+
+            if val2 in data[num].keys():
+                prob = round(data[num][val2][0]/data[num][val2][1], 4)*100
+                move.append(round(prob, 2))
+            else:
+                move.append('')
+        return move
 
 
-# ace and smth
-# only when player has 2 cards
-soft = {}
-soft[2] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-soft[3] = {2: 'H', 3: 'H', 4: 'H', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-soft[4] = {2: 'H', 3: 'H', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-soft[5] = {2: 'H', 3: 'H', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-soft[6] = {2: 'H', 3: 'DH', 4: 'DH', 5: 'DH', 6 : 'DH', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H'}
-soft[7] = {2: 'DS', 3: 'DS', 4: 'DS', 5: 'DS', 6 : 'DS', 7: 'S', 8: 'S', 9: 'H', 10: 'H', 11: 'H'}
-soft[8] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'DS', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
-soft[9] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
-soft[10] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
+    def help_split(self, game):
+        val2, k = self.hand_value('D')
+        df = pd.read_csv('data/split_data.csv', index_col = 0)
+        data = save_data.nicer_dict(df)
+        move = []
+        # check for split
+        if self.split(game):
+            num = self.player_hand[0].real_value()
+            check = self.splitgrid[num][val2]
+            if check == 'Y':
+                move.append('Split')
+                if val2 in data[num].keys():
+                    prob = round(data[num][val2][0]/data[num][val2][1], 4)*100
+                    move.append(round(prob, 2))
+                else:
+                    move.append('')
 
-# split
-splitgrid = {}
-splitgrid[2] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[3] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[4] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[5] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[6] = {2: 'N', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[7] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[8] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
-splitgrid[9] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'N', 8: 'Y', 9: 'Y', 10: 'N', 11: 'N'}
-splitgrid[10] = {2: 'N', 3: 'N', 4: 'N', 5: 'N', 6 : 'N', 7: 'N', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
-splitgrid[11] = {2: 'Y', 3: 'Y', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'Y', 9: 'Y', 10: 'Y', 11: 'Y'}
+        return move
 
+
+
+        
+
+
+    
+        
 
 class Hand_ai:
     def __init__(self, bet, hand, dealer_hand, double, split, split_hand, winnings, split_bet, move):
@@ -563,7 +696,7 @@ class Hand_ai:
                 if self.double(game):
                     return 'D'
                 else:
-                    return 'H'
+                    return 'S'
             else:
                 return check
         elif 11 == self.player_hand[1].value and len(self.player_hand) == 2 and self.player_hand[0].value != 11: # ace is second card
@@ -584,7 +717,7 @@ class Hand_ai:
                 if self.double(game):
                     return 'D'
                 else:
-                    return 'H'
+                    return 'S'
             else:
                 return check
         else:
@@ -594,7 +727,14 @@ class Hand_ai:
             elif val >= 18:
                 return 'S'
             else:
-                return self.decisions[val][val2]
+                m = self.decisions[val][val2]
+                if m == 'D':
+                    if self.double(game):
+                        return m
+                    else:
+                        return m 
+                else:
+                    return self.decisions[val][val2]
 
     def restart_hand(self):
         self.player_hand = []
