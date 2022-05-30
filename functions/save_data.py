@@ -48,9 +48,6 @@ def save_simulation(hand, game):
         if (sim - 1) not in game.data_multiple['data_10x'].keys() and (sim - 1) != 0 and sim != 0:
             game.data_multiple['data_10x'][sim-1] = 0
 
-
-    
-
     
 def save_prob(hand, game):
     # a izenacenje stejemo?
@@ -214,7 +211,7 @@ def update_csv_prob(new_dict, csv_file):
         old_dict = {}
     else: 
         # get old data
-        df = pd.read_csv(csv_file, index_col = 0) 
+        df = pd.read_csv(csv_file, 1) 
         old_dict = nicer_dict(df.to_dict())
     # merge data
     updated = combine_dict(old_dict, new_dict)
