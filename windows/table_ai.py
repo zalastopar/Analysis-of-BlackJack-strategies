@@ -83,8 +83,7 @@ def set_bet(game, hand, strat): # game.position = 28
     #print(strat.active_strategy.bet)
     hand.restart_hand()
     hand.bet = strat.active_strategy.bet
-    print(game.sim)
-    print(game.length)
+
     save_data.save_bet_sim(hand, game)
 
     if hand.bet > 0 and game.balance >= 0:
@@ -196,10 +195,10 @@ def first_dealing(game, hand,strat): # game.position = 22
     if move == 'H':
         game.position = 23
     elif move == 'S':
-        #hand.move.append('S') # save move
+
         game.position = 24
     elif move == 'D':
-        #hand.move.append('D') # save move
+
         sui, val = classes.random_card(game)
         position = game.player_position
         c = classes.Card(sui, val, [position[0] + 2*150, position[1]])
@@ -218,7 +217,7 @@ def first_dealing(game, hand,strat): # game.position = 22
             hand.bet = hand.bet*2
             game.position = 24
     elif move == 'split':
-        #hand.move.append('split') # save move
+
         hand.take_split = 1
         c = hand.player_hand[0]
         d = hand.player_hand[1]
@@ -253,7 +252,7 @@ def dealing(game, hand, strat): # game.position = 23
 
     move = hand.next_move(game)
     if move == 'H':
-        #hand.move.append('H') # save move
+
         sui, val = classes.random_card(game)
         position = game.player_position
         num = len(hand.player_hand)
@@ -270,15 +269,14 @@ def dealing(game, hand, strat): # game.position = 23
         game.position = 23
     else:
         if hand.take_split == 1:
-            #hand.move.append('S') # save move
-            #hand.move.append(',') # save move - split start new hand
+
             hand.take_split = 2
             pygame.display.flip()
             pygame.event.pump()
             #pygame.time.delay(200)
             game.position = 26
         else:
-            #hand.move.append('S') # save move 
+
             game.position = 24
 
 
@@ -522,10 +520,6 @@ def saving_data(game, hand, strat): # game.position = 27
     #print(df)
 
     # new bet or cash out
-    print('game.length')
-    print(game.length)
-    print('game.sim')
-    print(game.sim)
 
     if game.length >= game.num_dealings:  # we play n number of dealings 
 

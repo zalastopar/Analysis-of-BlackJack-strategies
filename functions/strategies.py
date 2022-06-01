@@ -73,8 +73,6 @@ class paroli:
             self.bet = bet
             game.balance = game.balance - self.bet
             
-
-
 class system1326:
     '''
     The 1 3 2 6 strategy isn’t as popular as the Paroli, 
@@ -127,88 +125,6 @@ class system1326:
             self.bet = round(bet,2)
             game.balance = game.balance - self.bet
 
-class reverse_lab:
-    '''
-    The reverse Labouchere system is one of the most complicated gambling strategies. 
-    But you should still be able to pick up this system within a few minutes.
-    The reverse Labouchere starts with creating a sequence of numbers. 
-    The numbers should add up to your desired profit for the betting string.
-    You then add the first and last number in the sequence to determine your next bet.
-    If you win the wager, you add the combined amount to the end of your sequence. 
-    After a loss, you cross off both numbers and continue to the next wager.
-    You start over with a new sequence whenever completing the number string.
-    The drawback to this strategy is that it normally takes a while to complete your betting sequence. 
-    But the upside is that you can win solid profits after completing the number string.
-    '''
-    def __init__(self, profit, seq, winning_streak, bet):
-        self.profit = profit # int: wanted profit (int)
-        self.seq = seq # sequence of betting int
-        self.winning_streak = winning_streak
-        self.bet = bet
-        self.strat = 'rev_lab'
-
-        self.button = classes.Button([width - 1300, height - 600 + 100], 'Reverse Labouchere', PINK, PINK, TEAL, [500, 80], True)
-
-
-    def create_seq(self, game):
-        p = self.profit
-        print('profit' + str(p))
-        seq = []
-        first = 0
-        while p > 0:
-            first = random.randint(1, p)
-            seq.append(first)
-            p = p-first
-        self.seq = seq
-            
-    
-    def set_bet(self, game):
-        self.bet = 0
-        # if sequence is empty, create new one
-        if len(self.seq) == 0:
-            self.create_seq(game)
-            print('dolzina 0')
-            print(len(self.seq))
-            print(self.seq)
-            if len(self.seq) == 1:
-                bet = self.seq[0]
-            else:
-                bet = self.seq[0] + self.seq[-1]
-        else: 
-            if self.winning_streak > 0:
-                print('w')
-                if len(self.seq) == 1:
-                    self.seq = self.seq + [self.seq[0]]
-                else:
-                    print('else')
-                    self.seq = self.seq + [self.seq[0] + self.seq[-1]]
-                bet = self.seq[0] + self.seq[-1]
-            else:
-                if len(self.seq) == 1 or len(self.seq) == 2:
-                    self.create_seq(game)
-                    print('dolzina 0')
-                    if len(self.seq) == 1:
-                        bet = self.seq[0]
-                    else:
-                        bet = self.seq[0] + self.seq[-1]
-                else:
-                    self.seq = self.seq[1:-1]
-                    if len(self.seq) == 1:
-                        bet = self.seq[0]
-                    else:
-                        bet = self.seq[0] + self.seq[-1]
-        
-        # change balance
-        if bet > game.balance: 
-            if game.balance == 0: # no more money
-                self.bet = 0
-            else: # bet as much as you have
-                self.bet = game.balance
-                game.balance = 0
-        else: 
-            self.bet = round(bet,2)
-            game.balance = game.balance - self.bet
-
 class one_half_increase:
     '''
     The one half increase system is aptly named, 
@@ -222,7 +138,8 @@ class one_half_increase:
         self.bet = bet
         self.strat = 'increase'
 
-        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 100], 'One half increase', PINK, PINK, TEAL, [500, 80], True)
+        self.button = classes.Button([width - 1300, height - 600 + 100], 'One half increase', PINK, PINK, TEAL, [500, 80], True)
+        
 
     def set_bet(self, game):
         initial = game.initial_bet
@@ -260,7 +177,8 @@ class card_counting:
         self.bet = bet
         self.strat = 'counting'
 
-        self.button = classes.Button([width - 1300, height - 600 + 200], 'Card counting', PINK, PINK, TEAL, [500, 80], True)
+        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 100], 'Card counting', PINK, PINK, TEAL, [500, 80], True)
+        
         
     def set_bet(self, game):
         # game with 6 decks --> 312 skupnih kart
@@ -272,7 +190,7 @@ class card_counting:
         if true_count <= 1:
             bet = game.initial_bet
         else :
-            bet = (true_count-1)*game.initial_bet*2
+            bet = (true_count-1)*game.initial_bet*4
 
         # change balance
         if bet > game.balance: 
@@ -310,7 +228,8 @@ class martingale:
         self.bet = bet
         self.strat = 'martingale'
 
-        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 200], 'Martingale system', PINK, PINK, TEAL, [500, 80], True)
+        self.button = classes.Button([width - 1300, height - 600 + 200], 'Martingale system', PINK, PINK, TEAL, [500, 80], True)
+        
 
     def set_bet(self, game):
         if self.bet == 0:
@@ -347,7 +266,7 @@ class oscars_grind:
         self.bankroll = bankroll
         self.strat = 'oscar'
 
-        self.button = classes.Button([width - 1300, height - 600 + 300], "Oscar's grind", PINK, PINK, TEAL, [500, 80], True)
+        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 200], "Oscar's grind", PINK, PINK, TEAL, [500, 80], True)
 
     def set_bet(self, game):
         bet = 0
@@ -376,77 +295,6 @@ class oscars_grind:
         else: 
             self.bet = round(bet,2)
             game.balance = game.balance - self.bet
-
-class labouchere:
-    '''
-    Earlier I covered how the reverse Labouchere works, 
-    and the regular Labouchere has the same structure, only in a negative progression format.
-    This strategy begins by creating a number string that represents your bet amounts. 
-    The sequence can be however long you’d like, but I suggest keeping it to 5 to 8 numbers.
-    The next step is to make your first bet by combining the first and last numbers.
-    You cross both numbers off after a win and continue to the next wager. 
-    Following a loss, you add the combined bet to the end of the sequence.
-    The good thing about this system is that it’s less risky than the Martingale, 
-    but you still carry a fair amount of risk because it takes a while to complete each number string.'''
-
-    def __init__(self, profit, sequence, bet, losing_streak):
-        self.profit = profit
-        self.seq = sequence
-        self.bet = bet
-        self.losing_streak = losing_streak
-        self.strat = 'lab'
-
-        self.button = classes.Button([width - 1300 + 500 + 40, height - 600 + 300], 'Labouchere', PINK, PINK, TEAL, [500, 80], True)
-
-    def create_seq(self, game):
-        p = self.profit
-        seq = []
-        first = 0
-        while p > 0:
-            first = random.randint(1, p)
-            seq.append(first)
-            p = p-first
-        self.seq = seq
-
-    def set_bet(self, game):
-        self.bet = 0
-        # if sequence is empty, create new one
-        if len(self.seq) == 0:
-            self.create_seq(game)
-            if len(self.seq) == 1:
-                bet = self.seq[0]
-            else:
-                bet = self.seq[0] + self.seq[-1]
-        else: 
-            if self.losing_streak > 0:
-                if len(self.seq) == 1:
-                    self.seq = self.seq + [self.seq[0]]
-                else:
-                    self.seq = self.seq + [self.seq[0] + self.seq[-1]]
-                bet = self.seq[0] + self.seq[-1]
-            else:
-                if len(self.seq) == 1 or len(self.seq) == 2:
-                    self.create_seq(game)
-                    if len(self.seq) == 1:
-                        bet = self.seq[0]
-                    else:
-                        bet = self.seq[0] + self.seq[-1]
-                else:
-                    self.seq = self.seq[1:-1]
-                    if len(self.seq) == 1:
-                        bet = self.seq[0]
-                    else:
-                        bet = self.seq[0] + self.seq[-1]
-        # change balance
-        if bet > game.balance: 
-            if game.balance == 0: # no more money
-                self.bet = 0
-            else: # bet as much as you have
-                self.bet = game.balance
-                game.balance = 0
-        else: 
-            self.bet = round(bet,2)
-            game.balance = game.balance - self.bet
-        
+     
 
 

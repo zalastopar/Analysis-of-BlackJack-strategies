@@ -211,7 +211,7 @@ def update_csv_prob(new_dict, csv_file):
         old_dict = {}
     else: 
         # get old data
-        df = pd.read_csv(csv_file, 1) 
+        df = pd.read_csv(csv_file, index_col = 0) 
         old_dict = nicer_dict(df.to_dict())
     # merge data
     updated = combine_dict(old_dict, new_dict)

@@ -245,34 +245,26 @@ def strategy_buttons(game, mouse, strat):
         strat.activate_button('1326')
         strat.active_strategy = strat.s1326
         game.strategy = '1326'
-    elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 100 <= mouse[1] <=  height - 600 + 80 + 100: # rev_lab
-        strat.activate_button('rev_lab')
-        strat.active_strategy = strat.rev_lab
-        game.strategy = 'rev_lab'
-    elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 100 <= mouse[1] <=  height - 600 + 80 + 100: # increase
+    elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 100 <= mouse[1] <=  height - 600 + 80 + 100: # increase
         strat.activate_button('increase')
         strat.active_strategy = strat.half
         game.strategy = 'increase'
-    elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 200 <= mouse[1] <=  height - 600 + 80 + 200: # counting
+    elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 100 <= mouse[1] <=  height - 600 + 80 + 100: # counting
         strat.activate_button('counting')
         strat.active_strategy = strat.counting
         game.strategy = 'counting'
-    elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 200 <= mouse[1] <=  height - 600 + 80 + 200: # martingale
+    elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 200 <= mouse[1] <=  height - 600 + 80 + 200: # martingale
         strat.activate_button('martingale')
         strat.active_strategy = strat.martingale
         game.strategy = 'martingale'
-    elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 + 300 <= mouse[1] <=  height - 600 + 80 + 300: # oscar
+    elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 200 <= mouse[1] <=  height - 600 + 80 + 200: # oscar
         strat.activate_button('oscar')
         strat.active_strategy = strat.oscar
         game.strategy = 'oscar'
-    elif width - 1300 + 500 + 40 <= mouse[0] <= width - 1300 + 500 + 500 + 40 and height - 600 + 300 <= mouse[1] <=  height - 600 + 80 + 300: # lab
-        strat.activate_button('lab')
-        strat.active_strategy = strat.lab
-        game.strategy = 'lab'
 
     pygame.display.update()
 
-def unit_strategy(game, strat, box_unit, box_profit): # game.position = '3b'
+def unit_strategy(game, strat, box_unit): # game.position = '3b'
     # Create empty window
     pygame.draw.rect(gameDisplay, PINK, (0, 0, width, height))
     
@@ -288,17 +280,6 @@ def unit_strategy(game, strat, box_unit, box_profit): # game.position = '3b'
     if box_unit.napaka == 2:
         print_error("Unit can't be more than balance!", [width - 530, height-700 + 70], 28, DARKPINK)
 
-    # wanted profit
-    if strat.active_strategy.strat == 'rev_lab' or strat.active_strategy.strat == 'lab':
-        text_font = pygame.font.SysFont('Bungee', 100)
-        first = text_font.render('Select desired profit: ', TRUE, DARKPINK)
-        gameDisplay.blit(first, (width - 1400, height-500))
-
-        box_profit.update()
-        box_profit.draw(gameDisplay)
-        if box_profit.napaka == 1:
-            print_error('Your amount must be a number!', [width - 530, height - 500 + 70], 28, DARKPINK)
-
     b = classes.Button([width - 955, height - 200], 'Back', LIGHTTEAL, PINK, DARKPINK, [300, 80], True)
     b.create(gameDisplay, 70)
 
@@ -307,32 +288,23 @@ def unit_strategy(game, strat, box_unit, box_profit): # game.position = '3b'
 
     pygame.display.update()
 
-def unit_strategy_button(game, mouse, strat, box_unit, box_profit):
+def unit_strategy_button(game, mouse, strat, box_unit):
 
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
         strat.restart_strategies(game)
         #box_unit.text = ''
-        #box_profit.text = ''
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # back - select simulation
         strat.restart_strategies(game)
         #box_unit.text = ''
-        #box_profit.text = ''
         game.position = '3a'
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box_unit.text != '' and float(box_unit.text) > 0:# play 
-        if strat.active_strategy.strat not in ['rev_lab', 'lab']:#if strategy is not lab or rev_lab
-            game.initial_bet = float(box_unit.text)
-            #box_unit.text = ''
-            #box_profit.text = ''
-            game.position = 28
-        elif (strat.active_strategy.strat == 'rev_lab' or strat.active_strategy.strat == 'lab') and box_profit.text != ''  and float(box_profit.text) > 0: # player
-            game.initial_bet = float(box_unit.text)
-            strat.active_strategy.profit = float(box_profit.text)
-            #box_unit.text = ''
-            #box_profit.text = ''
-            game.position = 28
+        game.initial_bet = float(box_unit.text)
+        #box_unit.text = ''
+        print(game.strategy)
+        game.position = 28
 
 
 

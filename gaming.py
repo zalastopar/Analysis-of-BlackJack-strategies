@@ -76,13 +76,11 @@ aihand = classes.Hand_ai(0, [], [], False, False, [], 0, 0, [])
 # strategies
 paroli = strategies.paroli(0, 0)
 sys1326 = strategies.system1326(0, 0, 1)
-revlab = strategies.reverse_lab(0, [], 0, 0)
 onehalf = strategies.one_half_increase(0, 0)
 mart = strategies.martingale(0, 0)
 oscar = strategies.oscars_grind(0, 0, 0)
-lab = strategies.labouchere(0, [], 0, 0)
 counting = strategies.card_counting(0, 0, 0)
-strat_buttons = classes.StrategyButton(paroli, sys1326, revlab, onehalf, counting, mart, oscar, lab, '')
+strat_buttons = classes.StrategyButton(paroli, sys1326, onehalf, counting, mart, oscar, '')
 
 # input boxes
 balance_box = classes.InputBox(width - 600, height-695, 300, 70, '', 100)
@@ -90,7 +88,6 @@ bet_box = classes.InputBox(width/2 + 100, height - 490, 300, 70, '', 100, [LIGHT
 num_sim_box = classes.InputBox(width - 600, height-400, 300, 70, '', 100, is_int = True)
 num_deal_box = classes.InputBox(width - 600, height-600, 300, 70, '', 100, is_int= True)
 bet_unit = classes.InputBox(width - 530, height-700, 300, 70, '', 100)
-desired_profit = classes.InputBox(width - 530, height-500, 300, 70, '', 100)
 
 
 
@@ -113,7 +110,7 @@ def view(position):
     elif position == '3a':
         prep_window.select_strategy_window(mygame, strat_buttons)
     elif position == '3b':
-        prep_window.unit_strategy(mygame, strat_buttons, bet_unit, desired_profit)
+        prep_window.unit_strategy(mygame, strat_buttons, bet_unit)
     elif position == 4:
         table.place_bet(myhand, mygame, bet_box)
     elif position == 5:
@@ -182,7 +179,7 @@ while True:
             elif position == '3a':
                 prep_window.strategy_buttons(mygame, mouse, strat_buttons)
             elif position == '3b':
-                prep_window.unit_strategy_button(mygame, mouse, strat_buttons, bet_unit, desired_profit)
+                prep_window.unit_strategy_button(mygame, mouse, strat_buttons, bet_unit)
             elif position == 4:
                 table.place_bet_buttons(mygame, mouse, myhand, bet_box)
             elif position == 6:
@@ -203,7 +200,6 @@ while True:
             num_deal_box.handle_event(event, gameDisplay, mygame)
         elif position == '3b':
             bet_unit.handle_event(event, gameDisplay, mygame, True)
-            desired_profit.handle_event(event, gameDisplay, mygame)
 
 
 

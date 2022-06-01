@@ -232,6 +232,7 @@ soft[8] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'DS', 7: 'S', 8: 'S', 9: 'S', 10:
 soft[9] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
 soft[10] = {2: 'S', 3: 'S', 4: 'S', 5: 'S', 6 : 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S'}
 
+
 # split
 splitgrid = {}
 splitgrid[2] = {2: 'N', 3: 'N', 4: 'Y', 5: 'Y', 6 : 'Y', 7: 'Y', 8: 'N', 9: 'N', 10: 'N', 11: 'N'}
@@ -258,7 +259,6 @@ class Hand:
         self.take_double = double # bool - if player doubled
         self.winnings = winnings
         self.split_bet = split_bet
-        self.move = move ############################### ne rabm?
 
         # help
         self.splitgrid = splitgrid # directions how to play
@@ -861,15 +861,13 @@ class InputBox:
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class StrategyButton:
-    def __init__(self, s1, s2, s3, s4, s5, s6, s7, s8, active_strat):
+    def __init__(self, s1, s2, s4, s5, s6, s7, active_strat):
         self.paroli = s1
         self.s1326 = s2
-        self.rev_lab = s3
         self.half = s4
         self.counting = s5
         self.martingale = s6
         self.oscar = s7
-        self.lab = s8
         self.activated = 0
 
         self.active_strategy = active_strat
@@ -877,20 +875,16 @@ class StrategyButton:
     def draw(self):
         self.paroli.button.create(gameDisplay, 70)
         self.s1326.button.create(gameDisplay, 70)
-        self.rev_lab.button.create(gameDisplay, 70)
         self.half.button.create(gameDisplay, 70)
         self.counting.button.create(gameDisplay, 70)
         self.martingale.button.create(gameDisplay, 70)
         self.oscar.button.create(gameDisplay, 70)
-        self.lab.button.create(gameDisplay, 70)
 
     def get_button(self, search):
         if search == 'paroli':
             return self.paroli
         elif search == '1326':
             return self.s1326
-        elif search == 'rev_lab':
-            return self.rev_lab
         elif search == 'increase':
             return self.half
         elif search == 'counting':
@@ -899,8 +893,6 @@ class StrategyButton:
             return self.martingale
         elif search == 'oscar':
             return self.oscar
-        elif search == 'lab':
-            return self.lab
 
     def activate_button(self, new):
         if self.active_strategy == '': # no button pressed yet
@@ -931,11 +923,6 @@ class StrategyButton:
             self.active_strategy.winning_streak = 0
             self.active_strategy.round = 1
             self.s1326.button.darkcol = DARKPINK
-        elif self.active_strategy.strat == 'rev_lab':
-            self.active_strategy.bet = game.initial_bet
-            self.active_strategy.winning_streak = 0
-            self.active_strategy.seq = []
-            self.rev_lab.button.darkcol = DARKPINK
         elif self.active_strategy.strat == 'martingale':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.losing_streak = 0
@@ -945,11 +932,7 @@ class StrategyButton:
             self.active_strategy.losing_streak = 0
             self.active_strategy.bankroll = 0
             self.oscar.button.darkcol = DARKPINK
-        elif self.active_strategy.strat == 'lab':
-            self.active_strategy.seq = []
-            self.active_strategy.bet = game.initial_bet
-            self.active_strategy.losing_streak = 0
-            self.lab.button.darkcol = DARKPINK
+
 
 
 
