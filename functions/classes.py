@@ -860,6 +860,11 @@ class InputBox:
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
+    def restart(self):
+        self.text = ''
+        self.txt_surface = self.text_font.render(self.text, TRUE, self.txtcol)
+
+
 class StrategyButton:
     def __init__(self, s1, s2, s4, s5, s6, s7, active_strat):
         self.paroli = s1
@@ -905,33 +910,48 @@ class StrategyButton:
             new.button.darkcol = DARKPINK
             self.active_strategy = new
 
-    def restart_strategies(self, game):
+#strat.restart_strategies(game)
+
+    def restart_strategies(self, game, par = 1):
         if self.active_strategy == '':
             pass
         elif self.active_strategy.strat == 'counting': # restart counting ############################################33333333333333333333333333
             self.active_strategy.cards = 0
             self.active_strategy.count = 0
             self.active_strategy.bet = game.initial_bet
-            self.counting.button.darkcol = DARKPINK
-        elif self.active_strategy.strat == 'paroli' or self.active_strategy.strat == 'increase':
+            self.counting.button.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
+        elif self.active_strategy.strat == 'paroli':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.winning_streak = 0
-            self.paroli.button.darkcol = DARKPINK
-            self.half.button.darkcol = DARKPINK
+            self.paroli.button.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
+        elif self.active_strategy.strat == 'increase':
+            self.active_strategy.bet = game.initial_bet
+            self.half.button.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
         elif self.active_strategy.strat == '1326':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.winning_streak = 0
+            self.active_strategy.winning_streak = 0
             self.active_strategy.round = 1
-            self.s1326.button.darkcol = DARKPINK
+            self.s1326.button.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
         elif self.active_strategy.strat == 'martingale':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.losing_streak = 0
-            self.martingale.button.darkcol = DARKPINK
+            self.martingale.button.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
         elif self.active_strategy.strat == 'oscar':
             self.active_strategy.bet = game.initial_bet
             self.active_strategy.losing_streak = 0
             self.active_strategy.bankroll = 0
-            self.oscar.button.darkcol = DARKPINK
+            self.oscar.button.darkcol = TEAL
+            self.active_strategy.darkcol = TEAL
+        
+        if par == 1:
+            game.strategy = ''
+            self.active_strategy = ''
 
 
 

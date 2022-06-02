@@ -493,15 +493,7 @@ def ai_winner(game, hand, strat): # game.position = 25
     game.balance = game.balance + hand.winnings
     
     game.position = 27
-    #print(game.prob_data)  
-    #print(game.soft_data)
-    #print(game.split_data)
-    #print(hand.player_hand)
-    #print(hand.dealer_hand)
-    #print(game.data_balance)
-    #print(game.balance)
-    #print(game.data_bet)
-    #print(hand.bet)
+
 
 def saving_data(game, hand, strat): # game.position = 27
 
@@ -510,14 +502,6 @@ def saving_data(game, hand, strat): # game.position = 27
     if hand.player_hand != []:
         save_data.save_prob(hand, game)
 
-    #print('multiple')
-    #print(game.data_multiple)
-    #print('balance')
-    #print(game.data_balance)
-    #print('bet')
-    #print(game.data_bet)
-    #df = pd.DataFrame(game.data_bet)
-    #print(df)
 
     # new bet or cash out
 
@@ -538,8 +522,8 @@ def saving_data(game, hand, strat): # game.position = 27
             game.position = 28
 
         else: # finnish
-            #print('saving')
-            
+
+            '''
             # save probabilities
             save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
             save_data.update_csv_prob(game.split_data, 'data/split_data.csv')
@@ -555,7 +539,7 @@ def saving_data(game, hand, strat): # game.position = 27
 
             df = pd.DataFrame(game.data_balance)
             df.to_csv('data/' + strat.active_strategy.strat + '-balance.csv')
-            
+            '''
             game.position = 13
 
 

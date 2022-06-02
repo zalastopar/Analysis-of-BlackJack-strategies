@@ -98,14 +98,12 @@ napaka = False
 mygame.shuffle_deck()
 
 
-
-
 def view(position):
     if position == 1:
         menu_window.menu()
     elif position == 2:
         prep_window.bet_window(mygame, balance_box)
-    elif position == 3:                           ############ simulation - bomo naredili pol
+    elif position == 3:                      
         prep_window.bet_window_sim(mygame, num_sim_box, num_deal_box)
     elif position == '3a':
         prep_window.select_strategy_window(mygame, strat_buttons)
