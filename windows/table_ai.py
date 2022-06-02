@@ -518,12 +518,12 @@ def saving_data(game, hand, strat): # game.position = 27
             hand.bet = 0
             #print(game.balance)
             # restart strategies
-            strat.restart_strategies(game)
+            strat.restart_strategies(game, par = 0)
             game.position = 28
 
         else: # finnish
 
-            '''
+            
             # save probabilities
             save_data.update_csv_prob(game.prob_data, 'data/prob_data.csv')
             save_data.update_csv_prob(game.split_data, 'data/split_data.csv')
@@ -533,13 +533,15 @@ def saving_data(game, hand, strat): # game.position = 27
             df = pd.DataFrame(game.data_multiple)
             #print(df)
             df.to_csv('data/' + strat.active_strategy.strat + '.csv')
+            
+            df = pd.DataFrame(game.data_balance)
+            df.to_csv('data/' + strat.active_strategy.strat + '-balance.csv')
 
             df = pd.DataFrame(game.data_bet)
             df.to_csv('data/' + strat.active_strategy.strat + '-bet.csv')
 
-            df = pd.DataFrame(game.data_balance)
-            df.to_csv('data/' + strat.active_strategy.strat + '-balance.csv')
-            '''
+
+            
             game.position = 13
 
 
