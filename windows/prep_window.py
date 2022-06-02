@@ -80,21 +80,19 @@ def prep_buttons(game, mouse, box):
 
     if width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # go back (to Menu)
         game.restart_game()
-        box.text = ''
+        box.restart()
         game.position = 1 
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.simulation == 1 and box.text != '' and float(box.text) > 0:#and game.balance >0: # select num of simulations
         game.balance = game.balance + float(box.text)
         game.initial_balance = float(box.text)
-        #box.text = ''
-        box.txt_surface = box.text_font.render('', True, PINK)
+        box.restart()
         game.shuffle_deck()
         game.position = 3 
 
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box.text != '' and float(box.text) > 0 and game.simulation == 0: # start playing
         game.balance = game.balance + float(box.text)
         game.initial_balance = game.balance + float(box.text)
-        #box.text = ''
-        box.txt_surface = box.text_font.render('', True, PINK)
+        box.restart()
         game.shuffle_deck()
         game.position = 4 
                 
@@ -159,19 +157,19 @@ def simulation_buttons(game, mouse, sim_box, deal_box):
     #if the mouse is clicked on the button smth happens:
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
-        sim_box.text = ''
-        deal_box.text = ''
+        sim_box.restart()
+        deal_box.restart()
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # select deposit amount again
         game.balance = 0
-        #sim_box.text = ''
-        #deal_box.text = ''
+        sim_box.restart()
+        deal_box.restart()
         game.position = 2
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and sim_box.text != '' and deal_box.text != '' and int(sim_box.text) > 0 and int(deal_box.text) > 0: # next 
         game.simulation = int(sim_box.text)
         game.num_dealings = int(deal_box.text)
-        #sim_box.text = ''
-        #deal_box.text = ''
+        sim_box.restart()
+        deal_box.restart()
         game.position = '3a'
 
 
@@ -232,9 +230,11 @@ def strategy_buttons(game, mouse, strat):
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # back select deposit amount again
         #game.strategy = ''
         #game.balance = 0
-        game.position = 3
         strat.restart_strategies(game)
+        game.position = 3
+        
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and game.strategy != '':  # play 
+        strat.restart_strategies(game, 0)
         game.position = '3b'
     # color the buttons
     elif width - 1300 <= mouse[0] <= width - 1300 + 500 and height - 600 <= mouse[1] <=  height - 600 + 80: # paroli
@@ -294,18 +294,17 @@ def unit_strategy_button(game, mouse, strat, box_unit):
     if width - 65 <= mouse[0] <= width and 5 <= mouse[1] <= 35: # Go back to menu
         game.restart_game()
         strat.restart_strategies(game)
-        #box_unit.text = ''
+        box_unit.restart()
         game.position = 1
     elif width - 955 <= mouse[0] <= width - 955 + 300 and height - 200 <= mouse[1] <= height - 200 + 80: # back - select simulation
         strat.restart_strategies(game)
-        #box_unit.text = ''
+        box_unit.restart()
         game.position = '3a'
     elif width - 955 + 300 + 40 <= mouse[0] <= width - 955 + 300 + 40 + 300 and height - 200 <= mouse[1] <= height - 200 + 80 and box_unit.text != '' and float(box_unit.text) > 0:# play 
         game.initial_bet = float(box_unit.text)
-        #box_unit.text = ''
+        box_unit.restart()
+        strat.restart_strategies(game, 0)
         print(game.strategy)
         game.position = 28
-
-
 
     pygame.display.update()
