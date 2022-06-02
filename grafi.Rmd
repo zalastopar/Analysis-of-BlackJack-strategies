@@ -1,0 +1,45 @@
+---
+title: ""
+author: "Zala Stopar Springer"
+date: "6/2/2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library("ggplot2")
+library(dplyr)
+```
+
+
+![](reports/analysis/average-balance.png) 
+![](reports/analysis/avg_balance-end.png)
+
+
+![](reports/analysis/average-bet.png)
+
+
+![](reports/analysis/prob_data.png)
+![](reports/analysis/soft_data.png)
+![](reports/analysis/split_data.png)
+
+
+
+
+\newpage
+
+
+```{r fig.show = "hold", out.width = "50%", fig.align = "default", echo=FALSE}
+
+knitr::include_graphics("reports/analysis/paroli-hist.png")
+knitr::include_graphics("reports/analysis/1326-hist.png")
+knitr::include_graphics("reports/analysis/counting-hist.png")
+knitr::include_graphics("reports/analysis/increase-hist.png")
+knitr::include_graphics("reports/analysis/martingale-hist.png")
+knitr::include_graphics("reports/analysis/oscar-hist.png")
+
+```

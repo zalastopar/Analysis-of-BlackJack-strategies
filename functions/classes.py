@@ -948,7 +948,6 @@ class StrategyButton:
             self.active_strategy.bankroll = 0
             self.oscar.button.darkcol = TEAL
             self.active_strategy.darkcol = TEAL
-        
         if par == 1:
             game.strategy = ''
             self.active_strategy = ''

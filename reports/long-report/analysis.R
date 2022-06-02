@@ -131,7 +131,7 @@ dev.off()
  colors <- c('deepskyblue', 'firebrick1', 'mediumorchid1', 'springgreen', 'gold')
  legend(0, 85, legend = c('paroli','1326', 'counting', 'increase', 'martingale', 'oscar'),
         col = c('hotpink', colors), lty = 1, lwd = 2)
- for (el in c('1326', 'counting', 'increase', 'martingale', 'oscar')){
+ for (el in c('1326', 'increase', 'counting', 'martingale', 'oscar')){
    avg_balance <- c()
    tab <- get(paste(el, '_balance', sep = ''))
    for (i in 1:100){
@@ -147,27 +147,27 @@ dev.off()
 # Average balance at the end
 #############################################################################################################################
 
- avg_balance <- c()
- for (el in c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar')){
-   
-  tab <- get(paste(el, '_balance', sep = ''))
-  avg_balance <- c(avg_balance, mean(as.numeric(tab[100,])))
- }
-
- p <- ggplot(data.frame(avg_balance), aes(x=c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar'), y = avg_balance)) + 
-   geom_col(fill = 'violetred1') + theme_classic() +
-  labs(x = 'Strategy', y = 'Balance', title = 'Average balance after 100 dealings')
- 
- png('reports/analysis/avg_balance-end.png', height =600 , width = 700)
- print(p)
- dev.off()
+ # avg_balance <- c()
+ # for (el in c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar')){
+ #   
+ #  tab <- get(paste(el, '_balance', sep = ''))
+ #  avg_balance <- c(avg_balance, mean(as.numeric(tab[100,])))
+ # }
+ # 
+ # p <- ggplot(data.frame(avg_balance), aes(x=c('paroli', '1326', 'counting', 'increase', 'martingale', 'oscar'), y = avg_balance)) + 
+ #   geom_col(fill = 'violetred1') + theme_classic() +
+ #  labs(x = 'Strategy', y = 'Balance', title = 'Average balance after 100 dealings')
+ # 
+ # png('reports/analysis/avg_balance-end.png', height =600 , width = 700)
+ # print(p)
+ # dev.off()
 
 
 
 
 
 #############################################################################################################################
- PROBABILITY # stolpci so player
+# PROBABILITY # stolpci so player
 #############################################################################################################################
 calculate_prob <- function(el) {
      if (is.na(el)){
